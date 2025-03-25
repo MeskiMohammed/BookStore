@@ -260,8 +260,8 @@ export default function AdminLayout(props) {
         </div>
       </aside>
 
-      <div class='p-4 sm:ml-64 mt-14 overflow-y-auto h-[calc(100dvh-0.25*14px)]'>
-      <main>{props.children}</main>
+      <div class='p-4 sm:ml-64 mt-14 overflow-y-auto h-[calc(100dvh-0.25rem*14)]'>
+        <main>{props.children}</main>
         <footer class='text-black'>
           <ul>
             <li>content</li>
