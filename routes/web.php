@@ -10,8 +10,8 @@ Route::get('/register', function () {return inertia('Register');});
 
 
 Route::get('/users', function () {return inertia('users/index');});
-Route::get('/livres', function () {return inertia('livress/index');});
-Route::get('/users', function () {return inertia('users/index');});
-Route::get('/users', function () {return inertia('users/index');});
+Route::get('/livres', function () {return inertia('livres/index');});
+Route::get('/categories', function () {return inertia('categories/index');});
+Route::get('/commandes', function () {return inertia('users/index');});
 
 
