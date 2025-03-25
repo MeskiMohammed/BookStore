@@ -1,4 +1,4 @@
-export default function AdminLayout() {
+export default function AdminLayout(props) {
   return (
     <>
       <nav class='fixed top-0 z-50 w-full bg-white border-b border-gray-200 :bg-gray-800 '>
@@ -260,7 +260,8 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      <div class='p-4 sm:ml-64 mt-14 overflow-y-auto h-[calc(100%-calc(0.25rem*14))]'>
+      <div class='p-4 sm:ml-64 mt-14 overflow-y-auto h-[calc(100dvh-0.25*14px)]'>
+      <main>{props.children}</main>
         <footer class='text-black'>
           <ul>
             <li>content</li>
