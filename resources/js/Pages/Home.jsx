@@ -1,8 +1,9 @@
 import React from 'react'
+import AdminLayout from '../Components/AdminLayout.jsx'
 
 function Home() {
   return (
-    <div>Homse</div>
+      <AdminLayout/>
   )
 }
 
