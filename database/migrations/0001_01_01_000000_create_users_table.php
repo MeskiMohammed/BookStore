@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('adresse');
             $table->string('email')->unique();
             $table->string('password');
+            $table->boolean('admin')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
