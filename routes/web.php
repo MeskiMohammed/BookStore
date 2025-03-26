@@ -7,9 +7,10 @@ Route::get('/login', fn () => inertia('Login'));
 Route::get('/register', fn () => inertia('Register'));
 
 
-Route::get('/users', fn () => inertia('users/index'));
-Route::get('/livres', fn () => inertia('livres/index'));
-Route::get('/categories', fn () => inertia('categories/index'));
-Route::get('/commandes', fn () => inertia('commandes/index'));
+Route::get('/admin/dashboard', fn () => inertia('admin/dashboard'));
+Route::get('/admin/users', fn () => inertia('admin/users/index'));
+Route::get('/admin/books', fn () => inertia('admin/books/index'));
+Route::get('/admin/categories', fn () => inertia('admin/categories/index'));
+Route::get('/admin/orders', fn () => inertia('admin/orders/index'));
 
 

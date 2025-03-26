@@ -1,4 +1,4 @@
-import App from '../../Layout/admin/app.jsx';
+import App from '../../../Layout/admin/app.jsx';
 
 export default function UsersIndex() {
   return (

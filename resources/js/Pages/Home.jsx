@@ -1,9 +1,10 @@
 import React from 'react'
-import AdminLayout from '../Layout/admin/app.jsx'
+import App from '../Layout/admin/app.jsx'
+
 
 function Home() {
   return (
-      <AdminLayout/>
+      <App/>
   )
 }
 
