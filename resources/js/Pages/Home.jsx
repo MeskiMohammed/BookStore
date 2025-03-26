@@ -1,5 +1,5 @@
 import React from 'react'
-import AdminLayout from '../Components/AdminLayout.jsx'
+import AdminLayout from '../Layout/admin/app.jsx'
 
 function Home() {
   return (

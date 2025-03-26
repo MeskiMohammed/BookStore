@@ -2,16 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {return inertia('Home');});
-Route::get('/login', function () {return inertia('Login');});
-Route::get('/register', function () {return inertia('Register');});
+Route::get('/', fn () => inertia('Home'));
+Route::get('/login', fn () => inertia('Login'));
+Route::get('/register', fn () => inertia('Register'));
 
 
 
 
-Route::get('/users', function () {return inertia('users/index');});
-Route::get('/livres', function () {return inertia('livres/index');});
-Route::get('/categories', function () {return inertia('categories/index');});
-Route::get('/commandes', function () {return inertia('users/index');});
+Route::get('/users', fn () => inertia('users/index'));
+Route::get('/livres', fn () => inertia('livres/index'));
+Route::get('/categories', fn () => inertia('categories/index'));
+Route::get('/commandes', fn () => inertia('commandes/index'));
 
 

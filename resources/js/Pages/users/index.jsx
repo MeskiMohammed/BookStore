@@ -1,8 +1,8 @@
-import AdminLayout from '../../Components/AdminLayout.jsx';
+import App from '../../Layout/admin/app.jsx';
 
 export default function UsersIndex() {
   return (
-    <AdminLayout>
+    <App>
       <div class='p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5  '>
         <div class='w-full mb-1'>
           <div class='mb-4'>
@@ -161,6 +161,6 @@ export default function UsersIndex() {
           </div>
         </div>
       </div>
-    </AdminLayout>
+    </App>
   );
 }
