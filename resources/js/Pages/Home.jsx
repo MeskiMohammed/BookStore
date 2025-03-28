@@ -6,6 +6,8 @@ import BookSlider from '../HomeComponent/book-slider.jsx';
 import books from '../TempData/books.json';
 
 function Home() {
+  const bookGenres = ['Fantasy', 'Science Fiction', 'Mystery', 'Romance', 'Horror', 'Thriller', 'Historical Fiction', 'Nonfiction'];
+
   return (
     <>
       {/* ========== HEADER ========== */}
