@@ -28,10 +28,7 @@
         "postcss": "^8.5.3",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
-<<<<<<< HEAD
+        "react-perfect-scrollbar": "^1.5.8",
         "swiper": "^11.2.6"
-=======
-        "react-perfect-scrollbar": "^1.5.8"
->>>>>>> c00e52e3cb98d16095829d690672124c2dc594a7
     }
 }
