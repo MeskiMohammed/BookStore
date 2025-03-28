@@ -290,7 +290,7 @@ function Home() {
             </a>
           </div>
 
-      </sect          <div class='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+        <div class='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
             {bookGenres.map((book) => {
               return (
                 <a href='#' class='flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2 hover:bg-gray-50   '>
@@ -346,7 +346,6 @@ function Home() {
             . All Rights Reserved.
           </span>
         </div>
-    </div>
       </footer>
     </>
   );
