@@ -2,12 +2,5 @@
 @tailwind components;
 @tailwind utilities;
 
-/* In your global CSS */
-body {
-  overflow: hidden;
-}
 
-.PerfectScrollbar {
-  max-height: 100vh;  /* Example */
-}
 
