@@ -24,10 +24,10 @@ export default function Header() {
         {/* Button Group */}
         <div className='flex items-center gap-x-1 lg:gap-x-2 ms-auto py-1 lg:ps-6 lg:order-3 lg:col-span-3'>
           <button type='button' className='py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium text-nowrap rounded-xl bg-white border border-gray-200 text-black hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none            '>
-            Sign in
+            Inscrivez-vous
           </button>
-          <button type='button' className='py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium text-nowrap rounded-xl border border-transparent bg-lime-400 text-black hover:bg-lime-500 focus:outline-hidden focus:bg-lime-500 transition disabled:opacity-50 disabled:pointer-events-none'>
-            Hire us
+          <button type='button' className='py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium text-nowrap rounded-xl border border-transparent bg-primary-400 text-black hover:bg-primary-500 focus:outline-hidden focus:bg-primary-500 transition disabled:opacity-50 disabled:pointer-events-none'>
+            Login
           </button>
 
           <div className='lg:hidden'>
@@ -50,28 +50,23 @@ export default function Header() {
         <div id='hs-navbar-hcail' className='hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow lg:block lg:w-auto lg:basis-auto lg:order-2 lg:col-span-6' aria-labelledby='hs-navbar-hcail-collapse'>
           <div className='flex flex-col gap-y-4 gap-x-0 mt-5 lg:flex-row lg:justify-center lg:items-center lg:gap-y-0 lg:gap-x-7 lg:mt-0'>
             <div>
-              <a className='relative inline-block text-blue-950 focus:outline-hidden before:absolute before:bottom-0.5 before:start-0 before:-z-1 before:w-full before:h-1 before:bg-lime-400  ' href='#' aria-current='page'>
-                Work
+              <a className='relative inline-block text-blue-950 focus:outline-hidden before:absolute before:bottom-0.5 before:start-0 before:-z-1 before:w-full before:h-1 before:bg-primary-400  ' href='#' aria-current='page'>
+                Accueil
               </a>
             </div>
             <div>
               <a className='inline-block text-black hover:text-gray-600 focus:outline-hidden focus:text-gray-600 ' href='#'>
-                Services
+                Catalogue
               </a>
             </div>
             <div>
-              <a className='inline-block text-black hover:text-gray-600 focus:outline-hidden focus:text-gray-600      ' href='#'>
-                About
+              <a className='inline-block text-black hover:text-gray-600 focus:outline-hidden focus:text-gray-600' href='#'>
+                À propos
               </a>
             </div>
             <div>
-              <a className='inline-block text-black hover:text-gray-600 focus:outline-hidden focus:text-gray-600      ' href='#'>
-                Careers
-              </a>
-            </div>
-            <div>
-              <a className='inline-block text-black hover:text-gray-600 focus:outline-hidden focus:text-gray-600      ' href='#'>
-                Blog
+              <a className='inline-block text-black hover:text-gray-600 focus:outline-hidden focus:text-gray-600' href='#'>
+                Contact
               </a>
             </div>
           </div>
