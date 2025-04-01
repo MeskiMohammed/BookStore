@@ -48,7 +48,7 @@ export default function Header() {
               </a>
             </div>
             <div>
-              <a className='inline-block text-black hover:text-gray-600 focus:outline-hidden focus:text-gray-600 ' href='#'>
+              <a className='inline-block text-black hover:text-gray-600 focus:outline-hidden focus:text-gray-600 ' href='/catalogue'>
                 Catalogue
               </a>
             </div>
