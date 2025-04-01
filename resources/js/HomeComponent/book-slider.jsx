@@ -98,7 +98,7 @@ export default function BookSlider({ title, books }) {
       <Swiper
         modules={[Navigation, Autoplay]}
         spaceBetween={20}
-        slidesPerView={1}
+        slidesPerView={2}
         breakpoints={{
           640: { slidesPerView: 2 },
           768: { slidesPerView: 4 },

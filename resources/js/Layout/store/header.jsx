@@ -7,7 +7,7 @@ export default function Header() {
         <div className='lg:col-span-3 flex items-center'>
           {/* Logo */}
           <a className='flex-none rounded-xl text-xl inline-block font-semibold focus:outline-hidden focus:opacity-80' href='../templates/creative-agency/index.html' aria-label='Preline'>
-            <img src={Logo} width={250} height={100} alt="" />
+            <img src={Logo} width={250} height={100} alt='' />
           </a>
           {/* End Logo */}
 
@@ -16,12 +16,12 @@ export default function Header() {
 
         {/* Button Group */}
         <div className='flex items-center gap-x-1 lg:gap-x-2 ms-auto py-1 lg:ps-6 lg:order-3 lg:col-span-3'>
-          <button type='button' className='py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium text-nowrap rounded-xl bg-white border border-gray-200 text-black hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none            '>
+          <a href='/register' className='cursor-pointer py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium text-nowrap rounded-xl bg-white border border-gray-200 text-black hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none            '>
             Inscrivez-vous
-          </button>
-          <button type='button' className='py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium text-nowrap rounded-xl border border-transparent bg-primary-400 text-black hover:bg-primary-500 focus:outline-hidden focus:bg-primary-500 transition disabled:opacity-50 disabled:pointer-events-none'>
+          </a>
+          <a href='/login' className='cursor-pointer py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium text-nowrap rounded-xl border border-transparent bg-primary-400 text-black hover:bg-primary-500 focus:outline-hidden focus:bg-primary-500 transition disabled:opacity-50 disabled:pointer-events-none'>
             Login
-          </button>
+          </a>
 
           <div className='lg:hidden'>
             <button type='button' className='hs-collapse-toggle size-9.5 flex justify-center items-center text-sm font-semibold rounded-xl border border-gray-200 text-black hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none        ' id='hs-navbar-hcail-collapse' aria-expanded='false' aria-controls='hs-navbar-hcail' aria-label='Toggle navigation' data-hs-collapse='#hs-navbar-hcail'>

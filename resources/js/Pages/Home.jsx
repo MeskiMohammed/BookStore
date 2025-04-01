@@ -294,8 +294,7 @@ function Home() {
             <br />
 
             <a href='#' className='inline-flex items-center justify-center rounded-lg bg-primary-700 px-5 py-3 text-center text-base font-medium text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 '>
-              {' '}
-              Précommandez.{' '}
+              {' Précommandez '}
             </a>
           </div>
         </div>
