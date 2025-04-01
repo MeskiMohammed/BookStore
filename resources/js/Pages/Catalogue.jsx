@@ -85,7 +85,7 @@ function Catalogue() {
               </div>
               <div class='pt-6'>
                 <a href='#' class=' text-base font-semibold leading-tight text-gray-900 hover:underline '>
-                  Apple iMac 27", 1TB HDD, Retina 5K Display, M3 Max
+                  {book.title}
                 </a>
                 <p class='text-sm font-medium text-gray-500 mt-2'>{book.author}</p>
                 <div class='mt-2 flex items-center gap-2'>

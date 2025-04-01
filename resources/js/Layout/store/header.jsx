@@ -10,7 +10,7 @@ export default function Header() {
   };
 
   return (
-    <header className='flex flex-wrap lg:justify-start lg:flex-nowrap z-50 w-full py-7'>
+    <header className='flex flex-wrap lg:justify-start lg:flex-nowrap z-50 w-full pb-7'>
       <nav className='relative w-full flex flex-wrap basis-full items-center max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='flex w-full justify-between items-center'>
           {/* Logo */}
