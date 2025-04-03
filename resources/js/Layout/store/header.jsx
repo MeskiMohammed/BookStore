@@ -37,7 +37,7 @@ export default function Header() {
               </a>
             </div>
             <div>
-              <a className='inline-block text-black hover:text-gray-600' href='#'>
+              <a className='inline-block text-black hover:text-gray-600' href='/contact'>
                 Contact
               </a>
             </div>

@@ -6,8 +6,7 @@ import books from '../TempData/books.json';
 function Catalogue() {
   return (
     <App>
-      <section class='bg-gray-50 py-8 antialiased  md:py-12'>
-        <div class='mx-auto max-w-screen-xl px-4 2xl:px-0'>
+      <section class='max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8'>
           {/* Breadcrumb */}
           <div className='h-80 rounded text-center flex items-center justify-center' style={{ backgroundImage: `url(${BooksBG})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
             <h1 className='text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-6xl'>Catalogue</h1>
@@ -147,7 +146,7 @@ function Catalogue() {
         </button>
         </nav>
     {/* <!-- End Pagination --> */}
-        </div>
+
         {/* <!-- Filter modal --> */}
         <form action='#' method='get' id='filterModal' tabindex='-1' aria-hidden='true' class='fixed left-0 right-0 top-0 z-50 hidden h-modal w-full overflow-y-auto overflow-x-hidden p-4 md:inset-0 md:h-full'>
           <div class='relative h-full w-full max-w-xl md:h-auto'>
