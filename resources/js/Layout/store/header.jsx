@@ -22,7 +22,7 @@ export default function Header() {
         <div className='hidden lg:block w-full lg:w-auto mt-4 lg:mt-0'>
           <div className='flex flex-col lg:flex-row lg:justify-center lg:items-center gap-y-4 lg:gap-y-0 lg:gap-x-7'>
             <div>
-              <a className='relative inline-block text-blue-950 before:absolute before:bottom-0.5 before:start-0 before:w-full before:h-1 before:bg-primary-400' href='/' aria-current='page'>
+              <a className='relative inline-block text-blue-950 before:absolute before:bottom-0.5 before:start-0 before:w-full before:h-1 before:bg-blue-500' href='/' aria-current='page'>
                 Accueil
               </a>
             </div>
@@ -48,7 +48,7 @@ export default function Header() {
             <a href='/register' className='hidden lg:inline-flex cursor-pointer py-2 px-3 items-center gap-x-2 text-sm font-medium text-nowrap rounded-xl bg-white border border-gray-200 text-black hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none '>
               Inscrivez-vous
             </a>
-            <a href='/login' className='hidden lg:inline-flex  cursor-pointer py-2 px-3 items-center gap-x-2 text-sm font-medium text-nowrap rounded-xl border border-transparent bg-primary-400 text-black hover:bg-primary-500 disabled:opacity-50 disabled:pointer-events-none '>
+            <a href='/login' className='hidden lg:inline-flex  cursor-pointer py-2 px-3 items-center gap-x-2 text-sm font-medium text-nowrap rounded-xl border border-transparent bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50 disabled:pointer-events-none '>
               Login
             </a>
 
@@ -98,7 +98,7 @@ export default function Header() {
                 <a href='/register' className='flex-1 text-center cursor-pointer py-2 px-3 text-sm font-medium rounded-xl bg-white border border-gray-200 text-black hover:bg-gray-100'>
                   Inscrivez-vous
                 </a>
-                <a href='/login' className='flex-1 text-center cursor-pointer py-2 px-3 text-sm font-medium rounded-xl border border-transparent bg-primary-400 text-black hover:bg-primary-500'>
+                <a href='/login' className='flex-1 text-center cursor-pointer py-2 px-3 text-sm font-medium rounded-xl border border-transparent bg-blue-500 text-black hover:bg-blue-600'>
                   Login
                 </a>
               </div>

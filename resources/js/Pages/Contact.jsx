@@ -70,7 +70,7 @@ function Contact() {
             <div className="space-y-8 lg:space-y-16">
             <div>
                 <h3 className="mb-5 font-semibold text-black ">
-                Our address
+                Notre adresse
                 </h3>
 
                 {/* Grid */}
@@ -80,11 +80,11 @@ function Contact() {
 
                     <div className="grow">
                     <p className="text-sm text-gray-600 ">
-                        United Kingdom
+                        Morocco
                     </p>
                     <address className="mt-1 text-black not-italic ">
-                        300 Bath Street, Tay House<br />
-                        Glasgow G2 4JR
+                        Fès-Boulemane<br />
+                        21, rue Sebta, z.i. Doukkarat
                     </address>
                     </div>
                 </div>
@@ -94,7 +94,7 @@ function Contact() {
 
             <div>
                 <h3 className="mb-5 font-semibold text-black ">
-                Our contacts
+                Nos contacts
                 </h3>
 
                 {/* Grid */}
@@ -104,11 +104,11 @@ function Contact() {
 
                     <div className="grow">
                     <p className="text-sm text-gray-600 ">
-                        Email us
+                        Envoyez-nous un e-mail
                     </p>
                     <p>
                         <a className="relative inline-block font-medium text-black before:absolute before:bottom-0.5 before:start-0 before:-z-1 before:w-full before:h-1 before:bg-blue-400 hover:before:bg-black focus:outline-hidden focus:before:bg-black   " href="mailto:example@site.so">
-                        hello@example.so
+                        BookStore@gmail.com
                         </a>
                     </p>
                     </div>
@@ -119,11 +119,11 @@ function Contact() {
 
                     <div className="grow">
                     <p className="text-sm text-gray-600 ">
-                        Call us
+                        Appelez-nous
                     </p>
                     <p>
                         <a className="relative inline-block font-medium text-black before:absolute before:bottom-0.5 before:start-0 before:-z-1 before:w-full before:h-1 before:bg-blue-400 hover:before:bg-black focus:outline-hidden focus:before:bg-black   " href="mailto:example@site.so">
-                        +44 222 777-000
+                        +212 66 00 00 66
                         </a>
                     </p>
                     </div>

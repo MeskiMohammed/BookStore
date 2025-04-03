@@ -84,7 +84,7 @@ export default function BookSlider({ title, books }) {
   return (
     <div className='max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto'>
       <div className='flex justify-between items-center mb-6'>
-        <h2 className='text-2xl font-bold capitalize'>{title}</h2>
+        <h2 className='text-2xl text-gray-800 font-bold capitalize'>{title}</h2>
         <div className='flex gap-2'>
           <button ref={prevRef} className='bg-white px-3 py-2 rounded border border-gray-300 hover:bg-gray-100'>
             &lt;
@@ -136,7 +136,7 @@ export default function BookSlider({ title, books }) {
                   }}
                 />
               </div>
-              <h3 className='font-semibold text-lg truncate'>{book.title}</h3>
+              <h3 className='font-semibold text-gray-800 text-lg truncate'>{book.title}</h3>
               <p className='text-gray-600'>{book.author}</p>
               <p className='font-bold text-blue-600 mt-2'>{book.price}</p>
             </div>
