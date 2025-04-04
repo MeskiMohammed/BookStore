@@ -12,12 +12,13 @@ export default defineConfig({
     tailwindcss(),
     react(),
   ],
-  server: {
+    /*server: {
     host: '0.0.0.0', // Allow access from the network
     port: 5173, // Default Vite port
     strictPort: true,
+    cors: true,
     hmr: {
       host: '192.168.100.57', // Replace with your actual local IP
     },
-  },
+    },*/
 });
