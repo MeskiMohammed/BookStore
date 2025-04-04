@@ -248,7 +248,7 @@ function Home() {
       <section class='bg-gray-50 py-8 antialiased  md:py-16'>
         <div class='mx-auto max-w-screen-xl px-4 2xl:px-0'>
           <div class='mb-4 flex items-center justify-between gap-4 md:mb-8'>
-            <h2 class='text-xl font-semibold text-gray-900  sm:text-2xl'>Shop by category</h2>
+            <h2 class='text-xl font-semibold text-gray-800  sm:text-2xl'>Shop by category</h2>
 
             <a href='#' title='' class='flex items-center text-base font-medium text-primary-700 hover:underline '>
               See more categories
@@ -262,10 +262,10 @@ function Home() {
             {bookGenres.map((book) => {
               return (
                 <a href='#' class='flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2 hover:bg-gray-50   '>
-                  <svg class='me-2 h-4 w-4 shrink-0 text-gray-900 ' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'>
+                  <svg class='me-2 h-4 w-4 shrink-0 text-gray-800 ' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'>
                     <path stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 15v5m-3 0h6M4 11h16M5 15h14a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1Z'></path>
                   </svg>
-                  <span class='text-sm font-medium text-gray-900 '>{book}</span>
+                  <span class='text-sm font-medium text-gray-800 '>{book}</span>
                 </a>
               );
             })}
@@ -273,16 +273,16 @@ function Home() {
         </div>
       </section>
 
-      <section className='bg-white px-4 py-8 antialiased  md:py-16'>
+      <section className='bg-white  px-4 py-8 antialiased  md:py-16'>
         <div className='mx-auto grid max-w-screen-xl rounded-lg bg-gray-50 p-4  md:p-8 lg:grid-cols-12 lg:gap-8 lg:p-16 xl:gap-16'>
           <div className='lg:col-span-5 lg:mt-0'>
             <a href='#'>
-              <img className='mb-4 h-56 w-56  sm:h-96 sm:w-96 md:h-full md:w-full rounded-md' src={ReductionImage} alt='peripherals' />
+              <img className='mb-4 h-full w-full md:h-full md:w-full rounded-md' src={ReductionImage} alt='peripherals' />
               {/* <img className='mb-4 hidden  md:h-full' src='https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-components-dark.svg' alt='peripherals' /> */}
             </a>
           </div>
-          <div className='me-auto place-self-center lg:col-span-7'>
-            <h1 className='mb-3 text-2xl font-bold leading-tight tracking-tight text-gray-900  md:text-4xl'>
+          <div className='me-auto place-self-center py-4 lg:col-span-7'>
+            <h1 className='mb-3 text-2xl font-bold leading-tight tracking-tight text-gray-800  md:text-4xl'>
               Offre Spéciale
               <br />
               <br />
