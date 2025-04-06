@@ -1,7 +1,7 @@
 import React from 'react';
-import App from '../Layout/store/app';
-import BooksBG from '../../images/BooksBG.jpg';
-import books from '../TempData/books.json';
+import App from '../../Layout/store/app';
+import BooksBG from '../../../images/BooksBG.jpg';
+import books from '../../TempData/books.json';
 
 function Catalogue() {
   return (
@@ -75,7 +75,7 @@ function Catalogue() {
           <div class='mb-4 grid gap-4 sm:grid-cols-2 md:mb-8 lg:grid-cols-4 xl:grid-cols-5'>
             {/* produits list */}
             {books.bestSellers.map((book) => (
-                
+
             <div class='rounded-lg border border-gray-200 bg-white p-6 shadow-sm  '>
               <div class='h-56 w-full'>
                 <a href='#'>
@@ -183,7 +183,7 @@ function Catalogue() {
             </li>
             </ul>
         </div>
-            
+
             <div id='myTabContent'>
                 {/* <!-- Brand Tab Content --> */}
                 <div className='block p-4 rounded-lg bg-gray-50' id='author' role='tabpanel' aria-labelledby='author-tab'>
@@ -198,7 +198,7 @@ function Catalogue() {
                     ))}
                 </div>
                 </div>
-                
+
                 {/* <!-- Genre Tab Content --> */}
                 <div className='hidden p-4 rounded-lg bg-gray-50' id='genre' role='tabpanel' aria-labelledby='genre-tab'>
                 <div className='grid grid-cols-2 gap-4 md:grid-cols-2'>
@@ -213,7 +213,7 @@ function Catalogue() {
                     ))}
                 </div>
                 </div>
-                
+
                 {/* <!-- Advanced Filters Tab Content --> */}
                 <div className='hidden p-4 rounded-lg bg-gray-50' id='advanced-filters' role='tabpanel' aria-labelledby='advanced-filters-tab'>
                 <div className='space-y-4'>
@@ -256,9 +256,9 @@ function Catalogue() {
               </div>
             </div>
           </div>
-          
+
         </form>
-        
+
       </section>
 
     </App>
