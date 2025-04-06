@@ -21,5 +21,4 @@ export default defineConfig({
       host: '192.168.100.57', // Replace with your actual local IP
     },
     },*/
-  ]
 });
