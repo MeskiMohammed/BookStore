@@ -89,7 +89,7 @@ function Register() {
                 </button>
                 <p class='text-sm font-light text-gray-500  '>
                   Already have an account?{' '}
-                  <a href='#' class='font-medium text-primary-600 hover:underline  '>
+                  <a href='/login' class='font-medium text-primary-600 hover:underline  '>
                     Login here
                   </a>
                 </p>
