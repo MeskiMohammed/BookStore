@@ -2,10 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => inertia('Home'));
-Route::get('/propos', fn () => inertia('About'));
-Route::get('/contact', fn () => inertia('Contact'));
-Route::get('/catalogue', fn () => inertia('Catalogue'));
+Route::get('/', fn () => inertia('store/Home'));
+Route::get('/propos', fn () => inertia('store/About'));
+Route::get('/contact', fn () => inertia('store/Contact'));
+Route::get('/catalogue', fn () => inertia('store/Catalogue'));
 Route::get('/login', fn () => inertia('Login'));
 Route::get('/register', fn () => inertia('Register'));
 

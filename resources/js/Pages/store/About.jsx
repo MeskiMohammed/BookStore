@@ -1,8 +1,8 @@
 import React from 'react';
-import App from '../Layout/store/app';
-import BooksBG from '../../images/BooksBG.jpg';
-import about_1 from '../../images/about_1.jpg';
-import about_2 from '../../images/about_2.jpg';
+import App from '../../Layout/store/app';
+import BooksBG from '../../../images/BooksBG.jpg';
+import about_1 from '../../../images/about_1.jpg';
+import about_2 from '../../../images/about_2.jpg';
 
 function About() {
   return (

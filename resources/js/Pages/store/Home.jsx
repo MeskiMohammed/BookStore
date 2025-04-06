@@ -1,11 +1,11 @@
 import React from 'react';
-import App from '../Layout/store/app.jsx';
-import BookSlider from '../HomeComponent/book-slider.jsx';
-import books from '../TempData/books.json';
-import HeroImage from '../../images/HeroImage.jpg';
-import FreaturesImage from '../../images/FreaturesImage.png';
-import ReductionImage from '../../images/ReductionImage.png';
-import NiDiagramSuccessor from '../../icons/NiDiagramSuccessor.png';
+import App from '../../Layout/store/app.jsx';
+import BookSlider from '../../Components/book-slider.jsx';
+import books from '../../TempData/books.json';
+import HeroImage from '../../../images/HeroImage.jpg';
+import FreaturesImage from '../../../images/FreaturesImage.png';
+import ReductionImage from '../../../images/ReductionImage.png';
+import NiDiagramSuccessor from '../../../icons/NiDiagramSuccessor.png';
 function Home() {
   const bookGenres = ['Fantasy', 'Science Fiction', 'Mystery', 'Romance', 'Horror', 'Thriller', 'Historical Fiction', 'Nonfiction'];
 
