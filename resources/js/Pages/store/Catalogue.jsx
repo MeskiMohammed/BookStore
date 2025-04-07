@@ -1,5 +1,5 @@
 import React from 'react';
-import App from '../../Layout/store/app';
+import App from '@/Layout/store/app';
 import BooksBG from '../../../images/BooksBG.jpg';
 import books from '../../TempData/books.json';
 

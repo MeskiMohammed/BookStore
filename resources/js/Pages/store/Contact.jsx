@@ -1,6 +1,6 @@
 import React from 'react';
 import BooksBG from '../../../images/BooksBG.jpg';
-import App from '../../Layout/store/app';
+import App from '@/Layout/store/app';
 
 function Contact() {
   return (

@@ -1,14 +1,10 @@
-import StoreLayout from '../../Layouts/StoreLayout';
-import { BrowserRouter } from 'react-router-dom';
-import HomePage from '../../Components/store/home-page';
-// import AdminLayout from '../../../Components/admin/admin-layout';
+import StoreLayout from '@/Layouts/StoreLayout';
+import HomePage from '@/components/store/home-page';
 
 export default function App(props) {
   return (
-    <BrowserRouter>
-      <StoreLayout>
-        <HomePage/>
-      </StoreLayout>
-    </BrowserRouter>
+    <StoreLayout>
+      <HomePage />
+    </StoreLayout>
   );
 }

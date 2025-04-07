@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Outlet, Link, useLocation } from "react-router-dom"
+import { Outlet, Link, useLocation } from "@inertiajs/react"
 import { useCart } from "@/components/store/cart-context"
 
 export default function StoreLayout() {

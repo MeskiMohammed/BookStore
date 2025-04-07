@@ -1,12 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, router } from "@inertiajs/react"
 import { useCart } from "@/components/store/cart-context"
 
 export default function CheckoutPage() {
   const { cartItems, getCartTotal, clearCart } = useCart()
-  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -54,7 +53,7 @@ export default function CheckoutPage() {
       // In a real app, you would submit the order to your backend
       alert("Order placed successfully!")
       clearCart()
-      navigate("/")
+      router.visit("/")
     }
   }
 

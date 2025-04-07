@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useParams, Link } from "react-router-dom"
+import { Link } from "@inertiajs/react"
 import { useCart } from "@/components/store/cart-context"
 
 // Mock data
@@ -59,13 +59,12 @@ const initialCategories = [
   { id: 3, nom: "Science Fiction" },
 ]
 
-export default function ProductDetailPage() {
-  const { id } = useParams()
+export default function ProductDetailPage({id}) {
   const [book, setBook] = useState(null)
   const [category, setCategory] = useState(null)
   const [quantity, setQuantity] = useState(1)
   const [loading, setLoading] = useState(true)
-//   const { addToCart } = useCart()
+   const { addToCart } = useCart()
 
   useEffect(() => {
     // In a real app, you would fetch this data from an API

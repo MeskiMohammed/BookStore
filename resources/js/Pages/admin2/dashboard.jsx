@@ -1,14 +1,10 @@
-import AdminLayout from '../../Layouts/AdminLayout';
-import { BrowserRouter } from 'react-router-dom';
-import AdminDashboard from '../../Components/admin/admin-dashboard';
-// import AdminLayout from '../../../Components/admin/admin-layout';
+import AdminLayout from '@/Layouts/AdminLayout';
+import AdminDashboard from '@/components/admin/admin-dashboard';
 
 export default function App(props) {
   return (
-    <BrowserRouter>
       <AdminLayout>
-        <AdminDashboard/>
+        <AdminDashboard />
       </AdminLayout>
-    </BrowserRouter>
   );
 }

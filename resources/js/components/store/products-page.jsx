@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Link, useSearchParams } from "react-router-dom"
+import { Link, usePage } from "@inertiajs/react"
 import { useCart } from "@/components/store/cart-context"
 
 // Mock data
@@ -57,35 +57,34 @@ const initialCategories = [
 ]
 
 export default function ProductsPage() {
-  const [searchParams] = useSearchParams()
-  const categoryId = searchParams.get("category") ? Number.parseInt(searchParams.get("category")) : null
-
-  const [books, setBooks] = useState([])
-  const [filteredBooks, setFilteredBooks] = useState([])
-  const [categories, setCategories] = useState([])
+  const { url } = usePage()
   const [searchTerm, setSearchTerm] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState(categoryId)
-//   const { addToCart } = useCart()
+  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [books, setBooks] = useState(initialBooks)
+  const [filteredBooks, setFilteredBooks] = useState(initialBooks)
+  const [categories, setCategories] = useState(initialCategories)
+
+  // To handle category selection and update URL
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search)
+    const categoryId = searchParams.get("category")
+    if (categoryId) {
+      setSelectedCategory(Number.parseInt(categoryId))
+    }
+  }, [url])
 
   useEffect(() => {
-    // In a real app, you would fetch this data from an API
-    setBooks(initialBooks)
-    setCategories(initialCategories)
-  }, [])
-
-  useEffect(() => {
+    // Filter books based on search term and selected category
     let filtered = books
 
-    // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(
         (book) =>
           book.libelle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          book.auteur.toLowerCase().includes(searchTerm.toLowerCase()),
+          book.auteur.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
 
-    // Filter by category
     if (selectedCategory) {
       filtered = filtered.filter((book) => book.categorie_id === selectedCategory)
     }
@@ -96,7 +95,18 @@ export default function ProductsPage() {
   const handleCategoryChange = (e) => {
     const value = e.target.value ? Number.parseInt(e.target.value) : null
     setSelectedCategory(value)
+
+    // Update URL with the selected category
+    const url = new URL(window.location)
+    if (value) {
+      url.searchParams.set("category", value)
+    } else {
+      url.searchParams.delete("category")
+    }
+    window.history.pushState({}, '', url)
   }
+
+  const { addToCart } = useCart()  // Uncomment this to use addToCart
 
   return (
     <div className="bg-white">

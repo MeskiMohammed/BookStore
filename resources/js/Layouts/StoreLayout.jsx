@@ -1,15 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { Link, usePage } from '@inertiajs/inertia-react';
-import { useCart } from '../Components/store/cart-context';
+import { Link, usePage } from '@inertiajs/react';
+import { useCart } from '@/components/store/cart-context';
 
 export default function StoreLayout({ children }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-//   const { url } = usePage();
-//   const { cartItems } = useCart();
+  //   const { url } = usePage();
+  //   const { cartItems } = useCart();
 
-//   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+  //   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
   const totalItems = 0;
 
   return (
