@@ -5,8 +5,7 @@ import { Link, usePage } from '@inertiajs/react';
 
 export default function AdminLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  //   const { url } = usePage()
-  const url = 'test';
+   const { url } = usePage()
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);

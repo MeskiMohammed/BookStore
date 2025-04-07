@@ -3,8 +3,8 @@ import ProductsPage from '@/components/store/products-page';
 
 export default function App(props) {
   return (
-      <StoreLayout>
-        <ProductsPage />
-      </StoreLayout>
+    <StoreLayout>
+      <ProductsPage />
+    </StoreLayout>
   );
 }

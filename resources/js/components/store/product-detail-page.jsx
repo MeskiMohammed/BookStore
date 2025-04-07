@@ -59,15 +59,15 @@ const initialCategories = [
   { id: 3, nom: "Science Fiction" },
 ]
 
-export default function ProductDetailPage({id}) {
+export default function ProductDetailPage({ id }) {
   const [book, setBook] = useState(null)
   const [category, setCategory] = useState(null)
   const [quantity, setQuantity] = useState(1)
   const [loading, setLoading] = useState(true)
-   const { addToCart } = useCart()
+  const { addToCart } = useCart()
 
   useEffect(() => {
-    // In a real app, you would fetch this data from an API
+    // Simulate fetching book data
     const bookId = Number.parseInt(id)
     const foundBook = initialBooks.find((b) => b.id === bookId)
 
@@ -75,6 +75,8 @@ export default function ProductDetailPage({id}) {
       setBook(foundBook)
       const foundCategory = initialCategories.find((c) => c.id === foundBook.categorie_id)
       setCategory(foundCategory)
+    } else {
+      setBook(null) // Book not found, set it explicitly
     }
 
     setLoading(false)
@@ -86,6 +88,7 @@ export default function ProductDetailPage({id}) {
     }
   }
 
+  // Loading state
   if (loading) {
     return (
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
@@ -96,6 +99,7 @@ export default function ProductDetailPage({id}) {
     )
   }
 
+  // Book not found
   if (!book) {
     return (
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
@@ -103,7 +107,7 @@ export default function ProductDetailPage({id}) {
           <h2 className="text-2xl font-bold">Book not found</h2>
           <p className="mt-4 text-gray-500">The book you're looking for doesn't exist or has been removed.</p>
           <Link
-            to="/products"
+            href="/products"
             className="mt-6 inline-block rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500"
           >
             Back to Books

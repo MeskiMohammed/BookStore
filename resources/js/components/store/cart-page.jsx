@@ -1,4 +1,5 @@
 'use client';
+
 import { Link } from '@inertiajs/react';
 import { useCart } from '@/components/store/cart-context';
 
@@ -11,7 +12,7 @@ export default function CartPage() {
         <div className='text-center'>
           <h1 className='text-3xl font-bold tracking-tight text-gray-900'>Your Cart</h1>
           <p className='mt-4 text-gray-500'>Your cart is empty.</p>
-          <Link to='/products' className='mt-6 inline-block rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500'>
+          <Link href='products' className='mt-6 inline-block rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500'>
             Continue Shopping
           </Link>
         </div>
@@ -37,7 +38,7 @@ export default function CartPage() {
                     <div>
                       <div className='flex justify-between text-base font-medium text-gray-900'>
                         <h3>
-                          <Link to={`/products/${item.id}`}>{item.libelle}</Link>
+                          <Link href={`/products/${item.id}`}>{item.libelle}</Link>
                         </h3>
                         <p className='ml-4'>${(item.prix * item.quantity).toFixed(2)}</p>
                       </div>
@@ -79,14 +80,14 @@ export default function CartPage() {
           </div>
           <p className='mt-0.5 text-sm text-gray-500'>Shipping and taxes calculated at checkout.</p>
           <div className='mt-6'>
-            <Link to='/checkout' className='flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-blue-700'>
+            <Link href='/checkout' className='flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-blue-700'>
               Checkout
             </Link>
           </div>
           <div className='mt-6 flex justify-center text-center text-sm text-gray-500'>
             <p>
               or{' '}
-              <Link to='/products' className='font-medium text-blue-600 hover:text-blue-500'>
+              <Link href='/products' className='font-medium text-blue-600 hover:text-blue-500'>
                 Continue Shopping
                 <span aria-hidden='true'> &rarr;</span>
               </Link>

@@ -1,53 +1,14 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Link, usePage } from "@inertiajs/react"
+import { Link } from "@inertiajs/react"
 import { useCart } from "@/components/store/cart-context"
 
 // Mock data
 const initialBooks = [
-  {
-    id: 1,
-    libelle: "The Great Gatsby",
-    description: "A novel by F. Scott Fitzgerald",
-    auteur: "F. Scott Fitzgerald",
-    isbn: "9780743273565",
-    prix: 12.99,
-    stock: 25,
-    categorie_id: 1,
-    editeur: "Scribner",
-    date_publication: "2004-09-30",
-    image: "/placeholder.svg?height=100&width=70",
-    actif: true,
-  },
-  {
-    id: 2,
-    libelle: "To Kill a Mockingbird",
-    description: "A novel by Harper Lee",
-    auteur: "Harper Lee",
-    isbn: "9780061120084",
-    prix: 14.99,
-    stock: 18,
-    categorie_id: 1,
-    editeur: "HarperCollins",
-    date_publication: "2006-05-23",
-    image: "/placeholder.svg?height=100&width=70",
-    actif: true,
-  },
-  {
-    id: 3,
-    libelle: "A Brief History of Time",
-    description: "A book about cosmology by Stephen Hawking",
-    auteur: "Stephen Hawking",
-    isbn: "9780553380163",
-    prix: 18.99,
-    stock: 12,
-    categorie_id: 2,
-    editeur: "Bantam",
-    date_publication: "1998-09-01",
-    image: "/placeholder.svg?height=100&width=70",
-    actif: true,
-  },
+  { id: 1, libelle: "The Great Gatsby", description: "A novel by F. Scott Fitzgerald", auteur: "F. Scott Fitzgerald", isbn: "9780743273565", prix: 12.99, stock: 25, categorie_id: 1, editeur: "Scribner", date_publication: "2004-09-30", image: "/placeholder.svg?height=100&width=70", actif: true },
+  { id: 2, libelle: "To Kill a Mockingbird", description: "A novel by Harper Lee", auteur: "Harper Lee", isbn: "9780061120084", prix: 14.99, stock: 18, categorie_id: 1, editeur: "HarperCollins", date_publication: "2006-05-23", image: "/placeholder.svg?height=100&width=70", actif: true },
+  { id: 3, libelle: "A Brief History of Time", description: "A book about cosmology by Stephen Hawking", auteur: "Stephen Hawking", isbn: "9780553380163", prix: 18.99, stock: 12, categorie_id: 2, editeur: "Bantam", date_publication: "1998-09-01", image: "/placeholder.svg?height=100&width=70", actif: true },
 ]
 
 const initialCategories = [
@@ -56,27 +17,21 @@ const initialCategories = [
   { id: 3, nom: "Science Fiction" },
 ]
 
+const ITEMS_PER_PAGE = 4
+
 export default function ProductsPage() {
-  const { url } = usePage()
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [books, setBooks] = useState(initialBooks)
   const [filteredBooks, setFilteredBooks] = useState(initialBooks)
   const [categories, setCategories] = useState(initialCategories)
+  const [currentPage, setCurrentPage] = useState(1)
 
   // To handle category selection and update URL
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search)
-    const categoryId = searchParams.get("category")
-    if (categoryId) {
-      setSelectedCategory(Number.parseInt(categoryId))
-    }
-  }, [url])
-
-  useEffect(() => {
-    // Filter books based on search term and selected category
     let filtered = books
 
+    // Filter books based on search term and selected category
     if (searchTerm) {
       filtered = filtered.filter(
         (book) =>
@@ -92,18 +47,23 @@ export default function ProductsPage() {
     setFilteredBooks(filtered)
   }, [books, searchTerm, selectedCategory])
 
+  // Pagination logic
+  const totalPages = Math.ceil(filteredBooks.length / ITEMS_PER_PAGE)
+
+  const paginatedBooks = filteredBooks.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  )
+
   const handleCategoryChange = (e) => {
     const value = e.target.value ? Number.parseInt(e.target.value) : null
     setSelectedCategory(value)
+    setCurrentPage(1) // Reset to first page when category changes
+  }
 
-    // Update URL with the selected category
-    const url = new URL(window.location)
-    if (value) {
-      url.searchParams.set("category", value)
-    } else {
-      url.searchParams.delete("category")
-    }
-    window.history.pushState({}, '', url)
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value)
+    setCurrentPage(1) // Reset to first page when search term changes
   }
 
   const { addToCart } = useCart()  // Uncomment this to use addToCart
@@ -116,9 +76,7 @@ export default function ProductsPage() {
         {/* Filters */}
         <div className="mt-6 flex flex-col sm:flex-row gap-4">
           <div className="w-full sm:w-1/3">
-            <label htmlFor="search" className="sr-only">
-              Search
-            </label>
+            <label htmlFor="search" className="sr-only">Search</label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -136,15 +94,13 @@ export default function ProductsPage() {
                 placeholder="Search books..."
                 type="search"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={handleSearchChange}
               />
             </div>
           </div>
 
           <div className="w-full sm:w-1/3">
-            <label htmlFor="category" className="sr-only">
-              Category
-            </label>
+            <label htmlFor="category" className="sr-only">Category</label>
             <select
               id="category"
               name="category"
@@ -154,9 +110,7 @@ export default function ProductsPage() {
             >
               <option value="">All Categories</option>
               {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.nom}
-                </option>
+                <option key={category.id} value={category.id}>{category.nom}</option>
               ))}
             </select>
           </div>
@@ -164,12 +118,12 @@ export default function ProductsPage() {
 
         {/* Product grid */}
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {filteredBooks.length === 0 ? (
+          {paginatedBooks.length === 0 ? (
             <div className="col-span-full text-center py-10">
               <p className="text-gray-500">No books found matching your criteria.</p>
             </div>
           ) : (
-            filteredBooks.map((book) => (
+            paginatedBooks.map((book) => (
               <div key={book.id} className="group relative">
                 <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none lg:h-80">
                   <img
@@ -181,7 +135,7 @@ export default function ProductsPage() {
                 <div className="mt-4 flex justify-between">
                   <div>
                     <h3 className="text-sm text-gray-700">
-                      <Link to={`/products/${book.id}`}>
+                      <Link href={`/products/${book.id}`}>
                         <span aria-hidden="true" className="absolute inset-0" />
                         {book.libelle}
                       </Link>
@@ -199,6 +153,23 @@ export default function ProductsPage() {
               </div>
             ))
           )}
+        </div>
+
+        {/* Pagination Controls */}
+        <div className="mt-6 flex justify-center">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            className="mr-4 px-4 py-2 bg-blue-600 text-white rounded-md"
+          >
+            Previous
+          </button>
+          <span className="text-lg font-semibold">{currentPage} / {totalPages}</span>
+          <button
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-md"
+          >
+            Next
+          </button>
         </div>
       </div>
     </div>
