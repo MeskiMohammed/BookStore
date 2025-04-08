@@ -3,16 +3,16 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => inertia('store/home'));
-Route::get('/products', fn () => inertia('store2/products'));
-Route::get('/products/{id}', fn () => inertia('store2/product-detail'));
-Route::get('/cart', fn () => inertia('store2/cart'));
-Route::get('/checkout', fn () => inertia('store2/checkout'));
+// Route::get('/products', fn () => inertia('store2/products'));
+// Route::get('/products/{id}', fn () => inertia('store2/product-detail'));
+// Route::get('/cart', fn () => inertia('store2/cart'));
+// Route::get('/checkout', fn () => inertia('store2/checkout'));
 Route::get('/propos', fn () => inertia('store/about'));
 Route::get('/contact', fn () => inertia('store/contact'));
 Route::get('/catalogue', fn () => inertia('store/catalogue'));
 
-Route::get('/login', fn () => inertia('Login'));
-Route::get('/register', fn () => inertia('Register'));
+Route::get('/login', fn () => inertia('login'));
+Route::get('/register', fn () => inertia('register'));
 
 
 Route::prefix('admin')->group(function(){

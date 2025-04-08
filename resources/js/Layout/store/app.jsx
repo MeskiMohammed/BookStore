@@ -80,10 +80,10 @@ function Header() {
               <Link className='inline-block text-black hover:text-gray-600' href='/catalogue'>
                 Catalogue
               </Link>
-              <Link className='inline-block text-black hover:text-gray-600' href='#'>
+              <Link className='inline-block text-black hover:text-gray-600' href='/propos'>
                 À propos
               </Link>
-              <Link className='inline-block text-black hover:text-gray-600' href='#'>
+              <Link className='inline-block text-black hover:text-gray-600' href='/contact'>
                 Contact
               </Link>
               <div className='flex gap-x-2 mt-2'>
