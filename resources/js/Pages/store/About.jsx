@@ -1,46 +1,46 @@
 import React from 'react';
 import App from '@/Layout/store/app';
-import BooksBG from '../../../images/BooksBG.jpg';
-import about_1 from '../../../images/about_1.jpg';
-import about_2 from '../../../images/about_2.jpg';
+import BooksBG from '@/../images/BooksBG.jpg';
+import about_1 from '@/../images/about_1.jpg';
+import about_2 from '@/../images/about_2.jpg';
 
 function About() {
   return (
     <App>
-      <main class='max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8'>
+      <main className='max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8'>
         {/* Breadcrumb */}
         <div className='h-80 rounded text-center flex items-center justify-center' style={{ backgroundImage: `url(${BooksBG})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
           <h1 className='text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-6xl'>Contact</h1>
         </div>
         {/* End Breadcrumb */}
-        <section class='py-14 lg:py-24 relative'>
-          <div class='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative '>
-            <div class='grid grid-cols-1 lg:grid-cols-2 gap-9'>
-              <div class='img-box'>
-                <img src={about_1} alt='About Us tailwind page' class='rounded-lg max-lg:mx-auto object-cover' />
+        <section className='py-14 lg:py-24 relative'>
+          <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative '>
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-9'>
+              <div className='img-box'>
+                <img src={about_1} alt='About Us tailwind page' className='rounded-lg max-lg:mx-auto object-cover' />
               </div>
-              <div class='lg:pl-[100px] flex items-center'>
-                <div class='data w-full'>
-                  <h2 class='font-manrope font-bold text-4xl lg:text-5xl text-black mb-9 max-lg:text-center relative'>À propos de nous</h2>
-                  <p class='font-normal text-xl leading-8 text-gray-500 max-lg:text-center max-w-2xl mx-auto'>Bienvenue chez BookStore, votre librairie en ligne dédiée aux passionnés de lecture. Nous croyons que chaque livre est une porte ouverte vers de nouvelles idées, de nouvelles aventures et de nouveaux savoirs. Notre mission est de rendre la lecture accessible à tous, en proposant un large choix de livres, des classiques intemporels aux dernières nouveautés, avec une expérience d’achat simple et agréable.</p>
+              <div className='lg:pl-[100px] flex items-center'>
+                <div className='data w-full'>
+                  <h2 className='font-manrope font-bold text-4xl lg:text-5xl text-black mb-9 max-lg:text-center relative'>À propos de nous</h2>
+                  <p className='font-normal text-xl leading-8 text-gray-500 max-lg:text-center max-w-2xl mx-auto'>Bienvenue chez BookStore, votre librairie en ligne dédiée aux passionnés de lecture. Nous croyons que chaque livre est une porte ouverte vers de nouvelles idées, de nouvelles aventures et de nouveaux savoirs. Notre mission est de rendre la lecture accessible à tous, en proposant un large choix de livres, des classiques intemporels aux dernières nouveautés, avec une expérience d’achat simple et agréable.</p>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section class='py-14 lg:py-24 relative'>
-          <div class='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative '>
-            <div class='grid grid-cols-1 lg:grid-cols-2 lg:gap-9 '>
-              <div class='lg:pr-24 flex items-center'>
-                <div class='data w-full'>
-                  <img src={about_2} alt='About Us tailwind page' class='rounded-lg block lg:hidden mb-9 mx-auto object-cover' />
-                  <h2 class='font-manrope font-bold text-4xl lg:text-5xl text-black mb-9 max-lg:text-center'>Notre Histoire</h2>
-                  <p class='font-normal text-xl leading-8 text-gray-500 max-lg:text-center max-w-2xl mx-auto'>Tout a commencé en 2020, en pleine pandémie de Covid-19. Alors que les librairies physiques étaient fermées, nous avons eu l'idée de livrer des livres via les réseaux sociaux, permettant aux lecteurs de continuer à s’évader et apprendre malgré le confinement. Face au succès grandissant, nous avons décidé d’aller encore plus loin. En 2025, nous avons lancé notre site web pour offrir un catalogue plus large, un processus de commande plus simple et une expérience de lecture encore plus fluide. Aujourd’hui, BookStore continue de grandir, porté par une communauté de passionnés qui partagent notre amour des livres.</p>
+        <section className='py-14 lg:py-24 relative'>
+          <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative '>
+            <div className='grid grid-cols-1 lg:grid-cols-2 lg:gap-9 '>
+              <div className='lg:pr-24 flex items-center'>
+                <div className='data w-full'>
+                  <img src={about_2} alt='About Us tailwind page' className='rounded-lg block lg:hidden mb-9 mx-auto object-cover' />
+                  <h2 className='font-manrope font-bold text-4xl lg:text-5xl text-black mb-9 max-lg:text-center'>Notre Histoire</h2>
+                  <p className='font-normal text-xl leading-8 text-gray-500 max-lg:text-center max-w-2xl mx-auto'>Tout a commencé en 2020, en pleine pandémie de Covid-19. Alors que les librairies physiques étaient fermées, nous avons eu l'idée de livrer des livres via les réseaux sociaux, permettant aux lecteurs de continuer à s’évader et apprendre malgré le confinement. Face au succès grandissant, nous avons décidé d’aller encore plus loin. En 2025, nous avons lancé notre site web pour offrir un catalogue plus large, un processus de commande plus simple et une expérience de lecture encore plus fluide. Aujourd’hui, BookStore continue de grandir, porté par une communauté de passionnés qui partagent notre amour des livres.</p>
                 </div>
               </div>
-              <div class='img-box '>
-                <img src={about_2} alt='About Us tailwind page' class='rounded-lg hidden lg:block object-cover' />
+              <div className='img-box '>
+                <img src={about_2} alt='About Us tailwind page' className='rounded-lg hidden lg:block object-cover' />
               </div>
             </div>
           </div>

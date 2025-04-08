@@ -1,5 +1,10 @@
-import App from '../../Layout/admin/app.jsx';
+import AdminLayout from '@/Layouts/AdminLayout';
+import AdminDashboard from '@/components/admin/admin-dashboard';
 
-export default function Dashboard() {
-  return <App></App>;
+export default function App(props) {
+  return (
+      <AdminLayout>
+        <AdminDashboard />
+      </AdminLayout>
+  );
 }

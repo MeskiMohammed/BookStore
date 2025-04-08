@@ -1,18 +1,18 @@
 import React from 'react';
-import BooksBG from '../../../images/BooksBG.jpg';
+import BooksBG from '@/../images/BooksBG.jpg';
 import App from '@/Layout/store/app';
 
 function Contact() {
   return (
     <App>
       {/* Contact */}
-      <section class='max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8'>
+      <section className='max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8'>
         {/* Breadcrumb */}
         <div className='h-80 rounded text-center flex items-center justify-center' style={{ backgroundImage: `url(${BooksBG})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
           <h1 className='text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-6xl'>Contact</h1>
         </div>
         {/* End Breadcrumb */}
-        <div class='mb-4 mx-auto py-40 items-end justify-center space-y-4 sm:flex sm:space-y-0 md:mb-8'>
+        <div className='mb-4 mx-auto py-40 items-end justify-center space-y-4 sm:flex sm:space-y-0 md:mb-8'>
           <div className='grid grid-cols-1 lg:grid-cols-2 lg:items-center gap-6 md:gap-8 lg:gap-12'>
             {/* Card */}
             <div className='flex flex-col border border-gray-200 rounded-xl p-4 sm:p-6 lg:p-8 blue'>
@@ -42,7 +42,7 @@ function Contact() {
                     <label htmlFor='hs-email-contacts-1' className='sr-only'>
                       Email
                     </label>
-                    <input type='email' name='hs-email-contacts-1' id='hs-email-contacts-1' autocomplete='email' className='shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none' placeholder='Email' />
+                    <input type='email' name='hs-email-contacts-1' id='hs-email-contacts-1' autoComplete='email' className='shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none' placeholder='Email' />
                   </div>
 
                   <div>
