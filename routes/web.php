@@ -11,6 +11,8 @@ Route::get('/propos', fn () => inertia('store/about'));
 Route::get('/contact', fn () => inertia('store/contact'));
 Route::get('/catalogue', fn () => inertia('store/catalogue'));
 Route::get('/details-product', fn () => inertia('store/details-product'));
+Route::get('/cart', fn () => inertia('store/cart'));
+Route::get('/checkout', fn () => inertia('store/checkout'));
 
 Route::get('/login', fn () => inertia('login'));
 Route::get('/register', fn () => inertia('register'));
