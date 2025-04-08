@@ -1,6 +1,9 @@
 import React from 'react';
-import App from '../../Layout/store/app.jsx';
-import BookSlider from '../../Components/book-slider.jsx';
+import { Link } from '@inertiajs/react';
+
+import App from '@/Layout/store/app.jsx';
+import BookSlider from '@/components/book-slider.jsx';
+
 import books from '../../TempData/books.json';
 import HeroImage from '../../../images/HeroImage.jpg';
 import FreaturesImage from '../../../images/FreaturesImage.png';
@@ -23,15 +26,15 @@ function Home() {
 
             {/* Buttons */}
             <div className='mt-7 grid gap-3 w-full sm:inline-flex'>
-              <a className='py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none' href='#'>
+              <Link className='py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none' href='#'>
                 Explorer la librairie
                 <svg className='shrink-0 size-4' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
                   <path d='m9 18 6-6-6-6' />
                 </svg>
-              </a>
-              <a className='py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none' href='#'>
+              </Link>
+              <Link className='py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none' href='#'>
                 Contactez-nous
-              </a>
+              </Link>
             </div>
             {/* End Buttons */}
           </div>
@@ -39,7 +42,7 @@ function Home() {
 
           <div className='relative ms-4'>
             <img className='w-full rounded-md' src={HeroImage} alt='Hero Image' />
-            <div class='absolute inset-0 -z-10 bg-gradient-to-tr from-blue-200 via-white/0 to-white/0 w-full h-full rounded-md mt-4 -mb-4 mr-4 -ml-4 lg:mt-6 lg:-mb-6 lg:mr-6 lg:-ml-6 transition-all duration-500 ease-in-out hover:from-gray-700 hover:via-white/0 hover:to-white/0'></div>
+            <div className='absolute inset-0 -z-10 bg-gradient-to-tr from-blue-200 via-white/0 to-white/0 w-full h-full rounded-md mt-4 -mb-4 mr-4 -ml-4 lg:mt-6 lg:-mb-6 lg:mr-6 lg:-ml-6 transition-all duration-500 ease-in-out hover:from-gray-700 hover:via-white/0 hover:to-white/0'></div>
             {/* SVG*/}
             <div className='absolute bottom-0 start-0'>
               <svg className='w-2/3 ms-auto h-auto text-white  ' width='630' height='451' viewBox='0 0 630 451' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -75,7 +78,10 @@ function Home() {
         <div className='grid sm:grid-cols-2 lg:grid-cols-4 items-center gap-12'>
           {/* Icon Block */}
           <div>
-        <svg class="shrink-0 size-9" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+            <svg className='shrink-0 size-9' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
+              <path d='M7 10v12' />
+              <path d='M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z' />
+            </svg>
             <div className='bg-linear-to-r from-blue-500 via-blue-50 to-transparent h-0.5 mt-6'>
               <div className='bg-blue-400 w-9 h-0.5'></div>
             </div>
@@ -245,28 +251,28 @@ function Home() {
 
       <BookSlider title='Our Best Fiction Books' books={books.scienceFiction} />
 
-      <section class='bg-gray-50 py-8 antialiased  md:py-16'>
-        <div class='mx-auto max-w-screen-xl px-4 2xl:px-0'>
-          <div class='mb-4 flex items-center justify-between gap-4 md:mb-8'>
-            <h2 class='text-xl font-semibold text-gray-800  sm:text-2xl'>Shop by category</h2>
+      <section className='bg-gray-50 py-8 antialiased  md:py-16'>
+        <div className='mx-auto max-w-screen-xl px-4 2xl:px-0'>
+          <div className='mb-4 flex items-center justify-between gap-4 md:mb-8'>
+            <h2 className='text-xl font-semibold text-gray-800  sm:text-2xl'>Shop by category</h2>
 
-            <a href='#' title='' class='flex items-center text-base font-medium text-primary-700 hover:underline '>
+            <Link href='#' title='' className='flex items-center text-base font-medium text-primary-700 hover:underline '>
               See more categories
-              <svg class='ms-1 h-5 w-5' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'>
-                <path stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 12H5m14 0-4 4m4-4-4-4' />
+              <svg className='ms-1 h-5 w-5' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'>
+                <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 12H5m14 0-4 4m4-4-4-4' />
               </svg>
-            </a>
+            </Link>
           </div>
 
-          <div class='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-            {bookGenres.map((book) => {
+          <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+            {bookGenres.map((book,i) => {
               return (
-                <a href='#' class='flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2 hover:bg-gray-50   '>
-                  <svg class='me-2 h-4 w-4 shrink-0 text-gray-800 ' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'>
-                    <path stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 15v5m-3 0h6M4 11h16M5 15h14a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1Z'></path>
+                <Link href='#' key={i} className='flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2 hover:bg-gray-50   '>
+                  <svg className='me-2 h-4 w-4 shrink-0 text-gray-800 ' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'>
+                    <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M12 15v5m-3 0h6M4 11h16M5 15h14a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1Z'></path>
                   </svg>
-                  <span class='text-sm font-medium text-gray-800 '>{book}</span>
-                </a>
+                  <span className='text-sm font-medium text-gray-800 '>{book}</span>
+                </Link>
               );
             })}
           </div>
@@ -276,10 +282,10 @@ function Home() {
       <section className='bg-white  px-4 py-8 antialiased  md:py-16'>
         <div className='mx-auto grid max-w-screen-xl rounded-lg bg-gray-50 p-4  md:p-8 lg:grid-cols-12 lg:gap-8 lg:p-16 xl:gap-16'>
           <div className='lg:col-span-5 lg:mt-0'>
-            <a href='#'>
+            <Link href='#'>
               <img className='mb-4 h-full w-full md:h-full md:w-full rounded-md' src={ReductionImage} alt='peripherals' />
               {/* <img className='mb-4 hidden  md:h-full' src='https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-components-dark.svg' alt='peripherals' /> */}
-            </a>
+            </Link>
           </div>
           <div className='me-auto place-self-center py-4 lg:col-span-7'>
             <h1 className='mb-3 text-2xl font-bold leading-tight tracking-tight text-gray-800  md:text-4xl'>
@@ -293,9 +299,9 @@ function Home() {
             <p className='mb-6 text-gray-500 '>Inscrivez-vous à notre newsletter pour recevoir un bon de réduction !</p>
             <br />
 
-            <a href='#' className='inline-flex items-center justify-center rounded-lg bg-primary-700 px-5 py-3 text-center text-base font-medium text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 '>
+            <Link href='#' className='inline-flex items-center justify-center rounded-lg bg-primary-700 px-5 py-3 text-center text-base font-medium text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 '>
               {' Précommandez '}
-            </a>
+            </Link>
           </div>
         </div>
       </section>
