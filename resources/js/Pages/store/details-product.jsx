@@ -1,12 +1,12 @@
 import React from 'react';
-import App from '@/Layout/store/app';
+import StoreLayout from '@/Layouts/StoreLayout';
 import books from '@/TempData/books.json';
 import BookSlider from '@/components/book-slider';
 import {Link} from '@inertiajs/react';
 
 function DetailsProduct() {
   return (
-    <App>
+    <StoreLayout>
       <div className='max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8'>
         <section className='py-8 bg-white md:py-16 antialiased'>
           <div className='max-w-screen-xl px-4 mx-auto 2xl:px-0'>
@@ -293,7 +293,7 @@ function DetailsProduct() {
 
         <BookSlider title='Meilleures Ventes' books={books.bestSellers} />
       </div>
-    </App>
+    </StoreLayout>
   );
 }
 

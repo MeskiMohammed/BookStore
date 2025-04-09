@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
 
-import App from '@/Layout/store/app.jsx';
-import BookSlider from '@/components/book-slider.jsx';
+import StoreLayout from '@/Layouts/StoreLayout';
+import BookSlider from '@/components/book-slider';
 
 import books from '../../TempData/books.json';
 import HeroImage from '../../../images/HeroImage.jpg';
@@ -13,7 +13,7 @@ function Home() {
   const bookGenres = ['Fantasy', 'Science Fiction', 'Mystery', 'Romance', 'Horror', 'Thriller', 'Historical Fiction', 'Nonfiction'];
 
   return (
-    <App>
+    <StoreLayout>
       {/* Hero */}
       <div className='max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8'>
         {/* Grid */}
@@ -305,7 +305,7 @@ function Home() {
           </div>
         </div>
       </section>
-    </App>
+    </StoreLayout>
   );
 }
 

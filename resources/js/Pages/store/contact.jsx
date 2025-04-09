@@ -1,10 +1,10 @@
 import React from 'react';
 import BooksBG from '@/../images/BooksBG.jpg';
-import App from '@/Layout/store/app';
+import StoreLayout from '@/Layouts/StoreLayout';
 
 function Contact() {
   return (
-    <App>
+    <StoreLayout>
       {/* Contact */}
       <section className='max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8'>
         {/* Breadcrumb */}
@@ -144,7 +144,7 @@ function Contact() {
         </div>
       </section>
       {/* End Contact */}
-    </App>
+    </StoreLayout>
   );
 }
 

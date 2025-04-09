@@ -1,4 +1,4 @@
-import StoreLayout from '@/Layout/store/app';
+import StoreLayout from '@/Layouts/StoreLayout';
 import CartPage from '@/components/store/cart-page';
 
 export default function App(props) {

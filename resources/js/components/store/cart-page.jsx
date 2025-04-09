@@ -6,7 +6,7 @@ import { useCart } from '@/components/store/cart-context';
 export default function CartPage() {
   const { cartItems, updateCartItemQuantity, removeFromCart, getCartTotal } = useCart();
 
-  if (cartItems.length === 0) {
+  if (!cartItems.length === 0) {
     return (
       <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16'>
         <div className='text-center'>
@@ -87,7 +87,7 @@ export default function CartPage() {
           <div className='mt-6 flex justify-center text-center text-sm text-gray-500'>
             <p>
               or{' '}
-              <Link href='/products' className='font-medium text-blue-600 hover:text-blue-500'>
+              <Link href='/catalogue' className='font-medium text-blue-600 hover:text-blue-500'>
                 Continue Shopping
                 <span aria-hidden='true'> &rarr;</span>
               </Link>

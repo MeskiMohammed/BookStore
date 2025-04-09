@@ -1,11 +1,11 @@
 import React from 'react';
-import App from '@/Layout/store/app';
+import StoreLayout from '@/Layouts/StoreLayout';
 import BooksBG from '@/../images/BooksBG.jpg';
 import books from '@/TempData/books.json';
 
 function Catalogue() {
   return (
-    <App>
+    <StoreLayout>
       <section className='max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8'>
           {/* Breadcrumb */}
           <div className='h-80 rounded text-center flex items-center justify-center' style={{ backgroundImage: `url(${BooksBG})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
@@ -261,7 +261,7 @@ function Catalogue() {
 
       </section>
 
-    </App>
+    </StoreLayout>
   );
 }
 
