@@ -47,11 +47,11 @@ export default function PurchaseHistory() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold">Purchase History</h2>
+      <h2 className="text-xl font-semibold">Historique des achats</h2>
 
       {mockPurchases.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-gray-500">You haven't made any purchases yet.</p>
+          <p className="text-gray-500">Vous n'avez pas encore effectué d'achats.</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -84,7 +84,7 @@ export default function PurchaseHistory() {
 
               {expandedOrder === order.id && (
                 <div className="border-t border-gray-200 p-4 bg-gray-50">
-                  <h3 className="font-medium mb-2">Order Items</h3>
+                  <h3 className="font-medium mb-2">Commande articles.</h3>
                   <div className="space-y-2">
                     {order.items.map((item, index) => (
                       <div key={index} className="flex justify-between">

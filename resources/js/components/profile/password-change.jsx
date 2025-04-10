@@ -26,12 +26,12 @@ export default function PasswordChange() {
     setSuccess(false)
 
     if (formData.newPassword.length < 8) {
-      setError("New password must be at least 8 characters long")
+      setError("Le nouveau mot de passe doit comporter au moins 8 caractères")
       return
     }
 
     if (formData.newPassword !== formData.confirmPassword) {
-      setError("New passwords do not match")
+      setError("Les nouveaux mots de passe ne correspondent pas")
       return
     }
 
@@ -47,11 +47,11 @@ export default function PasswordChange() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold">Change Password</h2>
+      <h2 className="text-xl font-semibold">Changer le mot de passe</h2>
 
       {success && (
         <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md">
-          Your password has been successfully updated.
+          Votre mot de passe a été mis à jour avec succès.
         </div>
       )}
 
@@ -60,7 +60,7 @@ export default function PasswordChange() {
       <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
         <div>
           <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-1">
-            Current Password
+          Mot de passe actuel
           </label>
           <input
             type="password"
@@ -75,7 +75,7 @@ export default function PasswordChange() {
 
         <div>
           <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-1">
-            New Password
+          Nouveau mot de passe
           </label>
           <input
             type="password"
@@ -86,12 +86,12 @@ export default function PasswordChange() {
             className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             required
           />
-          <p className="text-xs text-gray-500 mt-1">Password must be at least 8 characters long.</p>
+          <p className="text-xs text-gray-500 mt-1">Le mot de passe doit comporter au moins 8 caractères.</p>
         </div>
 
         <div>
           <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-            Confirm New Password
+          Confirmer le nouveau mot de passe
           </label>
           <input
             type="password"
@@ -105,7 +105,7 @@ export default function PasswordChange() {
         </div>
 
         <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
-          Update Password
+            Mettre à jour le mot de passe
         </button>
       </form>
     </div>

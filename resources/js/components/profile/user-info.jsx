@@ -25,13 +25,13 @@ export default function UserInfo() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Personal Information</h2>
+        <h2 className="text-xl font-semibold">Informations personnelles</h2>
         {!isEditing && (
           <button
             onClick={() => setIsEditing(true)}
             className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-md transition"
           >
-            Edit Information
+           Modifier les informations
           </button>
         )}
       </div>
@@ -41,7 +41,7 @@ export default function UserInfo() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name
+              Nom et prénom
               </label>
               <input
                 type="text"
@@ -55,7 +55,7 @@ export default function UserInfo() {
             </div>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address
+              Adresse email
               </label>
               <input
                 type="email"
@@ -69,7 +69,7 @@ export default function UserInfo() {
             </div>
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                Phone Number
+              Numéro de téléphone
               </label>
               <input
                 type="tel"
@@ -82,7 +82,7 @@ export default function UserInfo() {
             </div>
             <div>
               <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
-                Address
+              Adresse
               </label>
               <input
                 type="text"
@@ -96,7 +96,7 @@ export default function UserInfo() {
           </div>
           <div className="flex space-x-3 mt-6">
             <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
-              Save Changes
+                    Enregistrer les modifications
             </button>
             <button
               type="button"
@@ -106,7 +106,7 @@ export default function UserInfo() {
               }}
               className="px-4 py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 transition"
             >
-              Cancel
+              Annuler
             </button>
           </div>
         </form>
@@ -114,19 +114,19 @@ export default function UserInfo() {
         <div className="bg-gray-50 p-6 rounded-lg">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <p className="text-sm text-gray-500">Full Name</p>
+              <p className="text-sm text-gray-500">Nom et prénom</p>
               <p className="font-medium">{userData.name}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">Email Address</p>
+              <p className="text-sm text-gray-500">Adresse email</p>
               <p className="font-medium">{userData.email}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">Phone Number</p>
+              <p className="text-sm text-gray-500">Numéro de téléphone</p>
               <p className="font-medium">{userData.phone}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">Address</p>
+              <p className="text-sm text-gray-500">Adresse</p>
               <p className="font-medium">{userData.address}</p>
             </div>
           </div>

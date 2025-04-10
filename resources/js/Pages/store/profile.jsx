@@ -22,13 +22,13 @@ function profile() {
             {/* Tabs */}
             <div className='flex border-b'>
               <button className={`px-6 py-3 text-sm font-medium ${activeTab === 'info' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('info')}>
-                Personal Information
+              Informations personnelles
               </button>
               <button className={`px-6 py-3 text-sm font-medium ${activeTab === 'password' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('password')}>
-                Change Password
+              Changer le mot de passe
               </button>
               <button className={`px-6 py-3 text-sm font-medium ${activeTab === 'history' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`} onClick={() => setActiveTab('history')}>
-                Purchase History
+              Historique des achats
               </button>
             </div>
 
