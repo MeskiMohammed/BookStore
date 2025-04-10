@@ -13,6 +13,7 @@ Route::get('/catalogue', fn () => inertia('store/catalogue'));
 Route::get('/details-product', fn () => inertia('store/details-product'));
 Route::get('/cart', fn () => inertia('store/cart'));
 Route::get('/checkout', fn () => inertia('store/checkout'));
+Route::get('/profile', fn () => inertia('store/profile'));
 
 Route::get('/login', fn () => inertia('login'));
 Route::get('/register', fn () => inertia('register'));
