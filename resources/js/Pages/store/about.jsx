@@ -10,7 +10,7 @@ export default function App() {
       <main className='max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8'>
         {/* Breadcrumb */}
         <div className='h-80 rounded text-center flex items-center justify-center' style={{ backgroundImage: `url(${BooksBG})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-          <h1 className='text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-6xl'>Contact</h1>
+          <h1 className='text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-6xl'>À propos</h1>
         </div>
         {/* End Breadcrumb */}
         <section className='py-14 lg:py-24 relative'>
