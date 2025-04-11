@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\LivreController;
+use App\Models\Livre;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => inertia('store/home'));
@@ -25,8 +27,10 @@ Route::prefix('admin')->group(function(){
     Route::get('reviews', fn () => inertia('admin/reviews'));
     Route::get('orders', fn () => inertia('admin/orders'));
     Route::get('order-details', fn () => inertia('admin/order-details'));
-    Route::get('books', fn () => inertia('admin/books'));
+    Route::get('books', fn () => inertia('admin/books',['initialBooks'=>Livre::all()]));
     Route::get('categories', fn () => inertia('admin/categories'));
+
+    Route::resource('books',LivreController::class)->except('index');
 });
 
 

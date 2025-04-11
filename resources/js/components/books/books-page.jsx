@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import {router} from '@inertiajs/react';
 import { DataTableToolbar, DeleteConfirmationDialog } from "@/components/ui-components"
 import { BookDialog } from "@/components/books/book-dialog"
 import { BookDetailsDialog } from "@/components/books/book-details-dialog"
@@ -12,7 +13,7 @@ const initialCategories = [
   { id: 3, nom: "Science Fiction" },
 ]
 
-const initialBooks = [
+const iinitialBooks = [
   {
     id: 1,
     libelle: "The Great Gatsby",
@@ -57,7 +58,9 @@ const initialBooks = [
   },
 ]
 
-export function BooksPage() {
+export function BooksPage({initialBooks}) {
+    console.log(initialBooks);
+
   const [books, setBooks] = useState(initialBooks)
   const [filteredBooks, setFilteredBooks] = useState(books)
   const [categories] = useState(initialCategories)
@@ -87,13 +90,15 @@ export function BooksPage() {
   }
 
   const handleEdit = (book) => {
-    setCurrentBook(book)
-    setIsEditDialogOpen(true)
+    /*setCurrentBook(book)
+      setIsEditDialogOpen(true)*/
+    router.delete('/admin/books',book.id)
   }
 
   const handleDelete = (book) => {
-    setCurrentBook(book)
-    setIsDeleteDialogOpen(true)
+    /*setCurrentBook(book)
+      setIsDeleteDialogOpen(true)*/
+    router.delete(`/admin/books/${book.id}`)
   }
 
   const handleViewDetails = (book) => {

@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateLivresTable extends Migration
 {
-    
+
     public function up()
     {
         Schema::create('livres', function (Blueprint $table) {
             $table->id();
             $table->string('libelle');
-            $table->string('description');
+            $table->text('description');
             $table->string('auteur');
             $table->string('isbn')->unique();
             $table->double('prix');

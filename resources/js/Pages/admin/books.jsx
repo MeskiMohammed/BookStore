@@ -1,10 +1,10 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { BooksPage } from '@/components/books/books-page';
 
-export default function App(props) {
+export default function App({ initialBooks }) {
   return (
-      <AdminLayout>
-        <BooksPage />
-      </AdminLayout>
+    <AdminLayout>
+      <BooksPage initialBooks={initialBooks} />
+    </AdminLayout>
   );
 }

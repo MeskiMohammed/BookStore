@@ -6,16 +6,16 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateAvisTable extends Migration
 {
-   
+
     public function up()
     {
 
         Schema::create('avis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('livre-id')->constrained('livres')->onDelete('cascade');
+            $table->foreignId('livre_id')->constrained('livres')->onDelete('cascade');
             $table->integer('note');
-            $table->text('commantaire');
+            $table->text('commentaire');
             $table->timestamps();
         });
 
