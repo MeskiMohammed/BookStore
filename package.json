@@ -29,6 +29,7 @@
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "react-perfect-scrollbar": "^1.5.8",
-        "swiper": "^11.2.6"
+        "swiper": "^11.2.6",
+        "ziggy-js": "^2.5.2"
     }
 }

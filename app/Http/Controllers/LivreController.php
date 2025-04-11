@@ -12,7 +12,7 @@ class LivreController extends Controller
      */
     public function index()
     {
-        //
+        return inertia('admin/books',['initialBooks'=>Livre::all()]);
     }
 
     /**
@@ -61,6 +61,6 @@ class LivreController extends Controller
     public function destroy(string $id)
     {
         Livre::find($id)->delete();
-        to_route('/admin/books');
+        to_route('books.index');
     }
 }

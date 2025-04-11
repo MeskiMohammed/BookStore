@@ -3,6 +3,7 @@
 use App\Http\Controllers\LivreController;
 use App\Models\Livre;
 use Illuminate\Support\Facades\Route;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', fn () => inertia('store/home'));
 // Route::get('/products', fn () => inertia('store2/products'));
@@ -22,15 +23,16 @@ Route::get('/register', fn () => inertia('register'));
 
 
 Route::prefix('admin')->group(function(){
-    Route::get('/', fn () => inertia('admin/dashboard'));
-    Route::get('users', fn () => inertia('admin/users'));
-    Route::get('reviews', fn () => inertia('admin/reviews'));
-    Route::get('orders', fn () => inertia('admin/orders'));
-    Route::get('order-details', fn () => inertia('admin/order-details'));
-    Route::get('books', fn () => inertia('admin/books',['initialBooks'=>Livre::all()]));
-    Route::get('categories', fn () => inertia('admin/categories'));
+    Route::get('/', fn () => inertia('admin/dashboard'))->name('dashboard');
+    Route::get('users', fn () => inertia('admin/users'))->name('users.index');
+    Route::get('reviews', fn () => inertia('admin/reviews'))->name('reviews.index');
+    Route::get('orders', fn () => inertia('admin/orders'))->name('orders.index');
+    Route::get('order-details', fn () => inertia('admin/order-details'))->name('order-details.index');
+    // Route::get('books', fn () => inertia('admin/books',['initialBooks'=>Livre::all()]))->name('books.index');
+    Route::get('categories', fn () => inertia('admin/categories'))->name('categories.index');
 
-    Route::resource('books',LivreController::class)->except('index');
+    // Route::delete('books/{id}', [LivreController::class, 'destroy'])->name('books.destroy');
+    Route::resource('books',LivreController::class);
 });
 
 
