@@ -4,13 +4,13 @@ namespace Database\Seeders;
 
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
+use Database\Seeders\AvisTableSeeder;
 use Database\Seeders\CategoriesTableSeeder;
-use Database\Seeders\UsersTableSeeder;
-use Database\Seeders\LivresTableSeeder;
 use Database\Seeders\CommandesTableSeeder;
 use Database\Seeders\DetailsCommandesTableSeeder;
-use Database\Seeders\AvisTableSeeder;
+use Illuminate\Database\Seeder;
+use Database\Seeders\LivresTableSeeder;
+use Database\Seeders\UsersTableSeeder;
 
 class DatabaseSeeder extends Seeder
 {

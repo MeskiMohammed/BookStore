@@ -1,5 +1,7 @@
 <?php
+
 namespace Database\Seeders;
+
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -18,10 +20,10 @@ class UsersTableSeeder extends Seeder
                 'Password' => Hash::make('password123'),
             ],
             [
-                'Nom' => 'Ait Aali',
+                'Nom' => 'Ait Ali',
                 'Prenom' => 'Zakaria',
                 'Adresse' => '8 Avenue Victor Hugo, Lyon',
-                'Email' => 'zakarua.aitaali@example.com',
+                'Email' => 'zakarua.aitali@example.com',
                 'Password' => Hash::make('monsecret'),
             ],
             [
