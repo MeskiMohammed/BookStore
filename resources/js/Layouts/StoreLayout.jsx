@@ -26,10 +26,11 @@ function Header() {
             <div className='flex flex-col lg:flex-row lg:justify-center lg:items-center gap-y-4 lg:gap-y-0 lg:gap-x-7'>
               <div>
                 <Link
-                   className={`relative inline-block transition-colors duration-200 before:absolute before:-bottom-1 before:left-0 before:right-0 before:h-1 before:rounded-full before:transition-transform before:duration-300 before:origin-center before:bg-blue-500
+                  className={`relative inline-block transition-colors duration-200 before:absolute before:-bottom-1 before:left-0 before:right-0 before:h-1 before:rounded-full before:transition-transform before:duration-300 before:origin-center before:bg-blue-500
                     ${url === '/' ? 'text-blue-950 before:scale-x-100' : 'text-black hover:text-gray-600 before:scale-x-0 hover:before:scale-x-100'}`}
                   href='/'
-                  aria-current='page'>
+                  aria-current='page'
+                >
                   Accueil
                 </Link>
               </div>
@@ -37,24 +38,37 @@ function Header() {
                 <Link
                   className={`relative inline-block transition-colors duration-200 before:absolute before:-bottom-1 before:left-0 before:right-0 before:h-1 before:rounded-full before:transition-transform before:duration-300 before:origin-center before:bg-blue-500
                     ${url === '/catalogue' ? 'text-blue-950 before:scale-x-100' : 'text-black hover:text-gray-600 before:scale-x-0 hover:before:scale-x-100'}`}
-                  href='/catalogue'>
+                  href='/catalogue'
+                >
                   Catalogue
                 </Link>
               </div>
               <div>
                 <Link
-                   className={`relative inline-block transition-colors duration-200 before:absolute before:-bottom-1 before:left-0 before:right-0 before:h-1 before:rounded-full before:transition-transform before:duration-300 before:origin-center before:bg-blue-500
+                  className={`relative inline-block transition-colors duration-200 before:absolute before:-bottom-1 before:left-0 before:right-0 before:h-1 before:rounded-full before:transition-transform before:duration-300 before:origin-center before:bg-blue-500
                     ${url === '/propos' ? 'text-blue-950 before:scale-x-100' : 'text-black hover:text-gray-600 before:scale-x-0 hover:before:scale-x-100'}`}
-                  href='/propos'>
+                  href='/propos'
+                >
                   À propos
                 </Link>
               </div>
               <div>
                 <Link
-                   className={`relative inline-block transition-colors duration-200 before:absolute before:-bottom-1 before:left-0 before:right-0 before:h-1 before:rounded-full before:transition-transform before:duration-300 before:origin-center before:bg-blue-500
+                  className={`relative inline-block transition-colors duration-200 before:absolute before:-bottom-1 before:left-0 before:right-0 before:h-1 before:rounded-full before:transition-transform before:duration-300 before:origin-center before:bg-blue-500
                     ${url === '/contact' ? 'text-blue-950 before:scale-x-100' : 'text-black hover:text-gray-600 before:scale-x-0 hover:before:scale-x-100'}`}
-                  href='/contact'>
+                  href='/contact'
+                >
                   Contact
+                </Link>
+              </div>
+
+              <div>
+                <Link
+                  className={`relative inline-block transition-colors duration-200 before:absolute before:-bottom-1 before:left-0 before:right-0 before:h-1 before:rounded-full before:transition-transform before:duration-300 before:origin-center before:bg-blue-500
+                    ${url === '/contact' ? 'text-blue-950 before:scale-x-100' : 'text-black hover:text-gray-600 before:scale-x-0 hover:before:scale-x-100'}`}
+                  href={route('dashboard')}
+                >
+                  Admin Panel
                 </Link>
               </div>
             </div>
