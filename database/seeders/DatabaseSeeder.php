@@ -4,7 +4,13 @@ namespace Database\Seeders;
 
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use AvisTableSeeder;
+use CategoriesTableSeeder;
+use CommandesTableSeeder;
+use DetailsCommandesTableSeeder;
 use Illuminate\Database\Seeder;
+use LivresTableSeeder;
+use UsersTableSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +19,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            CategoriesTableSeeder::class,
+            UsersTableSeeder::class,
+            LivresTableSeeder::class,
+            CommandesTableSeeder::class,
+            DetailsCommandesTableSeeder::class,
+            AvisTableSeeder::class,
         ]);
     }
 }
