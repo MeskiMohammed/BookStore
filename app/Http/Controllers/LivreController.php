@@ -28,7 +28,38 @@ class LivreController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'libelle' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'auteur' => 'required|string|max:255',
+            'isbn' => [
+                'required',
+                'string',
+                'max:20',
+            ],
+            'prix' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'categorie_id' => 'required',
+            'editeur' => 'required|string|max:255',
+            'date_publication' => 'required|date',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'actif' => 'required|boolean',
+        ]);
+    
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+    
+        $data = $validator->validated();
+    
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('livres', 'public');
+            $data['image'] = $path;
+        }
+    
+        Livre::create($data);
+    
+        return redirect()->route('livres.index')->with('success', 'Livre créé !');
     }
 
     /**
