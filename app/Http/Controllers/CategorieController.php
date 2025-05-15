@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categorie;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class CategorieController extends Controller
 {
@@ -11,15 +13,11 @@ class CategorieController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $categories = Categorie::withCount('livres')->get();
+        
+        return Inertia::render('admin/categories', [
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -27,38 +25,61 @@ class CategorieController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nom' => 'required|string|max:255|unique:categories,nom',
+            'description' => 'nullable|string'
+        ]);
+
+        Categorie::create([
+            'nom' => $request->nom,
+            'description' => $request->description
+        ]);
+        
+        return redirect()->back()->with('success', 'Catégorie créée avec succès.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Categorie $category)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        $category->load('livres');
+        
+        return Inertia::render('admin/categories/show', [
+            'categorie' => $category
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Categorie $category)
     {
-        //
+        $request->validate([
+            'nom' => 'required|string|max:255|unique:categories,nom,' . $category->id,
+            'description' => 'nullable|string'
+        ]);
+
+        $category->update([
+            'nom' => $request->nom,
+            'description' => $request->description
+        ]);
+        
+        return redirect()->back()->with('success', 'Catégorie mise à jour avec succès.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Categorie $category)
     {
-        //
+        // Check if category has books
+        if ($category->livres()->count() > 0) {
+            return redirect()->back()->with('error', 'Impossible de supprimer cette catégorie car elle contient des livres.');
+        }
+        
+        $category->delete();
+        
+        return redirect()->back()->with('success', 'Catégorie supprimée avec succès.');
     }
 }

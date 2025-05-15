@@ -1,7 +1,18 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LivreController;
 use Illuminate\Support\Facades\Route;
+
+
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
+
 
 Route::get('/', fn () => inertia('store/home'));
 Route::get('/propos', fn () => inertia('store/about'));
@@ -12,11 +23,11 @@ Route::get('/cart', fn () => inertia('store/cart'));
 Route::get('/checkout', fn () => inertia('store/checkout'));
 Route::get('/profile', fn () => inertia('store/profile'));
 
-Route::get('/login', fn () => inertia('login'));
-Route::get('/register', fn () => inertia('register'));
+// Route::get('/login', fn () => inertia('login'));
+// Route::get('/register', fn () => inertia('register'));
 
 
-Route::prefix('admin')->group(function(){
+Route::middleware('auth')->prefix('admin')->group(function(){
     Route::get('/', fn () => inertia('admin/dashboard'))->name('dashboard');
     Route::get('users', fn () => inertia('admin/users'))->name('users.index');
     Route::get('reviews', fn () => inertia('admin/reviews'))->name('reviews.index');
@@ -26,4 +37,3 @@ Route::prefix('admin')->group(function(){
 
     Route::resource('books',LivreController::class);
 });
-

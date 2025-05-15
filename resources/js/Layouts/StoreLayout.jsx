@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage,router } from '@inertiajs/react';
 import Logo from '@/../images/Logo.png';
 import { CartProvider } from '@/components/store/cart-context';
 
 function Header() {
   const { url } = usePage();
+  const { auth } = usePage().props;
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -29,8 +30,7 @@ function Header() {
                   className={`relative inline-block transition-colors duration-200 before:absolute before:-bottom-1 before:left-0 before:right-0 before:h-1 before:rounded-full before:transition-transform before:duration-300 before:origin-center before:bg-blue-500
                     ${url === '/' ? 'text-blue-950 before:scale-x-100' : 'text-black hover:text-gray-600 before:scale-x-0 hover:before:scale-x-100'}`}
                   href='/'
-                  aria-current='page'
-                >
+                  aria-current='page'>
                   Accueil
                 </Link>
               </div>
@@ -38,8 +38,7 @@ function Header() {
                 <Link
                   className={`relative inline-block transition-colors duration-200 before:absolute before:-bottom-1 before:left-0 before:right-0 before:h-1 before:rounded-full before:transition-transform before:duration-300 before:origin-center before:bg-blue-500
                     ${url === '/catalogue' ? 'text-blue-950 before:scale-x-100' : 'text-black hover:text-gray-600 before:scale-x-0 hover:before:scale-x-100'}`}
-                  href='/catalogue'
-                >
+                  href='/catalogue'>
                   Catalogue
                 </Link>
               </div>
@@ -47,8 +46,7 @@ function Header() {
                 <Link
                   className={`relative inline-block transition-colors duration-200 before:absolute before:-bottom-1 before:left-0 before:right-0 before:h-1 before:rounded-full before:transition-transform before:duration-300 before:origin-center before:bg-blue-500
                     ${url === '/propos' ? 'text-blue-950 before:scale-x-100' : 'text-black hover:text-gray-600 before:scale-x-0 hover:before:scale-x-100'}`}
-                  href='/propos'
-                >
+                  href='/propos'>
                   À propos
                 </Link>
               </div>
@@ -56,8 +54,7 @@ function Header() {
                 <Link
                   className={`relative inline-block transition-colors duration-200 before:absolute before:-bottom-1 before:left-0 before:right-0 before:h-1 before:rounded-full before:transition-transform before:duration-300 before:origin-center before:bg-blue-500
                     ${url === '/contact' ? 'text-blue-950 before:scale-x-100' : 'text-black hover:text-gray-600 before:scale-x-0 hover:before:scale-x-100'}`}
-                  href='/contact'
-                >
+                  href='/contact'>
                   Contact
                 </Link>
               </div>
@@ -65,9 +62,8 @@ function Header() {
               <div>
                 <Link
                   className={`relative inline-block transition-colors duration-200 before:absolute before:-bottom-1 before:left-0 before:right-0 before:h-1 before:rounded-full before:transition-transform before:duration-300 before:origin-center before:bg-blue-500
-                    ${url === '/contact' ? 'text-blue-950 before:scale-x-100' : 'text-black hover:text-gray-600 before:scale-x-0 hover:before:scale-x-100'}`}
-                  href={route('dashboard')}
-                >
+                    ${url === '/admin' ? 'text-blue-950 before:scale-x-100' : 'text-black hover:text-gray-600 before:scale-x-0 hover:before:scale-x-100'}`}
+                  href={route('dashboard')}>
                   Admin Panel
                 </Link>
               </div>
@@ -75,13 +71,24 @@ function Header() {
           </div>
           {/* Button Group */}
           <div className='flex items-center gap-x-1 lg:gap-x-2'>
-            <Link href='/register' className='hidden lg:inline-flex cursor-pointer py-2 px-3 items-center gap-x-2 text-sm font-medium text-nowrap rounded-xl bg-white border border-gray-200 text-black hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none '>
-              Inscrivez-vous
-            </Link>
-            <Link href='/login' className='hidden lg:inline-flex  cursor-pointer py-2 px-3 items-center gap-x-2 text-sm font-medium text-nowrap rounded-xl border border-transparent bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50 disabled:pointer-events-none '>
-              Login
-            </Link>
-
+            {!auth.user ? (
+              <>
+                <Link href='/register' className='hidden lg:inline-flex cursor-pointer py-2 px-3 items-center gap-x-2 text-sm font-medium text-nowrap rounded-xl bg-white border border-gray-200 text-black hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none '>
+                  Inscrivez-vous
+                </Link>
+                <Link href='/login' className='hidden lg:inline-flex  cursor-pointer py-2 px-3 items-center gap-x-2 text-sm font-medium text-nowrap rounded-xl border border-transparent bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50 disabled:pointer-events-none '>
+                  Login
+                </Link>
+              </>
+            ) : (
+              <span
+                onClick={() => {
+                  router.post('/logout');
+                }}
+                className='bloc cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-200'>
+                Sign out
+              </span>
+            )}
             {/* Mobile menu toggle */}
             <button type='button' className='lg:hidden size-10 flex justify-center items-center text-sm font-semibold rounded-xl border border-gray-200 text-black hover:bg-gray-100' onClick={toggleMenu} aria-expanded={isMenuOpen} aria-label='Toggle navigation'>
               {isMenuOpen ? (

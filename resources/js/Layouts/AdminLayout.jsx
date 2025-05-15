@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { route } from 'ziggy-js';
+import { router } from '@inertiajs/react';
 
 export default function AdminLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -73,9 +74,13 @@ export default function AdminLayout({ children }) {
                         </Link>
                       </li>
                       <li>
-                        <Link to='/signout' className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200'>
+                        <span
+                          onClick={() => {
+                            router.post('/logout');
+                          }}
+                          className='bloc cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-200'>
                           Sign out
-                        </Link>
+                        </span>
                       </li>
                     </ul>
                   </div>

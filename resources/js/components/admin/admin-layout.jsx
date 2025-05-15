@@ -13,7 +13,6 @@ export default function AdminLayout({ children }) {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-
   useEffect(() => {
     // Log the full URL when the component mounts or when the URL changes
     console.log('Inertia URL:', url);
@@ -24,6 +23,8 @@ export default function AdminLayout({ children }) {
       console.log('Current Pathname:', pathname);
     }
   }, [url]);
+
+
   return (
     <div className='min-h-screen bg-gray-50'>
       {/* Navbar */}
@@ -43,7 +44,7 @@ export default function AdminLayout({ children }) {
             </div>
             <div className='flex items-center'>
               <Link to='/' className='text-sm text-blue-600 hover:underline mr-4'>
-                View Storeeeeee
+                View Store
               </Link>
               <div className='flex items-center ml-3'>
                 <div>
