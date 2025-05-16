@@ -8,7 +8,7 @@ import { router } from '@inertiajs/react';
 export default function AdminLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [open, setOpen] = useState(false);
-  const { url } = usePage();
+  const { url, auth } = usePage().props;
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -59,8 +59,8 @@ export default function AdminLayout({ children }) {
                 {open && (
                   <div className='absolute right-0 top-full mt-2 w-48 z-50 bg-gray-50 border border-black divide-y divide-gray-100 rounded-lg shadow-sm'>
                     <div className='px-4 py-3'>
-                      <p className='text-sm text-gray-900'>Neil Sims</p>
-                      <p className='text-sm font-medium text-gray-900 truncate'>neil.sims@flowbite.com</p>
+                      <p className='text-sm text-gray-900'>{auth.user.prenom} {auth.user.nom}</p>
+                      <p className='text-sm font-medium text-gray-900 truncate'>{auth.user.email}</p>
                     </div>
                     <ul className='py-1'>
                       <li>

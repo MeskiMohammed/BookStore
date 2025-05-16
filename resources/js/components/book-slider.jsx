@@ -114,9 +114,7 @@ export default function BookSlider({ title, books }) {
           nextEl: nextRef.current,
         }}
         onInit={(swiper) => {
-          // @ts-ignore
           swiper.params.navigation.prevEl = prevRef.current;
-          // @ts-ignore
           swiper.params.navigation.nextEl = nextRef.current;
           swiper.navigation.init();
           swiper.navigation.update();
@@ -128,17 +126,43 @@ export default function BookSlider({ title, books }) {
             <div className='bg-white rounded-lg hover:shadow-lg transition-shadow h-full'>
               <div className=''>
                 <img
-                  src={book.coverImage}
-                  alt={book.title}
+                  src={book.image}
+                  alt={book.libelle}
                   className='w-full h-60 object-cover rounded mb-3'
                   onError={(e) => {
                     e.target.src = 'https://via.placeholder.com/350x500?text=No+Cover';
                   }}
                 />
               </div>
-              <h3 className='font-semibold text-gray-800 text-lg truncate'>{book.title}</h3>
-              <p className='text-gray-600'>{book.author}</p>
-              <p className='font-bold text-blue-600 mt-2'>{book.price}</p>
+              <div className="p-4">
+                <h3 className='font-semibold text-gray-800 text-lg truncate'>{book.libelle}</h3>
+                <p className='text-gray-600'>{book.auteur}</p>
+                <p className='text-sm text-gray-500'>{book.categorie}</p>
+                <div className="flex items-center mt-2">
+                  <div className="flex items-center">
+                    {[...Array(5)].map((_, i) => (
+                      <svg
+                        key={i}
+                        className={`w-4 h-4 ${
+                          i < Math.round(book.rating)
+                            ? 'text-yellow-300'
+                            : 'text-gray-300'
+                        }`}
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                      </svg>
+                    ))}
+                    <span className="ml-1 text-sm text-gray-500">
+                      {book.rating.toFixed(1)}
+                    </span>
+                  </div>
+                </div>
+                <p className='font-bold text-blue-600 mt-2'>{book.prix} €</p>
+              </div>
             </div>
           </SwiperSlide>
         ))}

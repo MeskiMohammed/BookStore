@@ -5,6 +5,7 @@ use App\Http\Controllers\LivreController;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\AvisController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -17,7 +18,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 
-Route::get('/', fn () => inertia('store/home'));
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/propos', fn () => inertia('store/about'));
 Route::get('/contact', fn () => inertia('store/contact'));
 Route::get('/catalogue', fn () => inertia('store/catalogue'));

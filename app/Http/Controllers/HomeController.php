@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Livre;
 use App\Models\Categorie;
+use App\Models\DetailsCommande;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,28 +16,120 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // Get featured books (newest releases)
-        $featuredBooks = Livre::with('categorie')
-            ->orderBy('date_publication', 'desc')
-            ->limit(6)
-            ->get();
-        
-        // Get popular books (most reviewed)
-        $popularBooks = Livre::withCount('avis')
-            ->orderBy('avis_count', 'desc')
-            ->limit(6)
-            ->get();
-        
-        // Get categories with book count
-        $categories = Categorie::withCount('livres')
-            ->orderBy('livres_count', 'desc')
-            ->limit(6)
-            ->get();
-        
+        // Get Best Sellers (based on order details)
+        $bestSellers = Livre::select(
+            'livres.id',
+            'livres.libelle',
+            'livres.description',
+            'livres.auteur',
+            'livres.prix',
+            'livres.image',
+            'livres.categorie_id',
+            DB::raw('COUNT(details_commandes.id) as total_orders')
+        )
+        ->leftJoin('details_commandes', 'livres.id', '=', 'details_commandes.livre_id')
+        ->groupBy(
+            'livres.id',
+            'livres.libelle',
+            'livres.description',
+            'livres.auteur',
+            'livres.prix',
+            'livres.image',
+            'livres.categorie_id'
+        )
+        ->orderBy('total_orders', 'desc')
+        ->with(['categorie', 'avis'])
+        ->take(10)
+        ->get()
+        ->map(function ($livre) {
+            return [
+                'id' => $livre->id,
+                'libelle' => $livre->libelle,
+                'description' => $livre->description,
+                'auteur' => $livre->auteur,
+                'prix' => $livre->prix,
+                'image' => $livre->image,
+                'categorie' => $livre->categorie->nom,
+                'rating' => $livre->avis->avg('note') ?? 0
+            ];
+        });
+
+        // Get Popular Books (highest rated)
+        $popular = Livre::select(
+            'livres.id',
+            'livres.libelle',
+            'livres.description',
+            'livres.auteur',
+            'livres.prix',
+            'livres.image',
+            'livres.categorie_id',
+            DB::raw('AVG(avis.note) as average_rating')
+        )
+        ->leftJoin('avis', 'livres.id', '=', 'avis.livre_id')
+        ->groupBy(
+            'livres.id',
+            'livres.libelle',
+            'livres.description',
+            'livres.auteur',
+            'livres.prix',
+            'livres.image',
+            'livres.categorie_id'
+        )
+        ->having('average_rating', '>', 0)
+        ->orderBy('average_rating', 'desc')
+        ->with(['categorie', 'avis'])
+        ->take(10)
+        ->get()
+        ->map(function ($livre) {
+            return [
+                'id' => $livre->id,
+                'libelle' => $livre->libelle,
+                'description' => $livre->description,
+                'auteur' => $livre->auteur,
+                'prix' => $livre->prix,
+                'image' => $livre->image,
+                'categorie' => $livre->categorie->nom,
+                'rating' => $livre->average_rating
+            ];
+        });
+
+        // Get Science Fiction Books
+        $scienceFiction = Livre::select(
+            'livres.id',
+            'livres.libelle',
+            'livres.description',
+            'livres.auteur',
+            'livres.prix',
+            'livres.image',
+            'livres.categorie_id'
+        )
+        ->whereHas('categorie', function($query) {
+            $query->where('nom', 'like', '%science%fiction%');
+        })
+        ->with(['categorie', 'avis'])
+        ->take(10)
+        ->get()
+        ->map(function ($livre) {
+            return [
+                'id' => $livre->id,
+                'libelle' => $livre->libelle,
+                'description' => $livre->description,
+                'auteur' => $livre->auteur,
+                'prix' => $livre->prix,
+                'image' => $livre->image,
+                'categorie' => $livre->categorie->nom,
+                'rating' => $livre->avis->avg('note') ?? 0
+            ];
+        });
+
+        // Get all categories for the "Shop by category" section
+        $bookGenres = Categorie::pluck('nom')->toArray();
+
         return Inertia::render('store/home', [
-            'featuredBooks' => $featuredBooks,
-            'popularBooks' => $popularBooks,
-            'categories' => $categories
+            'bestSellers' => $bestSellers,
+            'popular' => $popular,
+            'scienceFiction' => $scienceFiction,
+            'bookGenres' => $bookGenres
         ]);
     }
 

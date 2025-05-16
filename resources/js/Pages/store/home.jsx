@@ -4,14 +4,12 @@ import { Link } from '@inertiajs/react';
 import StoreLayout from '@/Layouts/StoreLayout';
 import BookSlider from '@/components/book-slider';
 
-import books from '../../TempData/books.json';
 import HeroImage from '../../../images/HeroImage.jpg';
 import FreaturesImage from '../../../images/FreaturesImage.png';
 import ReductionImage from '../../../images/ReductionImage.png';
 import NiDiagramSuccessor from '../../../icons/NiDiagramSuccessor.png';
-function Home() {
-  const bookGenres = ['Fantasy', 'Science Fiction', 'Mystery', 'Romance', 'Horror', 'Thriller', 'Historical Fiction', 'Nonfiction'];
 
+function Home({ bestSellers, popular, scienceFiction, bookGenres }) {
   return (
     <StoreLayout>
       {/* Hero */}
@@ -145,8 +143,9 @@ function Home() {
       </div>
       {/* End Icon Blocks */}
 
-      <BookSlider title='Meilleures Ventes' books={books.bestSellers} />
-      <BookSlider title='Sélection du Libraire' books={books.popular} />
+      <BookSlider title='Meilleures Ventes' books={bestSellers} />
+      <BookSlider title='Les Plus Populaires' books={popular} />
+      <BookSlider title='Science Fiction' books={scienceFiction} />
 
       {/* Features */}
       <div className='max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto'>
@@ -249,22 +248,10 @@ function Home() {
       </div>
       {/* End Features */}
 
-      <BookSlider title='Our Best Fiction Books' books={books.scienceFiction} />
+      {/* Shop by Genre */}
 
-      <section className='bg-gray-50 py-8 antialiased  md:py-16'>
-        <div className='mx-auto max-w-screen-xl px-4 2xl:px-0'>
-          <div className='mb-4 flex items-center justify-between gap-4 md:mb-8'>
-            <h2 className='text-xl font-semibold text-gray-800  sm:text-2xl'>Shop by category</h2>
-
-            <Link href='#' title='' className='flex items-center text-base font-medium text-primary-700 hover:underline '>
-              See more categories
-              <svg className='ms-1 h-5 w-5' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'>
-                <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 12H5m14 0-4 4m4-4-4-4' />
-              </svg>
-            </Link>
-          </div>
-
-          <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+      <div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 mx-auto">
+      <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
             {bookGenres.map((book,i) => {
               return (
                 <Link href='#' key={i} className='flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2 hover:bg-gray-50   '>
@@ -276,9 +263,7 @@ function Home() {
               );
             })}
           </div>
-        </div>
-      </section>
-
+            </div>
       <section className='bg-white  px-4 py-8 antialiased  md:py-16'>
         <div className='mx-auto grid max-w-screen-xl rounded-lg bg-gray-50 p-4  md:p-8 lg:grid-cols-12 lg:gap-8 lg:p-16 xl:gap-16'>
           <div className='lg:col-span-5 lg:mt-0'>
