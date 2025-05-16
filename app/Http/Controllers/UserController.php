@@ -50,7 +50,7 @@ class UserController extends Controller
             'adresse' => $request->adresse,
             'admin' => false,
         ]);
-
+        
         session()->flash('newUser', $user);
         return redirect()->route('users.index')
             ->with('success', 'User created successfully.');
@@ -94,7 +94,7 @@ class UserController extends Controller
         }
 
         $user->update($data);
-
+        
         session()->flash('updatedUser', $user);
         return redirect()->route('users.index')
             ->with('success', 'User updated successfully.');

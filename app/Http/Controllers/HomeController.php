@@ -11,6 +11,18 @@ use Inertia\Inertia;
 
 class HomeController extends Controller
 {
+    private function getPrimaryAuthor($authors)
+    {
+        if (empty($authors)) {
+            return 'Auteur inconnu';
+        }
+        // Get first author before any comma or 'and'
+        $primaryAuthor = explode(',', $authors)[0];
+        $primaryAuthor = explode(' and ', $primaryAuthor)[0];
+        $primaryAuthor = explode(' & ', $primaryAuthor)[0];
+        return trim($primaryAuthor);
+    }
+
     /**
      * Display the home page.
      */
@@ -46,14 +58,14 @@ class HomeController extends Controller
                 'id' => $livre->id,
                 'libelle' => $livre->libelle,
                 'description' => $livre->description,
-                'auteur' => $livre->auteur,
+                'auteur' => $this->getPrimaryAuthor($livre->auteur),
                 'prix' => $livre->prix,
                 'image' => $livre->image,
                 'categorie' => $livre->categorie->nom,
                 'rating' => $livre->avis->avg('note') ?? 0
             ];
         });
-
+        
         // Get Popular Books (highest rated)
         $popular = Livre::select(
             'livres.id',
@@ -85,7 +97,7 @@ class HomeController extends Controller
                 'id' => $livre->id,
                 'libelle' => $livre->libelle,
                 'description' => $livre->description,
-                'auteur' => $livre->auteur,
+                'auteur' => $this->getPrimaryAuthor($livre->auteur),
                 'prix' => $livre->prix,
                 'image' => $livre->image,
                 'categorie' => $livre->categorie->nom,
@@ -114,7 +126,7 @@ class HomeController extends Controller
                 'id' => $livre->id,
                 'libelle' => $livre->libelle,
                 'description' => $livre->description,
-                'auteur' => $livre->auteur,
+                'auteur' => $this->getPrimaryAuthor($livre->auteur),
                 'prix' => $livre->prix,
                 'image' => $livre->image,
                 'categorie' => $livre->categorie->nom,
@@ -124,7 +136,7 @@ class HomeController extends Controller
 
         // Get all categories for the "Shop by category" section
         $bookGenres = Categorie::pluck('nom')->toArray();
-
+        
         return Inertia::render('store/home', [
             'bestSellers' => $bestSellers,
             'popular' => $popular,

@@ -183,7 +183,7 @@ function Footer() {
   );
 }
 
-export default function App({ children }) {
+export default function StoreLayout({ children }) {
   return (
     <CartProvider>
       <Header />

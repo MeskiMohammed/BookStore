@@ -77,7 +77,7 @@ export function UsersPage({ initialUsers }) {
     router.delete(`/admin/users/${currentUser.id}`, {
       preserveScroll: true,
       onSuccess: () => {
-        setIsDeleteDialogOpen(false)
+      setIsDeleteDialogOpen(false)
       },
     })
   }
@@ -88,7 +88,7 @@ export function UsersPage({ initialUsers }) {
       router.put(`/admin/users/${currentUser.id}`, formData, {
         preserveScroll: true,
         onSuccess: () => {
-          setIsEditDialogOpen(false)
+      setIsEditDialogOpen(false)
         },
       })
     } else {
@@ -96,7 +96,7 @@ export function UsersPage({ initialUsers }) {
       router.post('/admin/users', formData, {
         preserveScroll: true,
         onSuccess: () => {
-          setIsAddDialogOpen(false)
+      setIsAddDialogOpen(false)
         },
       })
     }

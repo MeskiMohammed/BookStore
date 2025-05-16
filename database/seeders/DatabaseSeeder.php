@@ -11,12 +11,16 @@ use Database\Seeders\DetailsCommandesTableSeeder;
 use Illuminate\Database\Seeder;
 use Database\Seeders\LivresTableSeeder;
 use Database\Seeders\UsersTableSeeder;
+use Database\Seeders\CategorieSeeder;
+use Database\Seeders\LivreSeeder;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
         $this->call([
+            CategorieSeeder::class,
+            LivreSeeder::class,
             CategoriesTableSeeder::class,
             UsersTableSeeder::class,
             LivresTableSeeder::class,

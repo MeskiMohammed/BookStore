@@ -22,10 +22,12 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/propos', fn () => inertia('store/about'));
 Route::get('/contact', fn () => inertia('store/contact'));
 Route::get('/catalogue', fn () => inertia('store/catalogue'));
-Route::get('/details-product', fn () => inertia('store/details-product'));
 Route::get('/cart', fn () => inertia('store/cart'));
 Route::get('/checkout', fn () => inertia('store/checkout'));
 Route::get('/profile', fn () => inertia('store/profile'));
+
+// Book details route
+Route::get('/books/{book}', [LivreController::class, 'show'])->name('books.show');
 
 // Route::get('/login', fn () => inertia('login'));
 // Route::get('/register', fn () => inertia('register'));

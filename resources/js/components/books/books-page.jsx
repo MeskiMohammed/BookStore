@@ -99,7 +99,7 @@ export function BooksPage({ initialBooks, categories }) {
         preserveScroll: true,
         onSuccess: (response) => {
           console.log('Book updated successfully:', response);
-          setIsEditDialogOpen(false);
+      setIsEditDialogOpen(false);
         },
         onError: (errors) => {
           console.error('Error updating book:', errors);
@@ -112,7 +112,7 @@ export function BooksPage({ initialBooks, categories }) {
         preserveScroll: true,
         onSuccess: (response) => {
           console.log('Book added successfully:', response);
-          setIsAddDialogOpen(false);
+      setIsAddDialogOpen(false);
         },
         onError: (errors) => {
           console.error('Error adding book:', errors);

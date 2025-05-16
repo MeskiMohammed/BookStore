@@ -87,8 +87,8 @@ export function OrdersPage({ initialOrders, users }) {
       const response = await fetch(`/admin/orders/${order.id}`)
       const data = await response.json()
       setOrderDetails(data)
-      setCurrentOrder(order)
-      setIsDetailsDialogOpen(true)
+    setCurrentOrder(order)
+    setIsDetailsDialogOpen(true)
     } catch (error) {
       console.error("Error fetching order details:", error)
     }
@@ -100,7 +100,7 @@ export function OrdersPage({ initialOrders, users }) {
     router.delete(`/admin/orders/${currentOrder.id}`, {
       preserveScroll: true,
       onSuccess: () => {
-        setIsDeleteDialogOpen(false)
+      setIsDeleteDialogOpen(false)
       },
     })
   }
@@ -111,7 +111,7 @@ export function OrdersPage({ initialOrders, users }) {
       router.put(`/admin/orders/${currentOrder.id}`, formData, {
         preserveScroll: true,
         onSuccess: () => {
-          setIsEditDialogOpen(false)
+      setIsEditDialogOpen(false)
         },
       })
     } else {
@@ -119,7 +119,7 @@ export function OrdersPage({ initialOrders, users }) {
       router.post("/admin/orders", formData, {
         preserveScroll: true,
         onSuccess: () => {
-          setIsAddDialogOpen(false)
+      setIsAddDialogOpen(false)
         },
       })
     }

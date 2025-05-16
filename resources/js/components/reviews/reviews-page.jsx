@@ -83,7 +83,7 @@ export function ReviewsPage({ initialReviews, users, books }) {
     router.delete(`/admin/reviews/${currentReview.id}`, {
       preserveScroll: true,
       onSuccess: () => {
-        setIsDeleteDialogOpen(false)
+      setIsDeleteDialogOpen(false)
       },
     })
   }
@@ -94,7 +94,7 @@ export function ReviewsPage({ initialReviews, users, books }) {
       router.put(`/admin/reviews/${currentReview.id}`, formData, {
         preserveScroll: true,
         onSuccess: () => {
-          setIsEditDialogOpen(false)
+      setIsEditDialogOpen(false)
         },
       })
     } else {
@@ -102,7 +102,7 @@ export function ReviewsPage({ initialReviews, users, books }) {
       router.post('/admin/reviews', formData, {
         preserveScroll: true,
         onSuccess: () => {
-          setIsAddDialogOpen(false)
+      setIsAddDialogOpen(false)
         },
       })
     }

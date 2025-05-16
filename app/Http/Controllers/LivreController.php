@@ -64,31 +64,31 @@ class LivreController extends Controller
         ]);
 
         try {
-            $livre = new Livre();
+        $livre = new Livre();
             $livre->libelle = $request->libelle;
             $livre->description = $request->description;
-            $livre->auteur = $request->auteur;
+        $livre->auteur = $request->auteur;
             $livre->isbn = $request->isbn;
-            $livre->prix = $request->prix;
-            $livre->stock = $request->stock;
-            $livre->categorie_id = $request->categorie_id;
+        $livre->prix = $request->prix;
+        $livre->stock = $request->stock;
+        $livre->categorie_id = $request->categorie_id;
             $livre->editeur = $request->editeur;
-            $livre->date_publication = $request->date_publication;
+        $livre->date_publication = $request->date_publication;
             $livre->actif = $request->has('actif') ? $request->boolean('actif') : true;
 
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
                 $filename = Str::slug($request->libelle) . '-' . time() . '.' . $image->getClientOriginalExtension();
                 
                 // Store the image
                 $path = $image->storeAs('livres', $filename, 'public');
                 $livre->image = '/storage/' . $path;
-            } else {
-                $livre->image = '/images/default-book.jpg';
-            }
+        } else {
+            $livre->image = '/images/default-book.jpg';
+        }
 
-            $livre->save();
-            
+        $livre->save();
+
             // Load the category relationship and fresh data
             $livre = $livre->fresh(['categorie']);
 
@@ -109,8 +109,27 @@ class LivreController extends Controller
     {
         $book->load('categorie', 'avis.user');
 
-        return Inertia::render('admin/books/show', [
-            'livre' => $book
+        // Get related books from the same category
+        $relatedBooks = Livre::where('categorie_id', $book->categorie_id)
+            ->where('id', '!=', $book->id)
+            ->where('actif', true)
+            ->take(10)
+            ->get();
+
+        // Append computed attributes
+        $book->append(['average_rating', 'in_stock']);
+
+        // If accessing from admin route, show admin view
+        if (request()->is('admin/*')) {
+            return Inertia::render('admin/books/show', [
+                'livre' => $book
+            ]);
+        }
+
+        // Otherwise show public store view
+        return Inertia::render('store/details-product', [
+            'book' => $book,
+            'relatedBooks' => $relatedBooks
         ]);
     }
 
@@ -149,32 +168,32 @@ class LivreController extends Controller
         try {
             $book->libelle = $request->libelle;
             $book->description = $request->description;
-            $book->auteur = $request->auteur;
-            $book->prix = $request->prix;
-            $book->stock = $request->stock;
-            $book->categorie_id = $request->categorie_id;
+        $book->auteur = $request->auteur;
+        $book->prix = $request->prix;
+        $book->stock = $request->stock;
+        $book->categorie_id = $request->categorie_id;
             $book->editeur = $request->editeur;
-            $book->date_publication = $request->date_publication;
-            $book->isbn = $request->isbn;
+        $book->date_publication = $request->date_publication;
+        $book->isbn = $request->isbn;
             $book->actif = $request->has('actif') ? $request->boolean('actif') : true;
 
-            if ($request->hasFile('image')) {
-                // Delete old image if it exists and is not the default
-                if ($book->image && $book->image != '/images/default-book.jpg') {
+        if ($request->hasFile('image')) {
+            // Delete old image if it exists and is not the default
+            if ($book->image && $book->image != '/images/default-book.jpg') {
                     $oldPath = str_replace('/storage/', '', $book->image);
                     Storage::disk('public')->delete($oldPath);
-                }
+            }
 
-                $image = $request->file('image');
+            $image = $request->file('image');
                 $filename = Str::slug($request->libelle) . '-' . time() . '.' . $image->getClientOriginalExtension();
                 
                 // Store the new image
                 $path = $image->storeAs('livres', $filename, 'public');
                 $book->image = '/storage/' . $path;
-            }
+        }
 
-            $book->save();
-            
+        $book->save();
+
             // Load the category relationship and fresh data
             $book = $book->fresh(['categorie']);
 
@@ -196,13 +215,13 @@ class LivreController extends Controller
         try {
             $bookId = $book->id; // Store the ID before deletion
             
-            // Delete image if it exists and is not the default
-            if ($book->image && $book->image != '/images/default-book.jpg') {
+        // Delete image if it exists and is not the default
+        if ($book->image && $book->image != '/images/default-book.jpg') {
                 $path = str_replace('/storage/', '', $book->image);
                 Storage::disk('public')->delete($path);
-            }
+        }
 
-            $book->delete();
+        $book->delete();
             session()->flash('deletedBookId', $bookId);
             return redirect()->route('books.index')
                 ->with('success', 'Book deleted successfully.');

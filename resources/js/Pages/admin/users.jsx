@@ -3,8 +3,8 @@ import { UsersPage } from '@/components/users/users-page';
 
 export default function Users({ initialUsers }) {
   return (
-    <AdminLayout>
+      <AdminLayout>
       <UsersPage initialUsers={initialUsers} />
-    </AdminLayout>
+      </AdminLayout>
   );
 }
