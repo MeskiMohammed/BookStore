@@ -1,55 +1,46 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { router, usePage } from "@inertiajs/react"
 import { DataTableToolbar, DeleteConfirmationDialog } from "@/components/ui-components"
 import { ReviewDialog } from "@/components/reviews/review-dialog"
 
-// Mock data
-const initialReviews = [
-  {
-    id: 1,
-    user_id: 1,
-    livre_id: 1,
-    note: 4.5,
-    commentaire: "Great book, highly recommend it!",
-  },
-  {
-    id: 2,
-    user_id: 2,
-    livre_id: 1,
-    note: 5.0,
-    commentaire: "One of the best books I've ever read.",
-  },
-  {
-    id: 3,
-    user_id: 3,
-    livre_id: 2,
-    note: 3.5,
-    commentaire: "Good but not great.",
-  },
-]
-
-const initialUsers = [
-  { id: 1, nom: "Doe", prenom: "John" },
-  { id: 2, nom: "Smith", prenom: "Jane" },
-  { id: 3, nom: "Johnson", prenom: "Robert" },
-]
-
-const initialBooks = [
-  { id: 1, libelle: "The Great Gatsby" },
-  { id: 2, libelle: "To Kill a Mockingbird" },
-  { id: 3, libelle: "A Brief History of Time" },
-]
-
-export function ReviewsPage() {
-  const [reviews, setReviews] = useState(initialReviews)
+export function ReviewsPage({ initialReviews, users, books }) {
+  const [reviews, setReviews] = useState(initialReviews || [])
   const [filteredReviews, setFilteredReviews] = useState(reviews)
-  const [users] = useState(initialUsers)
-  const [books] = useState(initialBooks)
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [currentReview, setCurrentReview] = useState(null)
+  const { flash } = usePage().props
+
+  // Debug log for flash messages
+  useEffect(() => {
+    console.log('Flash data:', flash)
+  }, [flash])
+
+  // Handle real-time updates when a new review is added
+  useEffect(() => {
+    if (flash?.newReview) {
+      setReviews(currentReviews => [...currentReviews, flash.newReview])
+    }
+  }, [flash?.newReview])
+
+  // Handle real-time updates when a review is updated
+  useEffect(() => {
+    if (flash?.updatedReview) {
+      setReviews(currentReviews => 
+        currentReviews.map(review => 
+          review.id === flash.updatedReview.id ? flash.updatedReview : review
+        )
+      )
+    }
+  }, [flash?.updatedReview])
+
+  // Handle real-time updates when a review is deleted
+  useEffect(() => {
+    if (flash?.deletedReviewId) {
+      setReviews(currentReviews => 
+        currentReviews.filter(review => review.id !== parseInt(flash.deletedReviewId))
+      )
+    }
+  }, [flash?.deletedReviewId])
 
   useEffect(() => {
     setFilteredReviews(reviews)
@@ -87,24 +78,40 @@ export function ReviewsPage() {
   }
 
   const confirmDelete = () => {
+    if (!currentReview) return
+    
+    router.delete(`/admin/reviews/${currentReview.id}`, {
+      preserveScroll: true,
+      onSuccess: () => {
+        setIsDeleteDialogOpen(false)
+      },
+    })
+  }
+
+  const handleSaveReview = (formData) => {
     if (currentReview) {
-      setReviews(reviews.filter((r) => r.id !== currentReview.id))
-      setIsDeleteDialogOpen(false)
+      // Edit existing review
+      router.put(`/admin/reviews/${currentReview.id}`, formData, {
+        preserveScroll: true,
+        onSuccess: () => {
+          setIsEditDialogOpen(false)
+        },
+      })
+    } else {
+      // Add new review
+      router.post('/admin/reviews', formData, {
+        preserveScroll: true,
+        onSuccess: () => {
+          setIsAddDialogOpen(false)
+        },
+      })
     }
   }
 
-  const handleSaveReview = (review) => {
-    if (currentReview) {
-      // Edit existing review
-      setReviews(reviews.map((r) => (r.id === currentReview.id ? { ...r, ...review } : r)))
-      setIsEditDialogOpen(false)
-    } else {
-      // Add new review
-      const newId = Math.max(0, ...reviews.map((r) => r.id)) + 1
-      setReviews([...reviews, { id: newId, ...review }])
-      setIsAddDialogOpen(false)
-    }
-  }
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [currentReview, setCurrentReview] = useState(null)
 
   const getUserName = (userId) => {
     const user = users.find((u) => u.id === userId)
@@ -188,7 +195,10 @@ export function ReviewsPage() {
                     >
                       Edit
                     </button>
-                    <button onClick={() => handleDelete(review)} className="font-medium text-red-600 hover:underline">
+                    <button 
+                      onClick={() => handleDelete(review)} 
+                      className="font-medium text-red-600 hover:underline"
+                    >
                       Delete
                     </button>
                   </td>
@@ -223,7 +233,7 @@ export function ReviewsPage() {
         onClose={() => setIsDeleteDialogOpen(false)}
         onConfirm={confirmDelete}
         title="Delete Review"
-        description={`Are you sure you want to delete this review? This action cannot be undone.`}
+        description="Are you sure you want to delete this review? This action cannot be undone."
       />
     </div>
   )

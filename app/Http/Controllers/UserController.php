@@ -18,7 +18,14 @@ class UserController extends Controller
         $users = User::latest()->get();
         
         return Inertia::render('admin/users', [
-            'users' => $users
+            'initialUsers' => $users,
+            'flash' => [
+                'newUser' => session('newUser'),
+                'updatedUser' => session('updatedUser'),
+                'deletedUserId' => session('deletedUserId'),
+                'success' => session('success'),
+                'error' => session('error')
+            ],
         ]);
     }
 
@@ -28,20 +35,25 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'is_admin' => 'boolean'
+            'password' => 'required|string|min:8',
+            'adresse' => 'nullable|string|max:255',
         ]);
 
-        User::create([
-            'name' => $request->name,
+        $user = User::create([
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'is_admin' => $request->is_admin ?? false
+            'adresse' => $request->adresse,
+            'admin' => false,
         ]);
-        
-        return redirect()->back()->with('success', 'Utilisateur créé avec succès.');
+
+        session()->flash('newUser', $user);
+        return redirect()->route('users.index')
+            ->with('success', 'User created successfully.');
     }
 
     /**
@@ -62,29 +74,30 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'is_admin' => 'boolean'
+            'password' => 'nullable|string|min:8',
+            'adresse' => 'nullable|string|max:255',
         ]);
 
-        $userData = [
-            'name' => $request->name,
+        $data = [
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
             'email' => $request->email,
-            'is_admin' => $request->is_admin ?? false
+            'adresse' => $request->adresse,
         ];
 
         // Only update password if provided
         if ($request->filled('password')) {
-            $request->validate([
-                'password' => ['required', 'confirmed', Rules\Password::defaults()]
-            ]);
-            
-            $userData['password'] = Hash::make($request->password);
+            $data['password'] = Hash::make($request->password);
         }
 
-        $user->update($userData);
-        
-        return redirect()->back()->with('success', 'Utilisateur mis à jour avec succès.');
+        $user->update($data);
+
+        session()->flash('updatedUser', $user);
+        return redirect()->route('users.index')
+            ->with('success', 'User updated successfully.');
     }
 
     /**
@@ -92,20 +105,17 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        // Prevent deleting yourself
-        if ($user->id === auth()->id()) {
-            return redirect()->back()->with('error', 'Vous ne pouvez pas supprimer votre propre compte.');
+        // Prevent deleting the last admin user
+        if ($user->admin && User::where('admin', true)->count() <= 1) {
+            return redirect()->route('users.index')
+                ->with('error', 'Cannot delete the last admin user.');
         }
-        
-        // Delete related data or handle constraints
-        $user->avis()->delete();
-        
-        // For orders, you might want to keep them but set user_id to null
-        // or handle this according to your business logic
-        $user->commandes()->update(['user_id' => null]);
-        
+
+        $userId = $user->id;
         $user->delete();
         
-        return redirect()->back()->with('success', 'Utilisateur supprimé avec succès.');
+        session()->flash('deletedUserId', $userId);
+        return redirect()->route('users.index')
+            ->with('success', 'User deleted successfully.');
     }
 }

@@ -1,44 +1,46 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { router, usePage } from "@inertiajs/react"
 import { DataTableToolbar, DeleteConfirmationDialog } from "@/components/ui-components"
 import { UserDialog } from "@/components/users/user-dialog"
 
-// Mock data
-const initialUsers = [
-  {
-    id: 1,
-    nom: "Doe",
-    prenom: "John",
-    adresse: "123 Main St, City",
-    email: "john.doe@example.com",
-    password: "********",
-  },
-  {
-    id: 2,
-    nom: "Smith",
-    prenom: "Jane",
-    adresse: "456 Oak Ave, Town",
-    email: "jane.smith@example.com",
-    password: "********",
-  },
-  {
-    id: 3,
-    nom: "Johnson",
-    prenom: "Robert",
-    adresse: "789 Pine Rd, Village",
-    email: "robert.johnson@example.com",
-    password: "********",
-  },
-]
-
-export function UsersPage() {
-  const [users, setUsers] = useState(initialUsers)
+export function UsersPage({ initialUsers }) {
+  const [users, setUsers] = useState(initialUsers || [])
   const [filteredUsers, setFilteredUsers] = useState(users)
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [currentUser, setCurrentUser] = useState(null)
+  const { flash } = usePage().props
+
+  // Debug log for flash messages
+  useEffect(() => {
+    console.log('Flash data:', flash)
+  }, [flash])
+
+  // Handle real-time updates when a new user is added
+  useEffect(() => {
+    if (flash?.newUser) {
+      setUsers(currentUsers => [...currentUsers, flash.newUser])
+    }
+  }, [flash?.newUser])
+
+  // Handle real-time updates when a user is updated
+  useEffect(() => {
+    if (flash?.updatedUser) {
+      setUsers(currentUsers => 
+        currentUsers.map(user => 
+          user.id === flash.updatedUser.id ? flash.updatedUser : user
+        )
+      )
+    }
+  }, [flash?.updatedUser])
+
+  // Handle real-time updates when a user is deleted
+  useEffect(() => {
+    if (flash?.deletedUserId) {
+      setUsers(currentUsers => 
+        currentUsers.filter(user => user.id !== parseInt(flash.deletedUserId))
+      )
+    }
+  }, [flash?.deletedUserId])
 
   useEffect(() => {
     setFilteredUsers(users)
@@ -70,24 +72,40 @@ export function UsersPage() {
   }
 
   const confirmDelete = () => {
+    if (!currentUser) return
+    
+    router.delete(`/admin/users/${currentUser.id}`, {
+      preserveScroll: true,
+      onSuccess: () => {
+        setIsDeleteDialogOpen(false)
+      },
+    })
+  }
+
+  const handleSaveUser = (formData) => {
     if (currentUser) {
-      setUsers(users.filter((u) => u.id !== currentUser.id))
-      setIsDeleteDialogOpen(false)
+      // Edit existing user
+      router.put(`/admin/users/${currentUser.id}`, formData, {
+        preserveScroll: true,
+        onSuccess: () => {
+          setIsEditDialogOpen(false)
+        },
+      })
+    } else {
+      // Add new user
+      router.post('/admin/users', formData, {
+        preserveScroll: true,
+        onSuccess: () => {
+          setIsAddDialogOpen(false)
+        },
+      })
     }
   }
 
-  const handleSaveUser = (user) => {
-    if (currentUser) {
-      // Edit existing user
-      setUsers(users.map((u) => (u.id === currentUser.id ? { ...u, ...user } : u)))
-      setIsEditDialogOpen(false)
-    } else {
-      // Add new user
-      const newId = Math.max(0, ...users.map((u) => u.id)) + 1
-      setUsers([...users, { id: newId, ...user }])
-      setIsAddDialogOpen(false)
-    }
-  }
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [currentUser, setCurrentUser] = useState(null)
 
   return (
     <div className="bg-white p-4 rounded-lg shadow">

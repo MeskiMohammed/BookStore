@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Avis;
+use App\Models\User;
+use App\Models\Livre;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,9 +16,20 @@ class AvisController extends Controller
     public function index()
     {
         $avis = Avis::with(['user', 'livre'])->latest()->get();
+        $users = User::select('id', 'nom', 'prenom')->get();
+        $books = Livre::select('id', 'libelle')->get();
         
         return Inertia::render('admin/reviews', [
-            'avis' => $avis
+            'initialReviews' => $avis,
+            'users' => $users,
+            'books' => $books,
+            'flash' => [
+                'newReview' => session('newReview'),
+                'updatedReview' => session('updatedReview'),
+                'deletedReviewId' => session('deletedReviewId'),
+                'success' => session('success'),
+                'error' => session('error')
+            ],
         ]);
     }
 
@@ -26,28 +39,18 @@ class AvisController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'user_id' => 'required|exists:users,id',
             'livre_id' => 'required|exists:livres,id',
             'note' => 'required|integer|min:1|max:5',
             'commentaire' => 'required|string'
         ]);
 
-        // Check if user has already reviewed this book
-        $existingReview = Avis::where('user_id', auth()->id())
-            ->where('livre_id', $request->livre_id)
-            ->first();
-            
-        if ($existingReview) {
-            return redirect()->back()->with('error', 'Vous avez déjà laissé un avis pour ce livre.');
-        }
+        $avis = Avis::create($request->all());
+        $avis->load('user', 'livre');
 
-        Avis::create([
-            'user_id' => auth()->id(),
-            'livre_id' => $request->livre_id,
-            'note' => $request->note,
-            'commentaire' => $request->commentaire
-        ]);
-        
-        return redirect()->back()->with('success', 'Avis ajouté avec succès.');
+        session()->flash('newReview', $avis);
+        return redirect()->route('reviews.index')
+            ->with('success', 'Review added successfully.');
     }
 
     /**
@@ -65,38 +68,33 @@ class AvisController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Avis $avis)
+    public function update(Request $request, Avis $review)
     {
         $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'livre_id' => 'required|exists:livres,id',
             'note' => 'required|integer|min:1|max:5',
             'commentaire' => 'required|string'
         ]);
 
-        // Check if the user is the owner of the review or an admin
-        if (auth()->id() !== $avis->user_id && !auth()->user()->is_admin) {
-            return redirect()->back()->with('error', 'Vous n\'êtes pas autorisé à modifier cet avis.');
-        }
+        $review->update($request->all());
+        $review->load('user', 'livre');
 
-        $avis->update([
-            'note' => $request->note,
-            'commentaire' => $request->commentaire
-        ]);
-        
-        return redirect()->back()->with('success', 'Avis mis à jour avec succès.');
+        session()->flash('updatedReview', $review);
+        return redirect()->route('reviews.index')
+            ->with('success', 'Review updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Avis $avis)
+    public function destroy(Avis $review)
     {
-        // Check if the user is the owner of the review or an admin
-        if (auth()->id() !== $avis->user_id && !auth()->user()->is_admin) {
-            return redirect()->back()->with('error', 'Vous n\'êtes pas autorisé à supprimer cet avis.');
-        }
+        $reviewId = $review->id;
+        $review->delete();
         
-        $avis->delete();
-        
-        return redirect()->back()->with('success', 'Avis supprimé avec succès.');
+        session()->flash('deletedReviewId', $reviewId);
+        return redirect()->route('reviews.index')
+            ->with('success', 'Review deleted successfully.');
     }
 }

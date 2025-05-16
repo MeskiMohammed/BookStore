@@ -3,26 +3,30 @@
 import { useState, useEffect } from "react"
 import { Modal } from "@/components/ui-components"
 
-export function OrderDialog({ isOpen, onClose, onSave, title, users, defaultValues }) {
+export function OrderDialog({ isOpen, onClose, onSave, title, users = [], defaultValues }) {
   const [formData, setFormData] = useState({
-    user_id: users?.[0]?.id || 1,
+    user_id: "",
     montant_totale: 0,
     statut: "pending",
     method_paiment: "credit_card",
   })
 
+  // Initialize form data when the dialog opens or when defaultValues change
   useEffect(() => {
+    if (!isOpen) return;
+
     if (defaultValues) {
       setFormData(defaultValues)
     } else {
-      setFormData({
-        user_id: users?.[0]?.id || 1,
+      setFormData(prevData => ({
+        ...prevData,
+        user_id: users?.[0]?.id || "",
         montant_totale: 0,
         statut: "pending",
         method_paiment: "credit_card",
-      })
+      }))
     }
-  }, [defaultValues, users, isOpen])
+  }, [isOpen, defaultValues])
 
   const handleChange = (e) => {
     const { name, value, type } = e.target
@@ -76,7 +80,9 @@ export function OrderDialog({ isOpen, onClose, onSave, title, users, defaultValu
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               value={formData.user_id}
               onChange={handleChange}
+              required
             >
+              <option value="">Select a customer</option>
               {users.map((user) => (
                 <option key={user.id} value={user.id}>
                   {user.prenom} {user.nom}

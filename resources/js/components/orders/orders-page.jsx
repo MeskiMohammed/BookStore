@@ -1,50 +1,53 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { router, usePage } from "@inertiajs/react"
 import { DataTableToolbar, DeleteConfirmationDialog } from "@/components/ui-components"
 import { OrderDialog } from "@/components/orders/order-dialog"
 import { OrderDetailsDialog } from "@/components/orders/order-details-dialog"
 
-// Mock data
-const initialOrders = [
-  {
-    id: 1,
-    user_id: 1,
-    montant_totale: 42.97,
-    statut: "completed",
-    method_paiment: "credit_card",
-  },
-  {
-    id: 2,
-    user_id: 2,
-    montant_totale: 29.99,
-    statut: "processing",
-    method_paiment: "paypal",
-  },
-  {
-    id: 3,
-    user_id: 3,
-    montant_totale: 54.5,
-    statut: "pending",
-    method_paiment: "bank_transfer",
-  },
-]
-
-const initialUsers = [
-  { id: 1, nom: "Doe", prenom: "John" },
-  { id: 2, nom: "Smith", prenom: "Jane" },
-  { id: 3, nom: "Johnson", prenom: "Robert" },
-]
-
-export function OrdersPage() {
-  const [orders, setOrders] = useState(initialOrders)
+export function OrdersPage({ initialOrders, users }) {
+  const [orders, setOrders] = useState(initialOrders || [])
   const [filteredOrders, setFilteredOrders] = useState(orders)
-  const [users] = useState(initialUsers)
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false)
-  const [currentOrder, setCurrentOrder] = useState(null)
+  const { flash } = usePage().props
+  const [orderDetails, setOrderDetails] = useState(null)
+
+  // Add debug logging for users prop
+  useEffect(() => {
+    console.log('Users data:', users)
+  }, [users])
+
+  // Debug log for flash messages
+  useEffect(() => {
+    console.log('Flash data:', flash)
+  }, [flash])
+
+  // Handle real-time updates when a new order is added
+  useEffect(() => {
+    if (flash?.newOrder) {
+      setOrders(currentOrders => [...currentOrders, flash.newOrder])
+    }
+  }, [flash?.newOrder])
+
+  // Handle real-time updates when an order is updated
+  useEffect(() => {
+    if (flash?.updatedOrder) {
+      setOrders(currentOrders => 
+        currentOrders.map(order => 
+          order.id === flash.updatedOrder.id ? flash.updatedOrder : order
+        )
+      )
+    }
+  }, [flash?.updatedOrder])
+
+  // Handle real-time updates when an order is deleted
+  useEffect(() => {
+    if (flash?.deletedOrderId) {
+      setOrders(currentOrders => 
+        currentOrders.filter(order => order.id !== parseInt(flash.deletedOrderId))
+      )
+    }
+  }, [flash?.deletedOrderId])
 
   useEffect(() => {
     setFilteredOrders(orders)
@@ -79,30 +82,54 @@ export function OrdersPage() {
     setIsDeleteDialogOpen(true)
   }
 
-  const handleViewDetails = (order) => {
-    setCurrentOrder(order)
-    setIsDetailsDialogOpen(true)
+  const handleViewDetails = async (order) => {
+    try {
+      const response = await fetch(`/admin/orders/${order.id}`)
+      const data = await response.json()
+      setOrderDetails(data)
+      setCurrentOrder(order)
+      setIsDetailsDialogOpen(true)
+    } catch (error) {
+      console.error("Error fetching order details:", error)
+    }
   }
 
   const confirmDelete = () => {
+    if (!currentOrder) return
+    
+    router.delete(`/admin/orders/${currentOrder.id}`, {
+      preserveScroll: true,
+      onSuccess: () => {
+        setIsDeleteDialogOpen(false)
+      },
+    })
+  }
+
+  const handleSaveOrder = (formData) => {
     if (currentOrder) {
-      setOrders(orders.filter((o) => o.id !== currentOrder.id))
-      setIsDeleteDialogOpen(false)
+      // Edit existing order
+      router.put(`/admin/orders/${currentOrder.id}`, formData, {
+        preserveScroll: true,
+        onSuccess: () => {
+          setIsEditDialogOpen(false)
+        },
+      })
+    } else {
+      // Add new order
+      router.post("/admin/orders", formData, {
+        preserveScroll: true,
+        onSuccess: () => {
+          setIsAddDialogOpen(false)
+        },
+      })
     }
   }
 
-  const handleSaveOrder = (order) => {
-    if (currentOrder) {
-      // Edit existing order
-      setOrders(orders.map((o) => (o.id === currentOrder.id ? { ...o, ...order } : o)))
-      setIsEditDialogOpen(false)
-    } else {
-      // Add new order
-      const newId = Math.max(0, ...orders.map((o) => o.id)) + 1
-      setOrders([...orders, { id: newId, ...order }])
-      setIsAddDialogOpen(false)
-    }
-  }
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false)
+  const [currentOrder, setCurrentOrder] = useState(null)
 
   const getUserName = (userId) => {
     const user = users.find((u) => u.id === userId)
@@ -229,6 +256,7 @@ export function OrdersPage() {
         isOpen={isDetailsDialogOpen}
         onClose={() => setIsDetailsDialogOpen(false)}
         order={currentOrder}
+        orderDetails={orderDetails}
         userName={currentOrder ? getUserName(currentOrder.user_id) : ""}
       />
 

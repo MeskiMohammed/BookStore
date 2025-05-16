@@ -17,9 +17,18 @@ class LivreController extends Controller
     public function index()
     {
         $livres = Livre::with('categorie')->get();
+        $categories = Categorie::all();
 
         return Inertia::render('admin/books', [
-            'initialBooks' => $livres
+            'initialBooks' => $livres,
+            'categories' => $categories,
+            'flash' => [
+                'newBook' => session('newBook'),
+                'updatedBook' => session('updatedBook'),
+                'deletedBookId' => session('deletedBookId'),
+                'success' => session('success'),
+                'error' => session('error')
+            ],
         ]);
     }
 
@@ -41,39 +50,56 @@ class LivreController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'titre' => 'required|string|max:255',
-            'auteur' => 'required|string|max:255',
+            'libelle' => 'required|string|max:255',
             'description' => 'required|string',
-            'prix' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
-            'categorie_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|max:2048',
-            'date_publication' => 'required|date',
+            'auteur' => 'required|string|max:255',
             'isbn' => 'required|string|max:20|unique:livres,isbn',
+            'prix' => 'required|numeric|min:0',
+            'stock' => 'required|numeric|min:0',
+            'categorie_id' => 'required|exists:categories,id',
+            'editeur' => 'required|string|max:255',
+            'date_publication' => 'required|date',
+            'image' => 'nullable|image|max:2048',
+            'actif' => 'boolean'
         ]);
 
-        $livre = new Livre();
-        $livre->titre = $request->titre;
-        $livre->auteur = $request->auteur;
-        $livre->description = $request->description;
-        $livre->prix = $request->prix;
-        $livre->stock = $request->stock;
-        $livre->categorie_id = $request->categorie_id;
-        $livre->date_publication = $request->date_publication;
-        $livre->isbn = $request->isbn;
+        try {
+            $livre = new Livre();
+            $livre->libelle = $request->libelle;
+            $livre->description = $request->description;
+            $livre->auteur = $request->auteur;
+            $livre->isbn = $request->isbn;
+            $livre->prix = $request->prix;
+            $livre->stock = $request->stock;
+            $livre->categorie_id = $request->categorie_id;
+            $livre->editeur = $request->editeur;
+            $livre->date_publication = $request->date_publication;
+            $livre->actif = $request->has('actif') ? $request->boolean('actif') : true;
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $filename = Str::slug($request->titre) . '-' . time() . '.' . $image->getClientOriginalExtension();
-            $path = $image->storeAs('public/livres', $filename);
-            $livre->image = Storage::url($path);
-        } else {
-            $livre->image = '/images/default-book.jpg';
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $filename = Str::slug($request->libelle) . '-' . time() . '.' . $image->getClientOriginalExtension();
+                
+                // Store the image
+                $path = $image->storeAs('livres', $filename, 'public');
+                $livre->image = '/storage/' . $path;
+            } else {
+                $livre->image = '/images/default-book.jpg';
+            }
+
+            $livre->save();
+            
+            // Load the category relationship and fresh data
+            $livre = $livre->fresh(['categorie']);
+
+            session()->flash('newBook', $livre);
+            return redirect()->route('books.index')
+                ->with('success', 'Book created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error creating book: ' . $e->getMessage());
         }
-
-        $livre->save();
-
-        return redirect()->route('books.index')->with('success', 'Livre créé avec succès.');
     }
 
     /**
@@ -107,41 +133,59 @@ class LivreController extends Controller
     public function update(Request $request, Livre $book)
     {
         $request->validate([
-            'titre' => 'required|string|max:255',
-            'auteur' => 'required|string|max:255',
+            'libelle' => 'required|string|max:255',
             'description' => 'required|string',
+            'auteur' => 'required|string|max:255',
             'prix' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
+            'stock' => 'required|numeric|min:0',
             'categorie_id' => 'required|exists:categories,id',
+            'editeur' => 'required|string|max:255',
             'image' => 'nullable|image|max:2048',
             'date_publication' => 'required|date',
             'isbn' => 'required|string|max:20|unique:livres,isbn,' . $book->id,
+            'actif' => 'boolean'
         ]);
 
-        $book->titre = $request->titre;
-        $book->auteur = $request->auteur;
-        $book->description = $request->description;
-        $book->prix = $request->prix;
-        $book->stock = $request->stock;
-        $book->categorie_id = $request->categorie_id;
-        $book->date_publication = $request->date_publication;
-        $book->isbn = $request->isbn;
+        try {
+            $book->libelle = $request->libelle;
+            $book->description = $request->description;
+            $book->auteur = $request->auteur;
+            $book->prix = $request->prix;
+            $book->stock = $request->stock;
+            $book->categorie_id = $request->categorie_id;
+            $book->editeur = $request->editeur;
+            $book->date_publication = $request->date_publication;
+            $book->isbn = $request->isbn;
+            $book->actif = $request->has('actif') ? $request->boolean('actif') : true;
 
-        if ($request->hasFile('image')) {
-            // Delete old image if it exists and is not the default
-            if ($book->image && $book->image != '/images/default-book.jpg') {
-                Storage::delete(str_replace('/storage', 'public', $book->image));
+            if ($request->hasFile('image')) {
+                // Delete old image if it exists and is not the default
+                if ($book->image && $book->image != '/images/default-book.jpg') {
+                    $oldPath = str_replace('/storage/', '', $book->image);
+                    Storage::disk('public')->delete($oldPath);
+                }
+
+                $image = $request->file('image');
+                $filename = Str::slug($request->libelle) . '-' . time() . '.' . $image->getClientOriginalExtension();
+                
+                // Store the new image
+                $path = $image->storeAs('livres', $filename, 'public');
+                $book->image = '/storage/' . $path;
             }
 
-            $image = $request->file('image');
-            $filename = Str::slug($request->titre) . '-' . time() . '.' . $image->getClientOriginalExtension();
-            $path = $image->storeAs('public/livres', $filename);
-            $book->image = Storage::url($path);
+            $book->save();
+            
+            // Load the category relationship and fresh data
+            $book = $book->fresh(['categorie']);
+
+            session()->flash('updatedBook', $book);
+            return redirect()->route('books.index')
+                ->with('success', 'Book updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error updating book: ' . $e->getMessage());
         }
-
-        $book->save();
-
-        return redirect()->route('books.index')->with('success', 'Livre mis à jour avec succès.');
     }
 
     /**
@@ -149,13 +193,22 @@ class LivreController extends Controller
      */
     public function destroy(Livre $book)
     {
-        // Delete image if it exists and is not the default
-        if ($book->image && $book->image != '/images/default-book.jpg') {
-            Storage::delete(str_replace('/storage', 'public', $book->image));
+        try {
+            $bookId = $book->id; // Store the ID before deletion
+            
+            // Delete image if it exists and is not the default
+            if ($book->image && $book->image != '/images/default-book.jpg') {
+                $path = str_replace('/storage/', '', $book->image);
+                Storage::disk('public')->delete($path);
+            }
+
+            $book->delete();
+            session()->flash('deletedBookId', $bookId);
+            return redirect()->route('books.index')
+                ->with('success', 'Book deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Error deleting book: ' . $e->getMessage());
         }
-
-        $book->delete();
-
-        return redirect()->route('books.index')->with('success', 'Livre supprimé avec succès.');
     }
 }

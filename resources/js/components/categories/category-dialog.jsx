@@ -47,7 +47,7 @@ export function CategoryDialog({ isOpen, onClose, onSave, title, defaultValues }
   )
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={title} footer={footer}>
+    <Modal isOpen={isOpen} onClose={onClose} title={title} size="lg" footer={footer}>
       <form id="categoryForm" onSubmit={handleSubmit}>
         <div className="grid gap-4 mb-4">
           <div>

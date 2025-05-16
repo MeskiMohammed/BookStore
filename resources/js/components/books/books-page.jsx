@@ -1,37 +1,55 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { router } from '@inertiajs/react';
+import { router, Head, usePage } from '@inertiajs/react';
 import { DataTableToolbar, DeleteConfirmationDialog } from '@/components/ui-components';
 import { BookDialog } from '@/components/books/book-dialog';
 import { BookDetailsDialog } from '@/components/books/book-details-dialog';
+import BookList from './BookList';
 
-const initialCategories = [
-  { id: 1, nom: 'Fiction' },
-  { id: 2, nom: 'Non-Fiction' },
-  { id: 3, nom: 'Science Fiction' },
-];
+export function BooksPage({ initialBooks, categories }) {
+  console.log('BooksPage props:', { initialBooks, categories });
+  
+  const [books, setBooks] = useState(initialBooks || []);
+  const { flash } = usePage().props;
 
-export function BooksPage({ initialBooks }) {
-  const [books, setBooks] = useState(initialBooks);
-  const [filteredBooks, setFilteredBooks] = useState(books);
-  const [categories] = useState(initialCategories);
-
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
-
-  const [currentBook, setCurrentBook] = useState(null);
-
+  // Debug log for flash messages
   useEffect(() => {
-    setFilteredBooks(books);
+    console.log('Flash data:', flash);
+  }, [flash]);
+
+  // Debug log for books state
+  useEffect(() => {
+    console.log('Books state updated:', books);
   }, [books]);
 
-  const handleSearch = (searchTerm) => {
-    const filtered = books.filter((book) => book.libelle.toLowerCase().includes(searchTerm.toLowerCase()) || book.auteur.toLowerCase().includes(searchTerm.toLowerCase()) || book.isbn.includes(searchTerm));
-    setFilteredBooks(filtered);
-  };
+  // Handle real-time updates when a new book is added
+  useEffect(() => {
+    if (flash?.newBook) {
+      console.log('New book received:', flash.newBook);
+      setBooks(currentBooks => [...currentBooks, flash.newBook]);
+    }
+  }, [flash?.newBook]);
+
+  // Handle real-time updates when a book is updated
+  useEffect(() => {
+    if (flash?.updatedBook) {
+      console.log('Updated book received:', flash.updatedBook);
+      setBooks(currentBooks => 
+        currentBooks.map(book => book.id === flash.updatedBook.id ? flash.updatedBook : book)
+      );
+    }
+  }, [flash?.updatedBook]);
+
+  // Handle real-time updates when a book is deleted
+  useEffect(() => {
+    if (flash?.deletedBookId) {
+      console.log('Book deleted:', flash.deletedBookId);
+      setBooks(currentBooks => 
+        currentBooks.filter(book => book.id !== parseInt(flash.deletedBookId))
+      );
+    }
+  }, [flash?.deletedBookId]);
 
   const handleAddNew = () => {
     setCurrentBook(null);
@@ -53,26 +71,53 @@ export function BooksPage({ initialBooks }) {
     setIsDetailsDialogOpen(true);
   };
 
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
+  const [currentBook, setCurrentBook] = useState(null);
+
   const confirmDelete = () => {
-    router.delete('/admin/books/' + currentBook.id, {
+    if (!currentBook) return;
+    
+    router.delete(`/admin/books/${currentBook.id}`, {
       preserveScroll: true,
       onSuccess: () => {
-        setBooks((prevBooks) => prevBooks.filter((b) => b.id !== currentBook.id));
         setIsDeleteDialogOpen(false);
       },
     });
   };
 
-  const handleSaveBook = (book) => {
+  const handleSaveBook = (formData) => {
     if (currentBook) {
       // Edit existing book
-      setBooks(books.map((b) => (b.id === currentBook.id ? { ...b, ...book } : b)));
-      setIsEditDialogOpen(false);
+      router.post(`/admin/books/${currentBook.id}`, {
+        _method: 'PUT',
+        ...formData
+      }, {
+        forceFormData: true,
+        preserveScroll: true,
+        onSuccess: (response) => {
+          console.log('Book updated successfully:', response);
+          setIsEditDialogOpen(false);
+        },
+        onError: (errors) => {
+          console.error('Error updating book:', errors);
+        }
+      });
     } else {
       // Add new book
-      const newId = Math.max(0, ...books.map((b) => b.id)) + 1;
-      setBooks([...books, { id: newId, ...book }]);
-      setIsAddDialogOpen(false);
+      router.post('/admin/books', formData, {
+        forceFormData: true,
+        preserveScroll: true,
+        onSuccess: (response) => {
+          console.log('Book added successfully:', response);
+          setIsAddDialogOpen(false);
+        },
+        onError: (errors) => {
+          console.error('Error adding book:', errors);
+        }
+      });
     }
   };
 
@@ -82,91 +127,57 @@ export function BooksPage({ initialBooks }) {
   };
 
   return (
-    <div className='bg-white p-4 rounded-lg shadow'>
-      <h2 className='text-2xl font-bold mb-4'>Books Management</h2>
-
-      <DataTableToolbar searchPlaceholder='Search books...' onSearch={handleSearch} onAddNew={handleAddNew} />
-
-      <div className='relative overflow-x-auto shadow-md sm:rounded-lg mt-4'>
-        <table className='w-full text-sm text-left text-gray-500'>
-          <thead className='text-xs text-gray-700 uppercase bg-gray-50'>
-            <tr>
-              <th scope='col' className='px-6 py-3'>
-                ID
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Image
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Title
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Author
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Price
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Stock
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Category
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Status
-              </th>
-              <th scope='col' className='px-6 py-3 text-right'>
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredBooks.length === 0 ? (
-              <tr className='bg-white border-b'>
-                <td colSpan={9} className='px-6 py-4 text-center text-gray-500'>
-                  No books found
-                </td>
-              </tr>
-            ) : (
-              filteredBooks.map((book) => (
-                <tr key={book.id} className='bg-white border-b hover:bg-gray-50'>
-                  <td className='px-6 py-4'>{book.id}</td>
-                  <td className='px-6 py-4'>
-                    <img src={book.image || '/placeholder.svg'} alt={book.libelle} className='w-10 h-14 object-cover' />
-                  </td>
-                  <td className='px-6 py-4 font-medium text-gray-900'>{book.libelle}</td>
-                  <td className='px-6 py-4'>{book.auteur}</td>
-                  <td className='px-6 py-4'>${book.prix.toFixed(2)}</td>
-                  <td className='px-6 py-4'>{book.stock}</td>
-                  <td className='px-6 py-4'>{getCategoryName(book.categorie_id)}</td>
-                  <td className='px-6 py-4'>
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${book.actif ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{book.actif ? 'Active' : 'Inactive'}</span>
-                  </td>
-                  <td className='px-6 py-4 text-right'>
-                    <button onClick={() => handleViewDetails(book)} className='font-medium text-blue-600 hover:underline mr-2'>
-                      View
-                    </button>
-                    <button onClick={() => handleEdit(book)} className='font-medium text-blue-600 hover:underline mr-2'>
-                      Edit
-                    </button>
-                    <button onClick={() => handleDelete(book)} className='font-medium text-red-600 hover:underline'>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+    <>
+      <Head title="Books Management" />
+      <div className="py-12">
+        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+          <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div className="p-6 text-gray-900">
+              <h1 className="text-2xl font-semibold mb-6">Books Management</h1>
+              <BookList 
+                books={books}
+                categories={categories}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onViewDetails={handleViewDetails}
+                onAddNew={handleAddNew}
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
-      <BookDialog isOpen={isAddDialogOpen} onClose={() => setIsAddDialogOpen(false)} onSave={handleSaveBook} title='Add New Book' categories={categories} />
+      <BookDialog 
+        isOpen={isAddDialogOpen} 
+        onClose={() => setIsAddDialogOpen(false)} 
+        onSave={handleSaveBook} 
+        title='Add New Book' 
+        categories={categories} 
+      />
 
-      <BookDialog isOpen={isEditDialogOpen} onClose={() => setIsEditDialogOpen(false)} onSave={handleSaveBook} title='Edit Book' defaultValues={currentBook} categories={categories} />
+      <BookDialog 
+        isOpen={isEditDialogOpen} 
+        onClose={() => setIsEditDialogOpen(false)} 
+        onSave={handleSaveBook} 
+        title='Edit Book' 
+        defaultValues={currentBook} 
+        categories={categories} 
+      />
 
-      <BookDetailsDialog isOpen={isDetailsDialogOpen} onClose={() => setIsDetailsDialogOpen(false)} book={currentBook} categoryName={currentBook ? getCategoryName(currentBook.categorie_id) : ''} />
+      <BookDetailsDialog 
+        isOpen={isDetailsDialogOpen} 
+        onClose={() => setIsDetailsDialogOpen(false)} 
+        book={currentBook} 
+        categoryName={currentBook ? getCategoryName(currentBook.categorie_id) : ''} 
+      />
 
-      <DeleteConfirmationDialog isOpen={isDeleteDialogOpen} onClose={() => setIsDeleteDialogOpen(false)} onConfirm={confirmDelete} title='Delete Book' description={`Are you sure you want to delete the book "${currentBook?.libelle}"? This action cannot be undone.`} />
-    </div>
+      <DeleteConfirmationDialog 
+        isOpen={isDeleteDialogOpen} 
+        onClose={() => setIsDeleteDialogOpen(false)} 
+        onConfirm={confirmDelete} 
+        title='Delete Book' 
+        description={`Are you sure you want to delete the book "${currentBook?.libelle}"? This action cannot be undone.`} 
+      />
+    </>
   );
 }

@@ -1,10 +1,10 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { UsersPage } from '@/components/users/users-page';
 
-export default function App(props) {
+export default function Users({ initialUsers }) {
   return (
-      <AdminLayout>
-        <UsersPage />
-      </AdminLayout>
+    <AdminLayout>
+      <UsersPage initialUsers={initialUsers} />
+    </AdminLayout>
   );
 }

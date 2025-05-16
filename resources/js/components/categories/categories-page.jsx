@@ -1,17 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { router } from "@inertiajs/react"
 import { DataTableToolbar, DeleteConfirmationDialog } from "@/components/ui-components"
 import { CategoryDialog } from "@/components/categories/category-dialog"
 
-// Mock data
-const initialCategories = [
-  { id: 1, nom: "Fiction", description: "Fictional stories and novels" },
-  { id: 2, nom: "Non-Fiction", description: "Educational and informative books" },
-  { id: 3, nom: "Science Fiction", description: "Futuristic and sci-fi themed books" },
-]
-
-export function CategoriesPage() {
+export function CategoriesPage({ initialCategories }) {
   const [categories, setCategories] = useState(initialCategories)
   const [filteredCategories, setFilteredCategories] = useState(categories)
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
@@ -27,7 +21,7 @@ export function CategoriesPage() {
     const filtered = categories.filter(
       (category) =>
         category.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        category.description.toLowerCase().includes(searchTerm.toLowerCase()),
+        (category.description && category.description.toLowerCase().includes(searchTerm.toLowerCase()))
     )
     setFilteredCategories(filtered)
   }
@@ -48,22 +42,42 @@ export function CategoriesPage() {
   }
 
   const confirmDelete = () => {
-    if (currentCategory) {
-      setCategories(categories.filter((c) => c.id !== currentCategory.id))
+    router.delete(`/admin/categories/${currentCategory.id}`, {
+      preserveScroll: true,
+      onSuccess: () => {
+        setCategories((prevCategories) => prevCategories.filter((c) => c.id !== currentCategory.id))
       setIsDeleteDialogOpen(false)
-    }
+      },
+    })
   }
 
   const handleSaveCategory = (category) => {
     if (currentCategory) {
       // Edit existing category
-      setCategories(categories.map((c) => (c.id === currentCategory.id ? { ...c, ...category } : c)))
+      router.put(`/admin/categories/${currentCategory.id}`, category, {
+        preserveScroll: true,
+        onSuccess: (response) => {
+          setCategories(prevCategories => 
+            prevCategories.map(c => 
+              c.id === currentCategory.id ? { ...c, ...category } : c
+            )
+          )
       setIsEditDialogOpen(false)
+        },
+      })
     } else {
       // Add new category
-      const newId = Math.max(0, ...categories.map((c) => c.id)) + 1
-      setCategories([...categories, { id: newId, ...category }])
+      router.post('/admin/categories', category, {
+        preserveScroll: true,
+        onSuccess: (response) => {
+          // Get the newly created category from the response
+          const newCategory = response.props.flash.newCategory
+          if (newCategory) {
+            setCategories(prevCategories => [...prevCategories, newCategory])
+          }
       setIsAddDialogOpen(false)
+        },
+      })
     }
   }
 
@@ -107,7 +121,7 @@ export function CategoriesPage() {
                   <td className="px-6 py-4 text-right">
                     <button
                       onClick={() => handleEdit(category)}
-                      className="font-medium text-blue-600 hover:underline mr-3"
+                      className="font-medium text-blue-600 hover:underline mr-2"
                     >
                       Edit
                     </button>

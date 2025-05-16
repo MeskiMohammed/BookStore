@@ -13,10 +13,10 @@ class CategorieController extends Controller
      */
     public function index()
     {
-        $categories = Categorie::withCount('livres')->get();
+        $categories = Categorie::all();
         
         return Inertia::render('admin/categories', [
-            'categories' => $categories
+            'initialCategories' => $categories
         ]);
     }
 
@@ -26,16 +26,24 @@ class CategorieController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nom' => 'required|string|max:255|unique:categories,nom',
+            'nom' => 'required|string|max:255',
             'description' => 'nullable|string'
         ]);
 
-        Categorie::create([
-            'nom' => $request->nom,
-            'description' => $request->description
-        ]);
+        try {
+            $category = new Categorie();
+            $category->nom = $request->nom;
+            $category->description = $request->description;
+            $category->save();
         
-        return redirect()->back()->with('success', 'Catégorie créée avec succès.');
+            return redirect()->back()
+                ->with('success', 'Category created successfully.')
+                ->with('newCategory', $category);
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error creating category: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -56,16 +64,23 @@ class CategorieController extends Controller
     public function update(Request $request, Categorie $category)
     {
         $request->validate([
-            'nom' => 'required|string|max:255|unique:categories,nom,' . $category->id,
+            'nom' => 'required|string|max:255',
             'description' => 'nullable|string'
         ]);
 
-        $category->update([
-            'nom' => $request->nom,
-            'description' => $request->description
-        ]);
+        try {
+            $category->nom = $request->nom;
+            $category->description = $request->description;
+            $category->save();
         
-        return redirect()->back()->with('success', 'Catégorie mise à jour avec succès.');
+            return redirect()->back()
+                ->with('success', 'Category updated successfully.')
+                ->with('updatedCategory', $category);
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error updating category: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -73,13 +88,19 @@ class CategorieController extends Controller
      */
     public function destroy(Categorie $category)
     {
+        try {
         // Check if category has books
-        if ($category->livres()->count() > 0) {
-            return redirect()->back()->with('error', 'Impossible de supprimer cette catégorie car elle contient des livres.');
+            if ($category->livres()->exists()) {
+                return redirect()->back()
+                    ->with('error', 'Cannot delete category: It has associated books.');
         }
         
         $category->delete();
-        
-        return redirect()->back()->with('success', 'Catégorie supprimée avec succès.');
+            return redirect()->back()
+                ->with('success', 'Category deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Error deleting category: ' . $e->getMessage());
+        }
     }
 }

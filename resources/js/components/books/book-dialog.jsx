@@ -39,9 +39,11 @@ export function BookDialog({ isOpen, onClose, onSave, title, categories, default
   }, [defaultValues, categories, isOpen])
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target
+    const { name, value, type, checked, files } = e.target
 
-    if (type === "checkbox") {
+    if (type === "file") {
+      setFormData((prev) => ({ ...prev, image: files[0] }))
+    } else if (type === "checkbox") {
       setFormData((prev) => ({ ...prev, [name]: checked }))
     } else if (type === "number") {
       setFormData((prev) => ({ ...prev, [name]: Number.parseFloat(value) }))
@@ -52,7 +54,20 @@ export function BookDialog({ isOpen, onClose, onSave, title, categories, default
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    onSave(formData)
+    const formDataToSend = new FormData()
+    
+    // Append all form fields to FormData
+    Object.keys(formData).forEach(key => {
+      if (key === 'image' && formData[key] instanceof File) {
+        formDataToSend.append('image', formData[key])
+      } else if (key === 'actif') {
+        formDataToSend.append(key, formData[key] ? '1' : '0')
+      } else {
+        formDataToSend.append(key, formData[key])
+      }
+    })
+    
+    onSave(formDataToSend)
   }
 
   const footer = (
@@ -206,18 +221,21 @@ export function BookDialog({ isOpen, onClose, onSave, title, categories, default
               onChange={handleChange}
             />
           </div>
-          <div>
+          <div className="md:col-span-2">
             <label htmlFor="image" className="block mb-2 text-sm font-medium text-gray-900">
-              Image URL
+              Book Cover Image
             </label>
             <input
-              type="text"
+              type="file"
               id="image"
               name="image"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              value={formData.image}
+              accept="image/*"
+              className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
               onChange={handleChange}
             />
+            {formData.image && typeof formData.image === 'string' && (
+              <img src={formData.image} alt="Book cover preview" className="mt-2 w-32 h-48 object-cover rounded" />
+            )}
           </div>
           <div className="flex items-center">
             <input

@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LivreController;
+use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\AvisController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -29,11 +32,20 @@ Route::get('/profile', fn () => inertia('store/profile'));
 
 Route::middleware('auth')->prefix('admin')->group(function(){
     Route::get('/', fn () => inertia('admin/dashboard'))->name('dashboard');
-    Route::get('users', fn () => inertia('admin/users'))->name('users.index');
-    Route::get('reviews', fn () => inertia('admin/reviews'))->name('reviews.index');
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::post('users', [UserController::class, 'store'])->name('users.store');
+    Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::get('reviews', [AvisController::class, 'index'])->name('reviews.index');
+    Route::post('reviews', [AvisController::class, 'store'])->name('reviews.store');
+    Route::put('reviews/{review}', [AvisController::class, 'update'])->name('reviews.update');
+    Route::delete('reviews/{review}', [AvisController::class, 'destroy'])->name('reviews.destroy');
     Route::get('orders', fn () => inertia('admin/orders'))->name('orders.index');
     Route::get('order-details', fn () => inertia('admin/order-details'))->name('order-details.index');
-    Route::get('categories', fn () => inertia('admin/categories'))->name('categories.index');
+    Route::get('categories', [CategorieController::class, 'index'])->name('categories.index');
+    Route::post('categories', [CategorieController::class, 'store'])->name('categories.store');
+    Route::put('categories/{category}', [CategorieController::class, 'update'])->name('categories.update');
+    Route::delete('categories/{category}', [CategorieController::class, 'destroy'])->name('categories.destroy');
 
     Route::resource('books',LivreController::class);
 });
