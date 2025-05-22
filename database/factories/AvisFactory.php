@@ -11,8 +11,8 @@ class AvisFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::inRandomOrder()->first()->id ?? User::factory(),
-            'livre_id' => Livre::inRandomOrder()->first()->id ?? Livre::factory(),
+            'user_id' => User::factory(),
+            'livre_id' => Livre::factory(),
             'note' => $this->faker->numberBetween(1, 5),
             'commentaire' => $this->faker->sentence(),
         ];

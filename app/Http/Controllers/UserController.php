@@ -16,7 +16,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::latest()->get();
-        
+
         return Inertia::render('admin/users', [
             'initialUsers' => $users,
             'flash' => [
@@ -50,7 +50,7 @@ class UserController extends Controller
             'adresse' => $request->adresse,
             'admin' => false,
         ]);
-        
+
         session()->flash('newUser', $user);
         return redirect()->route('users.index')
             ->with('success', 'User created successfully.');
@@ -62,7 +62,7 @@ class UserController extends Controller
     public function show(User $user)
     {
         $user->load('commandes', 'avis');
-        
+
         return Inertia::render('admin/users/show', [
             'user' => $user
         ]);
@@ -94,7 +94,7 @@ class UserController extends Controller
         }
 
         $user->update($data);
-        
+
         session()->flash('updatedUser', $user);
         return redirect()->route('users.index')
             ->with('success', 'User updated successfully.');
@@ -113,7 +113,7 @@ class UserController extends Controller
 
         $userId = $user->id;
         $user->delete();
-        
+
         session()->flash('deletedUserId', $userId);
         return redirect()->route('users.index')
             ->with('success', 'User deleted successfully.');

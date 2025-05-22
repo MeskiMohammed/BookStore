@@ -15,43 +15,43 @@ class CatalogueController extends Controller
     public function index(Request $request)
     {
         $query = Livre::with('categorie');
-        
+
         // Apply category filter
         if ($request->has('categorie') && $request->categorie) {
             $query->where('categorie_id', $request->categorie);
         }
-        
+
         // Apply price range filter
         if ($request->has('prix_min') && $request->prix_min) {
             $query->where('prix', '>=', $request->prix_min);
         }
-        
+
         if ($request->has('prix_max') && $request->prix_max) {
             $query->where('prix', '<=', $request->prix_max);
         }
-        
+
         // Apply search filter
         if ($request->has('search') && $request->search) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
-                $q->where('titre', 'like', "%{$search}%")
+                $q->where('libelle', 'like', "%{$search}%")
                   ->orWhere('auteur', 'like', "%{$search}%")
                   ->orWhere('description', 'like', "%{$search}%");
             });
         }
-        
+
         // Apply sorting
-        $sort = $request->sort ?? 'titre';
+        $sort = $request->sort ?? 'libelle';
         $direction = $request->direction ?? 'asc';
-        
+
         $query->orderBy($sort, $direction);
-        
+
         // Get paginated results
         $livres = $query->paginate(12)->withQueryString();
-        
+
         // Get all categories for filter
         $categories = Categorie::all();
-        
+
         return Inertia::render('store/catalogue', [
             'livres' => $livres,
             'categories' => $categories,
@@ -62,17 +62,17 @@ class CatalogueController extends Controller
     /**
      * Display the product details page.
      */
-    public function show($id)
+    public function show(Livre $livre)
     {
-        $livre = Livre::with(['categorie', 'avis.user'])->findOrFail($id);
-        
+        $livre->load(['categorie', 'avis.user']);
+
         // Get related books from the same category
         $relatedBooks = Livre::where('categorie_id', $livre->categorie_id)
             ->where('id', '!=', $livre->id)
             ->inRandomOrder()
             ->limit(4)
             ->get();
-        
+
         return Inertia::render('store/details-product', [
             'livre' => $livre,
             'relatedBooks' => $relatedBooks

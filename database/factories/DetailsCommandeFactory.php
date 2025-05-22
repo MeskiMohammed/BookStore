@@ -11,8 +11,8 @@ class DetailsCommandeFactory extends Factory
     public function definition(): array
     {
         return [
-            'commande_id' => Commande::inRandomOrder()->first()->id ?? Commande::factory(),
-            'livre_id' => Livre::inRandomOrder()->first()->id ?? Livre::factory(),
+            'commande_id' => Commande::factory(),
+            'livre_id' => Livre::factory(),
             'quantite' => $this->faker->numberBetween(1, 5),
             'prix' => $this->faker->randomFloat(2, 10, 200),
         ];

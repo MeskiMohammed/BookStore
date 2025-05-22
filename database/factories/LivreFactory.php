@@ -16,10 +16,10 @@ class LivreFactory extends Factory
             'isbn' => $this->faker->isbn13(),
             'prix' => $this->faker->randomFloat(2, 5, 100),
             'stock' => $this->faker->numberBetween(10, 100),
-            'categorie_id' => Categorie::inRandomOrder()->first()->id ?? Categorie::factory(),
+            'categorie_id' => Categorie::factory(),
             'editeur' => $this->faker->company(),
             'date_publication' => $this->faker->date(),
-            'image' => $this->faker->imageUrl(),
+            'image' => $this->faker->imageUrl(200, 300, 'books', true),
             'actif' => 1,
         ];
     }

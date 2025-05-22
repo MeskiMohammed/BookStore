@@ -4,10 +4,10 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-class CategorieSeeder extends Seeder
+class LivreSeeder extends Seeder
 {
     public function run()
     {
-        \App\Models\Categorie::factory()->count(5)->create();
+        \App\Models\Livre::factory()->count(20)->create();
     }
 }

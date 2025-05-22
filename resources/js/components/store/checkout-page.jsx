@@ -12,9 +12,6 @@ export default function CheckoutPage() {
     lastName: "",
     email: "",
     address: "",
-    city: "",
-    postalCode: "",
-    country: "",
     paymentMethod: "credit_card",
   })
 
@@ -38,9 +35,6 @@ export default function CheckoutPage() {
     if (!formData.email.trim()) newErrors.email = "Email is required"
     if (!/^\S+@\S+\.\S+$/.test(formData.email)) newErrors.email = "Email is invalid"
     if (!formData.address.trim()) newErrors.address = "Address is required"
-    if (!formData.city.trim()) newErrors.city = "City is required"
-    if (!formData.postalCode.trim()) newErrors.postalCode = "Postal code is required"
-    if (!formData.country.trim()) newErrors.country = "Country is required"
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -50,21 +44,26 @@ export default function CheckoutPage() {
     e.preventDefault()
 
     if (validateForm()) {
-      // In a real app, you would submit the order to your backend
-      alert("Order placed successfully!")
-      clearCart()
-      router.visit("/")
+      router.post(route('checkout.store'), formData, {
+        onSuccess: () => {
+          clearCart()
+          router.visit('/')
+        },
+        onError: (errors) => {
+          setErrors(errors)
+        }
+      })
     }
   }
 
-  if (!cartItems.length === 0) {
+  if (cartItems.length === 0) {
     return (
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">Checkout</h1>
           <p className="mt-4 text-gray-500">Your cart is empty.</p>
           <Link
-            to="/products"
+            href="/catalogue"
             className="mt-6 inline-block rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500"
           >
             Continue Shopping
@@ -98,7 +97,10 @@ export default function CheckoutPage() {
                           name="firstName"
                           value={formData.firstName}
                           onChange={handleChange}
-                          className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${errors.firstName ? "border-red-500" : ""}`}
+                          className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
+                            errors.firstName ? "border-red-500" : ""
+                          } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
+                          placeholder="Enter your first name"
                         />
                         {errors.firstName && <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>}
                       </div>
@@ -115,7 +117,10 @@ export default function CheckoutPage() {
                           name="lastName"
                           value={formData.lastName}
                           onChange={handleChange}
-                          className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${errors.lastName ? "border-red-500" : ""}`}
+                          className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
+                            errors.lastName ? "border-red-500" : ""
+                          } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
+                          placeholder="Enter your last name"
                         />
                         {errors.lastName && <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>}
                       </div>
@@ -132,7 +137,10 @@ export default function CheckoutPage() {
                           name="email"
                           value={formData.email}
                           onChange={handleChange}
-                          className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${errors.email ? "border-red-500" : ""}`}
+                          className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
+                            errors.email ? "border-red-500" : ""
+                          } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
+                          placeholder="Enter your email address"
                         />
                         {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
                       </div>
@@ -155,60 +163,12 @@ export default function CheckoutPage() {
                           name="address"
                           value={formData.address}
                           onChange={handleChange}
-                          className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${errors.address ? "border-red-500" : ""}`}
+                          className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
+                            errors.address ? "border-red-500" : ""
+                          } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
+                          placeholder="Enter your full address"
                         />
                         {errors.address && <p className="mt-1 text-sm text-red-600">{errors.address}</p>}
-                      </div>
-                    </div>
-
-                    <div className="sm:col-span-2">
-                      <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-                        City
-                      </label>
-                      <div className="mt-1">
-                        <input
-                          type="text"
-                          id="city"
-                          name="city"
-                          value={formData.city}
-                          onChange={handleChange}
-                          className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${errors.city ? "border-red-500" : ""}`}
-                        />
-                        {errors.city && <p className="mt-1 text-sm text-red-600">{errors.city}</p>}
-                      </div>
-                    </div>
-
-                    <div className="sm:col-span-2">
-                      <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">
-                        Postal code
-                      </label>
-                      <div className="mt-1">
-                        <input
-                          type="text"
-                          id="postalCode"
-                          name="postalCode"
-                          value={formData.postalCode}
-                          onChange={handleChange}
-                          className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${errors.postalCode ? "border-red-500" : ""}`}
-                        />
-                        {errors.postalCode && <p className="mt-1 text-sm text-red-600">{errors.postalCode}</p>}
-                      </div>
-                    </div>
-
-                    <div className="sm:col-span-2">
-                      <label htmlFor="country" className="block text-sm font-medium text-gray-700">
-                        Country
-                      </label>
-                      <div className="mt-1">
-                        <input
-                          type="text"
-                          id="country"
-                          name="country"
-                          value={formData.country}
-                          onChange={handleChange}
-                          className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${errors.country ? "border-red-500" : ""}`}
-                        />
-                        {errors.country && <p className="mt-1 text-sm text-red-600">{errors.country}</p>}
                       </div>
                     </div>
                   </div>
@@ -297,7 +257,7 @@ export default function CheckoutPage() {
                         <p className="text-sm text-gray-500">Qty {item.quantity}</p>
                       </div>
                       <div className="flex-shrink-0 text-sm font-medium text-gray-900">
-                        ${(item.prix * item.quantity).toFixed(2)}
+                        €{(item.prix * item.quantity).toFixed(2)}
                       </div>
                     </li>
                   ))}
@@ -307,20 +267,20 @@ export default function CheckoutPage() {
               <div className="mt-6 border-t border-gray-200 pt-6">
                 <div className="flex items-center justify-between">
                   <dt className="text-sm text-gray-600">Subtotal</dt>
-                  <dd className="text-sm font-medium text-gray-900">${getCartTotal().toFixed(2)}</dd>
+                  <dd className="text-sm font-medium text-gray-900">€{getCartTotal().toFixed(2)}</dd>
                 </div>
                 <div className="flex items-center justify-between mt-2">
                   <dt className="text-sm text-gray-600">Shipping</dt>
-                  <dd className="text-sm font-medium text-gray-900">$5.00</dd>
+                  <dd className="text-sm font-medium text-gray-900">€5.00</dd>
                 </div>
                 <div className="flex items-center justify-between mt-2">
                   <dt className="text-sm text-gray-600">Tax</dt>
-                  <dd className="text-sm font-medium text-gray-900">${(getCartTotal() * 0.1).toFixed(2)}</dd>
+                  <dd className="text-sm font-medium text-gray-900">€{(getCartTotal() * 0.1).toFixed(2)}</dd>
                 </div>
                 <div className="flex items-center justify-between border-t border-gray-200 pt-4 mt-4">
                   <dt className="text-base font-medium text-gray-900">Total</dt>
                   <dd className="text-base font-medium text-gray-900">
-                    ${(getCartTotal() + 5 + getCartTotal() * 0.1).toFixed(2)}
+                    €{(getCartTotal() + 5 + getCartTotal() * 0.1).toFixed(2)}
                   </dd>
                 </div>
               </div>

@@ -16,7 +16,7 @@ class OrderController extends Controller
     {
         $orders = Commande::with(['user'])->latest()->get();
         $users = User::select('id', 'nom', 'prenom')->get();
-        
+
         return Inertia::render('admin/orders', [
             'initialOrders' => $orders,
             'users' => $users,
@@ -53,10 +53,9 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Commande $order)
+    public function show($id)
     {
-        $order->load(['user', 'detailsCommandes.livre']);
-        
+        $order = \App\Models\Commande::with(['user', 'orderDetails.livre'])->findOrFail($id);
         return response()->json($order);
     }
 
@@ -86,13 +85,13 @@ class OrderController extends Controller
     public function destroy(Commande $order)
     {
         $orderId = $order->id;
-        
+
         // Delete related order details first
         $order->detailsCommandes()->delete();
         $order->delete();
-        
+
         session()->flash('deletedOrderId', $orderId);
         return redirect()->route('orders.index')
             ->with('success', 'Order deleted successfully.');
     }
-} 
+}

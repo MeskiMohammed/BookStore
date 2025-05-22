@@ -9,8 +9,8 @@ class CategorieFactory extends Factory
     public function definition(): array
     {
         return [
-            'Nom' => $this->faker->word(),
-            'Description' => $this->faker->sentence(),
+            'nom' => $this->faker->word(),
+            'description' => $this->faker->sentence(),
         ];
     }
 }

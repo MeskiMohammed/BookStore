@@ -13,20 +13,22 @@ use Database\Seeders\LivresTableSeeder;
 use Database\Seeders\UsersTableSeeder;
 use Database\Seeders\CategorieSeeder;
 use Database\Seeders\LivreSeeder;
+use Database\Seeders\UserSeeder;
+use Database\Seeders\CommandeSeeder;
+use Database\Seeders\DetailsCommandeSeeder;
+use Database\Seeders\AvisSeeder;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
         $this->call([
+            UserSeeder::class,
             CategorieSeeder::class,
             LivreSeeder::class,
-            CategoriesTableSeeder::class,
-            UsersTableSeeder::class,
-            LivresTableSeeder::class,
-            CommandesTableSeeder::class,
-            DetailsCommandesTableSeeder::class,
-            AvisTableSeeder::class,
+            CommandeSeeder::class,
+            DetailsCommandeSeeder::class,
+            AvisSeeder::class,
         ]);
     }
 }
