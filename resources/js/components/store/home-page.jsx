@@ -51,20 +51,22 @@ const initialBooks = [
 ]
 
 const initialCategories = [
-  { id: 1, nom: "Fiction" },
-  { id: 2, nom: "Non-Fiction" },
-  { id: 3, nom: "Science Fiction" },
+  { id: 1, nom: "Fiction", image: "/placeholder.svg" },
+  { id: 2, nom: "Non-Fiction", image: "/placeholder.svg" },
+  { id: 3, nom: "Science Fiction", image: "/placeholder.svg" },
+  { id: 4, nom: "Mystery", image: "/placeholder.svg" },
+  { id: 5, nom: "Romance", image: "/placeholder.svg" },
+  { id: 6, nom: "Biography", image: "/placeholder.svg" },
+  { id: 7, nom: "History", image: "/placeholder.svg" }
 ]
 
-export default function HomePage() {
+export default function HomePage({ categories }) {
   const [featuredBooks, setFeaturedBooks] = useState([])
-  const [categories, setCategories] = useState([])
-//   const { addToCart } = useCart()
+  const { addToCart } = useCart()
 
   useEffect(() => {
     // In a real app, you would fetch this data from an API
     setFeaturedBooks(initialBooks)
-    setCategories(initialCategories)
   }, [])
 
   return (
@@ -83,7 +85,7 @@ export default function HomePage() {
               </p>
               <div className="mt-10 flex items-center gap-x-6">
                 <Link
-                  to="/products"
+                  href="/catalogue"
                   className="rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                 >
                   Browse Books
@@ -117,7 +119,7 @@ export default function HomePage() {
               <div className="mt-4 flex justify-between">
                 <div>
                   <h3 className="text-sm text-gray-700">
-                    <Link to={`/products/${book.id}`}>
+                    <Link href={`/catalogue/${book.id}`}>
                       <span aria-hidden="true" className="absolute inset-0" />
                       {book.libelle}
                     </Link>
@@ -138,31 +140,48 @@ export default function HomePage() {
       </div>
 
       {/* Categories section */}
-      <div className="bg-gray-100">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900">Browse by Category</h2>
-          <div className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-            {categories.map((category) => (
-              <div key={category.id} className="group relative">
-                <div className="overflow-hidden rounded-lg bg-white shadow">
-                  <div className="p-6">
-                    <h3 className="text-lg font-medium text-gray-900">
-                      <Link to={`/products?category=${category.id}`}>
-                        <span className="absolute inset-0" />
-                        {category.nom}
-                      </Link>
-                    </h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      Explore our collection of {category.nom.toLowerCase()} books
-                    </p>
+      <section className='py-12 bg-gray-50'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <h2 className='text-3xl font-bold text-gray-900 mb-8'>Catégories</h2>
+          <div className='grid grid-cols-2 md:grid-cols-4 gap-6'>
+            {categories.slice(0, 7).map((category) => (
+              <Link
+                key={category.id}
+                href={`/catalogue?categorie=${category.id}`}
+                className='group relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300'
+              >
+                <div className='aspect-w-16 aspect-h-9'>
+                  <img
+                    src={category.image || "/placeholder.svg"}
+                    alt={category.nom}
+                    className='w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300'
+                  />
+                  <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent' />
+                  <div className='absolute bottom-0 left-0 right-0 p-4'>
+                    <h3 className='text-lg font-semibold text-white'>{category.nom}</h3>
+                  </div>
+                </div>
+              </Link>
+            ))}
+            <Link
+              href='/catalogue'
+              className='group relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300'
+            >
+              <div className='aspect-w-16 aspect-h-9'>
+                <div className='w-full h-full bg-gray-800 flex items-center justify-center'>
+                  <div className='text-center'>
+                    <h3 className='text-lg font-semibold text-white mb-2'>Autre</h3>
+                    <p className='text-sm text-gray-300'>Voir plus de catégories</p>
                   </div>
                 </div>
               </div>
-            ))}
+            </Link>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }
+
+
 

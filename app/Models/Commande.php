@@ -19,6 +19,10 @@ class Commande extends Model
         'montant_totale',
         'statut',
         'methode_paiement',
+        'client_name',
+        'client_email',
+        'client_phone',
+        'client_address',
     ];
 
     /**

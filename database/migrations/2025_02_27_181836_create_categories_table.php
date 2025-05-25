@@ -12,14 +12,16 @@ class CreateCategoriesTable extends Migration
             $table->id();
             $table->string("nom");
             $table->text("description")->nullable();
+            $table->string('image')->nullable();
+            $table->integer('ordre')->nullable();
             $table->timestamps();
-    });
+        });
     }
 
     public function down()
     {
         Schema::dropIfExists('categories');
     }
-    
-   
+
+
 };

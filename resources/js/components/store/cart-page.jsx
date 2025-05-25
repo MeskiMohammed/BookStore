@@ -3,6 +3,14 @@
 import { Link } from '@inertiajs/react';
 import { useCart } from '@/components/store/cart-context';
 
+// Helper to get book image or placeholder
+function getBookImage(image) {
+  if (!image || typeof image !== 'string' || image.trim() === '' || image === 'null' || image === 'undefined') {
+    return '/images/books/placeholder.svg';
+  }
+  return image;
+}
+
 export default function CartPage() {
   const { cartItems, updateCartItemQuantity, removeFromCart, getCartTotal } = useCart();
 
@@ -31,7 +39,7 @@ export default function CartPage() {
               {cartItems.map((item) => (
                 <li key={item.id} className='flex py-6'>
                   <div className='h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200'>
-                    <img src={item.image || '/placeholder.svg'} alt={item.libelle} className='h-full w-full object-cover object-center' />
+                    <img src={getBookImage(item.image)} alt={item.libelle} className='h-full w-full object-cover object-center' />
                   </div>
 
                   <div className='ml-4 flex flex-1 flex-col'>

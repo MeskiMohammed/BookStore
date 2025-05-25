@@ -20,7 +20,7 @@ class CreateLivresTable extends Migration
             $table->foreignId('categorie_id')->constrained('categories')->onDelete('cascade');
             $table->string('editeur');
             $table->date('date_publication');
-            $table->string('image')->nullable();
+            $table->text('image')->nullable();
             $table->boolean('actif')->default(1);
             $table->timestamps();
         });

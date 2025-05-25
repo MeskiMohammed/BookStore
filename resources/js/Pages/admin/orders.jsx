@@ -2,14 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import AdminLayout from '@/Layouts/AdminLayout';
-import { Modal } from '@/components/ui-components';
 import { router, usePage } from '@inertiajs/react';
-import { DataTableToolbar, DeleteConfirmationDialog } from '@/components/ui-components';
+import { DataTableToolbar, DeleteConfirmationDialog, Modal } from '@/components/ui-components';
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 
-
 export default function OrdersPage({ initialOrders, users }) {
-    console.log(initialOrders)
+  console.log(initialOrders);
   const [orders, setOrders] = useState(initialOrders || []);
   const [filteredOrders, setFilteredOrders] = useState(orders);
   const { flash } = usePage().props;
@@ -208,7 +206,7 @@ export default function OrdersPage({ initialOrders, users }) {
                     <td className='px-6 py-4'>{getUserName(order.user_id)}</td>
                     <td className='px-6 py-4'>${order.montant_totale.toFixed(2)}</td>
                     <td className='px-6 py-4'>{getStatusBadge(order.statut)}</td>
-                    <td className='px-6 py-4'>{formatPaymentMethod(order.method_paiment)}</td>
+                    <td className='px-6 py-4'>{formatPaymentMethod(order.methode_paiement)}</td>
                     <td className='px-6 py-4 text-right space-x-2'>
                       <button onClick={() => handleViewDetails(order)} className='text-blue-600 hover:text-blue-800' title='View'>
                         <FaEye />
@@ -229,11 +227,7 @@ export default function OrdersPage({ initialOrders, users }) {
           {totalPages > 1 && (
             <div className='flex justify-center items-center mt-4 space-x-2'>
               {Array.from({ length: totalPages }, (_, i) => (
-                <button
-                  key={i + 1}
-                  onClick={() => goToPage(i + 1)}
-                  className={`px-3 py-1 rounded ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}
-                >
+                <button key={i + 1} onClick={() => goToPage(i + 1)} className={`px-3 py-1 rounded ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}>
                   {i + 1}
                 </button>
               ))}

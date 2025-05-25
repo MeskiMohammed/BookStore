@@ -9,7 +9,15 @@ import FreaturesImage from '../../../images/FreaturesImage.png';
 import ReductionImage from '../../../images/ReductionImage.png';
 import NiDiagramSuccessor from '../../../icons/NiDiagramSuccessor.png';
 
-function Home({ bestSellers, popular, scienceFiction, bookGenres }) {
+// Helper to get book image or placeholder
+function getBookImage(image) {
+  if (!image || typeof image !== 'string' || image.trim() === '' || image === 'null' || image === 'undefined') {
+    return '/images/books/placeholder.svg';
+  }
+  return image;
+}
+
+function Home({ bestSellers, popular, bookGenres }) {
   return (
     <StoreLayout>
       {/* Hero */}
@@ -24,13 +32,13 @@ function Home({ bestSellers, popular, scienceFiction, bookGenres }) {
 
             {/* Buttons */}
             <div className='mt-7 grid gap-3 w-full sm:inline-flex'>
-              <Link className='py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none' href='#'>
+              <Link className='py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none' href='/catalogue'>
                 Explorer la librairie
                 <svg className='shrink-0 size-4' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
                   <path d='m9 18 6-6-6-6' />
                 </svg>
               </Link>
-              <Link className='py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none' href='#'>
+              <Link className='py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none' href='/contact'>
                 Contactez-nous
               </Link>
             </div>
@@ -145,7 +153,6 @@ function Home({ bestSellers, popular, scienceFiction, bookGenres }) {
 
       <BookSlider title='Meilleures Ventes' books={bestSellers} />
       <BookSlider title='Les Plus Populaires' books={popular} />
-      <BookSlider title='Science Fiction' books={scienceFiction} />
 
       {/* Features */}
       <div className='max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto'>
@@ -249,31 +256,47 @@ function Home({ bestSellers, popular, scienceFiction, bookGenres }) {
       {/* End Features */}
 
       {/* Shop by Genre */}
-
-      <div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 mx-auto">
-      <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-            {bookGenres.map((book,i) => {
-              return (
-                <Link href='#' key={i} className='flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2 hover:bg-gray-50   '>
-                  <svg className='me-2 h-4 w-4 shrink-0 text-gray-800 ' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'>
-                    <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M12 15v5m-3 0h6M4 11h16M5 15h14a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1Z'></path>
-                  </svg>
-                  <span className='text-sm font-medium text-gray-800 '>{book}</span>
-                </Link>
-              );
-            })}
-          </div>
-            </div>
-      <section className='bg-white  px-4 py-8 antialiased  md:py-16'>
-        <div className='mx-auto grid max-w-screen-xl rounded-lg bg-gray-50 p-4  md:p-8 lg:grid-cols-12 lg:gap-8 lg:p-16 xl:gap-16'>
-          <div className='lg:col-span-5 lg:mt-0'>
-            <Link href='#'>
-              <img className='mb-4 h-full w-full md:h-full md:w-full rounded-md' src={ReductionImage} alt='peripherals' />
-              {/* <img className='mb-4 hidden  md:h-full' src='https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-components-dark.svg' alt='peripherals' /> */}
+      <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 mx-auto">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">Catégories</h2>
+        <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+          {bookGenres.slice(0, 7).map((genre) => (
+            <Link
+              href={`/catalogue?categorie=${genre.id}`}
+              key={genre.id}
+              className='flex items-center rounded-lg border border-gray-200 bg-white px-4 py-3 hover:bg-gray-50 transition-colors'
+            >
+              <svg className='me-2 h-4 w-4 shrink-0 text-gray-800' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'>
+                <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M12 15v5m-3 0h6M4 11h16M5 15h14a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1Z'></path>
+              </svg>
+              <span className='text-sm font-medium text-gray-800'>{genre.nom}</span>
             </Link>
+          ))}
+          <Link
+            href="/catalogue"
+            className='flex items-center rounded-lg border border-gray-200 bg-white px-4 py-3 hover:bg-gray-50 transition-colors'
+          >
+            <svg className='me-2 h-4 w-4 shrink-0 text-gray-800' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'>
+              <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M12 15v5m-3 0h6M4 11h16M5 15h14a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1Z'></path>
+            </svg>
+            <span className='text-sm font-medium text-gray-800'>Autre</span>
+          </Link>
+        </div>
+      </div>
+      <section className='bg-white px-4 py-8 antialiased md:py-16'>
+        <div className='mx-auto grid max-w-screen-xl rounded-lg bg-gray-50 p-4 md:p-8 lg:grid-cols-12 lg:gap-8 lg:p-16 xl:gap-16'>
+          <div className='lg:col-span-5 lg:mt-0'>
+            {bestSellers[0] && (
+              <Link href={`/catalogue/${bestSellers[0].id}`}>
+                <img
+                  className='mb-4 h-64 w-48 mx-auto md:h-80 md:w-64 rounded-md object-contain'
+                  src={getBookImage(bestSellers[0].image)}
+                  alt={bestSellers[0].libelle}
+                />
+              </Link>
+            )}
           </div>
           <div className='me-auto place-self-center py-4 lg:col-span-7'>
-            <h1 className='mb-3 text-2xl font-bold leading-tight tracking-tight text-gray-800  md:text-4xl'>
+            <h1 className='mb-3 text-2xl font-bold leading-tight tracking-tight text-gray-800 md:text-4xl'>
               Offre Spéciale
               <br />
               <br />
@@ -281,12 +304,23 @@ function Home({ bestSellers, popular, scienceFiction, bookGenres }) {
             </h1>
             <br />
 
-            <p className='mb-6 text-gray-500 '>Inscrivez-vous à notre newsletter pour recevoir un bon de réduction !</p>
+            <p className='mb-6 text-gray-500'>
+              {bestSellers[0] && (
+                <>
+                  Profitez de notre offre spéciale sur <span className="font-semibold">{bestSellers[0].libelle}</span> et bien d'autres livres !
+                </>
+              )}
+            </p>
             <br />
 
-            <Link href='#' className='inline-flex items-center justify-center rounded-lg bg-primary-700 px-5 py-3 text-center text-base font-medium text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 '>
-              {' Précommandez '}
-            </Link>
+            {bestSellers[0] && (
+              <Link
+                href={`/catalogue/${bestSellers[0].id}`}
+                className='inline-flex items-center justify-center rounded-lg bg-primary-700 px-5 py-3 text-center text-base font-medium text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-300'
+              >
+                Précommandez
+              </Link>
+            )}
           </div>
         </div>
       </section>

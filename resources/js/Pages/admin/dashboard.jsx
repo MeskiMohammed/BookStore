@@ -7,6 +7,11 @@ export default function App(props) {
   // Get stats and recentData from props (inertia provides these from the controller)
   const { stats = {}, recentData = {} } = props;
   const { totalBooks = 0, totalUsers = 0, totalOrders = 0, totalCategories = 0 } = stats;
+
+  console.log('Dashboard props:', props);
+  console.log('Stats:', stats);
+  console.log('Recent data:', recentData);
+
   // For latest books, use recentData.recentBooks or fallback to []
   const latestBooks = (recentData.recentBooks || []).slice(0, 5);
   const recentOrders = (recentData.recentOrders || []).slice(0, 5);
@@ -23,7 +28,7 @@ export default function App(props) {
             </div>
             <div>
               <div className='text-sm font-medium text-gray-500'>Total Books</div>
-              <div className='text-2xl font-semibold text-gray-900'>{totalBooks}</div>
+              <div className='text-2xl font-semibold text-gray-900'>{totalBooks || 0}</div>
             </div>
           </div>
           <div className='flex items-center h-24 rounded bg-white border border-gray-200 shadow p-4'>
@@ -34,7 +39,7 @@ export default function App(props) {
             </div>
             <div>
               <div className='text-sm font-medium text-gray-500'>Total Users</div>
-              <div className='text-2xl font-semibold text-gray-900'>{totalUsers}</div>
+              <div className='text-2xl font-semibold text-gray-900'>{totalUsers || 0}</div>
             </div>
           </div>
           <div className='flex items-center h-24 rounded bg-white border border-gray-200 shadow p-4'>
@@ -45,7 +50,7 @@ export default function App(props) {
             </div>
             <div>
               <div className='text-sm font-medium text-gray-500'>Total Orders</div>
-              <div className='text-2xl font-semibold text-gray-900'>{totalOrders}</div>
+              <div className='text-2xl font-semibold text-gray-900'>{totalOrders || 0}</div>
             </div>
           </div>
           <div className='flex items-center h-24 rounded bg-white border border-gray-200 shadow p-4'>
@@ -56,7 +61,7 @@ export default function App(props) {
             </div>
             <div>
               <div className='text-sm font-medium text-gray-500'>Total Categories</div>
-              <div className='text-2xl font-semibold text-gray-900'>{totalCategories}</div>
+              <div className='text-2xl font-semibold text-gray-900'>{totalCategories || 0}</div>
             </div>
           </div>
         </div>

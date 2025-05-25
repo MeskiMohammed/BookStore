@@ -4,19 +4,22 @@ import { createRoot } from 'react-dom/client'
 import '../css/app.css';
 import { CartProvider } from './components/store/cart-context';
 import { ToastProvider } from './components/ToastContext';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 
 createInertiaApp({
-  resolve: name => {
-    const pages = import.meta.glob('./Pages/**/*.jsx', { eager: true })
-    return pages[`./Pages/${name}.jsx`]
-  },
+  title: (title) => `${title} - BookStore`,
+  resolve: (name) => resolvePageComponent(`./Pages/${name}.jsx`, import.meta.glob('./Pages/**/*.jsx')),
   setup({ el, App, props }) {
-    createRoot(el).render(
+    const root = createRoot(el);
+    root.render(
       <ToastProvider>
         <CartProvider>
           <App {...props} />
         </CartProvider>
       </ToastProvider>
-    )
+    );
+  },
+  progress: {
+    color: '#4B5563',
   },
 })

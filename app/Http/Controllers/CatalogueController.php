@@ -14,11 +14,12 @@ class CatalogueController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Livre::with('categorie');
+        $query = Livre::with(['categorie', 'avis']);
 
         // Apply category filter
         if ($request->has('categorie') && $request->categorie) {
-            $query->where('categorie_id', $request->categorie);
+            $categoryIds = explode(',', $request->categorie);
+            $query->whereIn('categorie_id', $categoryIds);
         }
 
         // Apply price range filter
@@ -47,7 +48,10 @@ class CatalogueController extends Controller
         $query->orderBy($sort, $direction);
 
         // Get paginated results
-        $livres = $query->paginate(12)->withQueryString();
+        $livres = $query->paginate(10)->withQueryString();
+
+        // Append the average_rating attribute to each book
+        $livres->getCollection()->each->append('average_rating');
 
         // Get all categories for filter
         $categories = Categorie::all();
@@ -74,7 +78,7 @@ class CatalogueController extends Controller
             ->get();
 
         return Inertia::render('store/details-product', [
-            'livre' => $livre,
+            'book' => $livre,
             'relatedBooks' => $relatedBooks
         ]);
     }

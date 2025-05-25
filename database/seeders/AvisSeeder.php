@@ -2,12 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Models\Avis;
 use Illuminate\Database\Seeder;
 
 class AvisSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        \App\Models\Avis::factory()->count(20)->create();
+        // Create 50 reviews
+        Avis::factory()->count(50)->create();
     }
 }

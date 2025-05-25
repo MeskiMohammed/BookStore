@@ -14,7 +14,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Commande::with(['user'])->latest()->get();
+        $orders = Commande::with('user')->latest()->get();
         $users = User::select('id', 'nom', 'prenom')->get();
 
         return Inertia::render('admin/orders', [

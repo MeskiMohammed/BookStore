@@ -3,6 +3,14 @@ import { Link, usePage,router } from '@inertiajs/react';
 import Logo from '@/../images/Logo.png';
 import { CartProvider, useCart } from '@/components/store/cart-context';
 
+// Helper to get book image or placeholder
+function getBookImage(image) {
+  if (!image || typeof image !== 'string' || image.trim() === '' || image === 'null' || image === 'undefined') {
+    return '/images/books/placeholder.svg';
+  }
+  return image;
+}
+
 function CartDropdown({ isOpen, onClose }) {
   const { cartItems, removeFromCart, getCartTotal } = useCart();
 
@@ -26,7 +34,9 @@ function CartDropdown({ isOpen, onClose }) {
             <div className="max-h-96 overflow-y-auto">
               {cartItems.map((item) => (
                 <div key={item.id} className="flex items-center gap-4 py-2 border-b border-gray-100">
-                  <img src={item.image} alt={item.titre} className="w-16 h-16 object-cover rounded" />
+                  <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                    <img src={getBookImage(item.image)} alt={item.libelle} className="h-full w-full object-cover object-center" />
+                  </div>
                   <div className="flex-1">
                     <h4 className="font-medium">{item.titre}</h4>
                     <p className="text-sm text-gray-600">Quantité: {item.quantity}</p>
@@ -99,7 +109,7 @@ function Header() {
               <div>
                 <Link
                   className={`relative inline-block transition-colors duration-200 before:absolute before:-bottom-1 before:left-0 before:right-0 before:h-1 before:rounded-full before:transition-transform before:duration-300 before:origin-center before:bg-blue-500
-                    ${url === '/catalogue' ? 'text-blue-950 before:scale-x-100' : 'text-black hover:text-gray-600 before:scale-x-0 hover:before:scale-x-100'}`}
+                    ${url.startsWith('/catalogue') ? 'text-blue-950 before:scale-x-100' : 'text-black hover:text-gray-600 before:scale-x-0 hover:before:scale-x-100'}`}
                   href='/catalogue'>
                   Catalogue
                 </Link>

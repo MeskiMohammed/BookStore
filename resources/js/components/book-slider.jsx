@@ -5,78 +5,13 @@ import { Link } from '@inertiajs/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-// const books = [
-//     {
-//       id: 1,
-//       title: "The Midnight Library",
-//       author: "Matt Haig",
-//       price: "$16.99",
-//       coverImage: "https://covers.openlibrary.org/b/id/12878782-L.jpg",
-//     },
-//     {
-//       id: 2,
-//       title: "Klara and the Sun",
-//       author: "Kazuo Ishiguro",
-//       price: "$18.99",
-//       coverImage: "https://covers.openlibrary.org/b/id/12911354-L.jpg",
-//     },
-//     {
-//       id: 3,
-//       title: "Project Hail Mary",
-//       author: "Andy Weir",
-//       price: "$19.99",
-//       coverImage: "https://covers.openlibrary.org/b/id/13032562-L.jpg",
-//     },
-//     {
-//       id: 4,
-//       title: "The Invisible Life of Addie LaRue",
-//       author: "V.E. Schwab",
-//       price: "$17.99",
-//       coverImage: "https://covers.openlibrary.org/b/id/12680953-L.jpg",
-//     },
-//     {
-//       id: 5,
-//       title: "The Four Winds",
-//       author: "Kristin Hannah",
-//       price: "$15.99",
-//       coverImage: "https://covers.openlibrary.org/b/id/12880880-L.jpg",
-//     },
-//     {
-//       id: 6,
-//       title: "Dune",
-//       author: "Frank Herbert",
-//       price: "$14.99",
-//       coverImage: "https://covers.openlibrary.org/b/id/12694418-L.jpg",
-//     },
-//     {
-//       id: 7,
-//       title: "The Silent Patient",
-//       author: "Alex Michaelides",
-//       price: "$15.99",
-//       coverImage: "https://covers.openlibrary.org/b/id/12680952-L.jpg",
-//     },
-//     {
-//       id: 8,
-//       title: "Where the Crawdads Sing",
-//       author: "Delia Owens",
-//       price: "$16.99",
-//       coverImage: "https://covers.openlibrary.org/b/id/12680951-L.jpg",
-//     },
-//     {
-//       id: 9,
-//       title: "Atomic Habits",
-//       author: "James Clear",
-//       price: "$14.99",
-//       coverImage: "https://covers.openlibrary.org/b/id/12842437-L.jpg",
-//     },
-//     {
-//       id: 10,
-//       title: "Educated",
-//       author: "Tara Westover",
-//       price: "$17.99",
-//       coverImage: "https://covers.openlibrary.org/b/id/12680950-L.jpg",
-//     }
-// ]
+// Helper to get book image or placeholder
+function getBookImage(image) {
+  if (!image || typeof image !== 'string' || image.trim() === '' || image === 'null' || image === 'undefined') {
+    return '/images/books/placeholder.svg';
+  }
+  return image;
+}
 
 export default function BookSlider({ title, books }) {
   const prevRef = useRef(null);
@@ -85,28 +20,6 @@ export default function BookSlider({ title, books }) {
   const formatRating = (rating) => {
     const numRating = Number(rating);
     return !isNaN(numRating) ? numRating.toFixed(1) : '0.0';
-  };
-
-  const getBookCoverUrl = (book) => {
-    // If we have a local image from our storage
-    if (book.image && book.image.startsWith('books/')) {
-      return `/storage/${book.image}`;
-    }
-
-    // If we have a direct image URL
-    if (book.image && (book.image.startsWith('http://') || book.image.startsWith('https://'))) {
-      return book.image;
-    }
-
-    // Generate an Open Library cover URL using ISBN
-    if (book.isbn) {
-      return `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`;
-    }
-
-    // Fallback to a generated cover using the book's title and author
-    const encodedTitle = encodeURIComponent(book.libelle);
-    const encodedAuthor = encodeURIComponent(book.auteur);
-    return `https://via.placeholder.com/400x600/1a365d/ffffff?text=${encodedTitle}%0A${encodedAuthor}`;
   };
 
   return (
@@ -155,21 +68,9 @@ export default function BookSlider({ title, books }) {
               <div className='bg-white rounded-lg hover:shadow-lg transition-shadow h-full'>
                 <div className='relative pt-[150%]'> {/* 2:3 aspect ratio container */}
                   <img
-                    src={getBookCoverUrl(book)}
+                    src={getBookImage(book.image)}
                     alt={book.libelle}
                     className='absolute top-0 left-0 w-full h-full object-cover rounded-t-lg'
-                    onError={(e) => {
-                      // If the Open Library cover fails, fall back to a generated cover
-                      if (e.target.src.includes('openlibrary.org')) {
-                        const encodedTitle = encodeURIComponent(book.libelle);
-                        const encodedAuthor = encodeURIComponent(book.auteur);
-                        e.target.src = `https://via.placeholder.com/400x600/1a365d/ffffff?text=${encodedTitle}%0A${encodedAuthor}`;
-                      }
-                      // If the generated cover also fails, use a simple no-cover image
-                      else if (e.target.src.includes('via.placeholder.com')) {
-                        e.target.src = 'https://via.placeholder.com/400x600/1a365d/ffffff?text=No+Cover+Available';
-                      }
-                    }}
                   />
                 </div>
                 <div className="p-4">

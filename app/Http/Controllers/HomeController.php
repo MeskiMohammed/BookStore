@@ -65,7 +65,7 @@ class HomeController extends Controller
                 'rating' => $livre->avis->avg('note') ?? 0
             ];
         });
-        
+
         // Get Popular Books (highest rated)
         $popular = Livre::select(
             'livres.id',
@@ -135,8 +135,8 @@ class HomeController extends Controller
         });
 
         // Get all categories for the "Shop by category" section
-        $bookGenres = Categorie::pluck('nom')->toArray();
-        
+        $bookGenres = Categorie::select('id', 'nom')->get();
+
         return Inertia::render('store/home', [
             'bestSellers' => $bestSellers,
             'popular' => $popular,
@@ -171,10 +171,10 @@ class HomeController extends Controller
             'email' => 'required|email|max:255',
             'message' => 'required|string'
         ]);
-        
+
         // Here you would typically send an email or store the contact message
         // For now, we'll just redirect with a success message
-        
+
         return redirect()->back()->with('success', 'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.');
     }
 }
