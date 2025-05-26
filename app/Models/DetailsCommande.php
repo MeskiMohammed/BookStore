@@ -18,7 +18,8 @@ class DetailsCommande extends Model
         'commande_id',
         'livre_id',
         'quantite',
-        'prix',
+        'prix_unitaire',
+        'sous_total',
     ];
 
     /**
@@ -28,7 +29,8 @@ class DetailsCommande extends Model
      */
     protected $casts = [
         'quantite' => 'integer',
-        'prix' => 'double',
+        'prix_unitaire' => 'double',
+        'sous_total' => 'double',
     ];
 
     /**
@@ -52,6 +54,6 @@ class DetailsCommande extends Model
      */
     public function getSubtotalAttribute()
     {
-        return $this->prix * $this->quantite;
+        return $this->prix_unitaire * $this->quantite;
     }
 }

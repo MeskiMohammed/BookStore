@@ -3,8 +3,12 @@
 import { useState, useEffect } from 'react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { router, usePage } from '@inertiajs/react';
-import { DataTableToolbar, DeleteConfirmationDialog, Modal } from '@/components/ui-components';
+import { DataTableToolbar, DeleteConfirmationDialog, Pagination } from '@/components/ui-components';
+import { Modal } from '@/components/ui-components';
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBox, faCreditCard, faEnvelope, faHome, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faPaypal } from "@fortawesome/free-brands-svg-icons";
 
 export default function OrdersPage({ initialOrders, users }) {
   console.log(initialOrders);
@@ -76,16 +80,17 @@ export default function OrdersPage({ initialOrders, users }) {
     setIsDeleteDialogOpen(true);
   };
 
-  const handleViewDetails = async (order) => {
-    try {
-      const response = await fetch(`/admin/orders/${order.id}`);
-      const data = await response.json();
-      setOrderDetails(data);
-      setCurrentOrder(order);
-      setIsDetailsDialogOpen(true);
-    } catch (error) {
-      console.error('Error fetching order details:', error);
-    }
+  const handleViewDetails = (order) => {
+    console.log('Opening details for order:', {
+      id: order.id,
+      client_name: order.client_name,
+      details_commandes: order.details_commandes,
+      hasDetails: !!order.details_commandes,
+      detailsLength: order.details_commandes?.length,
+      allKeys: Object.keys(order)
+    });
+    setCurrentOrder(order);
+    setIsDetailsDialogOpen(true);
   };
 
   const confirmDelete = () => {
@@ -132,14 +137,14 @@ export default function OrdersPage({ initialOrders, users }) {
 
   const getStatusBadge = (status) => {
     switch (status) {
-      case 'completed':
-        return <span className='bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full'>Completed</span>;
-      case 'processing':
-        return <span className='bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full'>Processing</span>;
-      case 'pending':
-        return <span className='bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full'>Pending</span>;
-      case 'cancelled':
-        return <span className='bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full'>Cancelled</span>;
+      case 'en_attente':
+        return <span className='bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full'>En attente</span>;
+      case 'en_cours':
+        return <span className='bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full'>En cours</span>;
+      case 'livree':
+        return <span className='bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full'>Livrée</span>;
+      case 'annulee':
+        return <span className='bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full'>Annulée</span>;
       default:
         return <span className='bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full'>{status}</span>;
     }
@@ -162,7 +167,11 @@ export default function OrdersPage({ initialOrders, users }) {
       <div className='bg-white p-4 rounded-lg shadow'>
         <h2 className='text-2xl font-bold mb-4'>Orders Management</h2>
 
-        <DataTableToolbar searchPlaceholder='Search orders...' onSearch={handleSearch} />
+        <DataTableToolbar
+          searchPlaceholder='Search orders...'
+          onSearch={handleSearch}
+          showAddButton={false}
+        />
 
         <div className='relative overflow-x-auto shadow-md sm:rounded-lg mt-4'>
           <table className='w-full text-sm text-left text-gray-500'>
@@ -223,23 +232,16 @@ export default function OrdersPage({ initialOrders, users }) {
               )}
             </tbody>
           </table>
-          {/* Pagination */}
           {totalPages > 1 && (
-            <div className='flex justify-center items-center mt-4 space-x-2'>
-              {Array.from({ length: totalPages }, (_, i) => (
-                <button key={i + 1} onClick={() => goToPage(i + 1)} className={`px-3 py-1 rounded ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}>
-                  {i + 1}
-                </button>
-              ))}
-            </div>
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={goToPage} />
           )}
         </div>
 
-        <OrderDialog isOpen={isAddDialogOpen} onClose={() => setIsAddDialogOpen(false)} onSave={handleSaveOrder} title='Add New Order' users={users} />
+        <OrderDialog isOpen={isAddDialogOpen} onClose={() => setIsAddDialogOpen(false)} onSave={handleSaveOrder} title='Add New Order' defaultValues={currentOrder} />
 
-        <OrderDialog isOpen={isEditDialogOpen} onClose={() => setIsEditDialogOpen(false)} onSave={handleSaveOrder} title='Edit Order' defaultValues={currentOrder} users={users} />
+        <OrderDialog isOpen={isEditDialogOpen} onClose={() => setIsEditDialogOpen(false)} onSave={handleSaveOrder} title='Edit Order' defaultValues={currentOrder} />
 
-        <OrderDetailsDialog isOpen={isDetailsDialogOpen} onClose={() => setIsDetailsDialogOpen(false)} order={currentOrder} orderDetails={orderDetails} userName={currentOrder ? getUserName(currentOrder.user_id) : ''} />
+        <OrderDetailsModal isOpen={isDetailsDialogOpen} onClose={() => setIsDetailsDialogOpen(false)} order={currentOrder} orderDetails={orderDetails} userName={currentOrder ? getUserName(currentOrder.user_id) : ''} />
 
         <DeleteConfirmationDialog isOpen={isDeleteDialogOpen} onClose={() => setIsDeleteDialogOpen(false)} onConfirm={confirmDelete} title='Delete Order' description={`Are you sure you want to delete order #${currentOrder?.id}? This action cannot be undone.`} />
       </div>
@@ -247,48 +249,31 @@ export default function OrdersPage({ initialOrders, users }) {
   );
 }
 
-export function OrderDialog({ isOpen, onClose, onSave, title, users = [], defaultValues }) {
+export function OrderDialog({ isOpen, onClose, onSave, title, defaultValues }) {
   const [formData, setFormData] = useState({
-    user_id: '',
-    montant_totale: 0,
-    statut: 'pending',
-    method_paiment: 'credit_card',
+    montant_totale: '',
+    statut: 'en_attente',
+    methode_paiement: 'credit_card',
   });
 
-  // Initialize form data when the dialog opens or when defaultValues change
   useEffect(() => {
-    if (!isOpen) return;
-
     if (defaultValues) {
-      setFormData(defaultValues);
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        user_id: users?.[0]?.id || '',
-        montant_totale: 0,
-        statut: 'pending',
-        method_paiment: 'credit_card',
-      }));
+      setFormData({
+        montant_totale: defaultValues.montant_totale,
+        statut: defaultValues.statut,
+        methode_paiement: defaultValues.methode_paiement,
+      });
     }
-  }, [isOpen, defaultValues]);
+  }, [defaultValues, isOpen]);
 
   const handleChange = (e) => {
-    const { name, value, type } = e.target;
-
-    if (type === 'number') {
-      setFormData((prev) => ({ ...prev, [name]: Number.parseFloat(value) }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({
-      ...formData,
-      user_id: Number.parseInt(formData.user_id),
-      montant_totale: Number.parseFloat(formData.montant_totale),
-    });
+    onSave(formData);
   };
 
   const footer = (
@@ -307,20 +292,6 @@ export function OrderDialog({ isOpen, onClose, onSave, title, users = [], defaul
       <form id='orderForm' onSubmit={handleSubmit}>
         <div className='grid gap-4 mb-4'>
           <div>
-            <label htmlFor='user_id' className='block mb-2 text-sm font-medium text-gray-900'>
-              Customer
-            </label>
-            <select id='user_id' name='user_id' className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5' value={formData.user_id} onChange={handleChange} required>
-              <option value=''>Select a customer</option>
-              {users.map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.prenom} {user.nom}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
             <label htmlFor='montant_totale' className='block mb-2 text-sm font-medium text-gray-900'>
               Total Amount
             </label>
@@ -332,22 +303,20 @@ export function OrderDialog({ isOpen, onClose, onSave, title, users = [], defaul
               Status
             </label>
             <select id='statut' name='statut' className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5' value={formData.statut} onChange={handleChange}>
-              <option value='pending'>Pending</option>
-              <option value='processing'>Processing</option>
-              <option value='completed'>Completed</option>
-              <option value='cancelled'>Cancelled</option>
+              <option value='en_attente'>En attente</option>
+              <option value='en_cours'>En cours</option>
+              <option value='livree'>Livrée</option>
+              <option value='annulee'>Annulée</option>
             </select>
           </div>
 
           <div>
-            <label htmlFor='method_paiment' className='block mb-2 text-sm font-medium text-gray-900'>
+            <label htmlFor='methode_paiement' className='block mb-2 text-sm font-medium text-gray-900'>
               Payment Method
             </label>
-            <select id='method_paiment' name='method_paiment' className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5' value={formData.method_paiment} onChange={handleChange}>
+            <select id='methode_paiement' name='methode_paiement' className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5' value={formData.methode_paiement} onChange={handleChange}>
               <option value='credit_card'>Credit Card</option>
               <option value='paypal'>PayPal</option>
-              <option value='bank_transfer'>Bank Transfer</option>
-              <option value='cash'>Cash</option>
             </select>
           </div>
         </div>
@@ -356,21 +325,32 @@ export function OrderDialog({ isOpen, onClose, onSave, title, users = [], defaul
   );
 }
 
-export function OrderDetailsDialog({ isOpen, onClose, order, orderDetails, userName }) {
-  if (!order || !orderDetails) return null;
+export function OrderDetailsModal({ isOpen, onClose, order }) {
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [status, setStatus] = useState(order?.statut || '');
 
-  const getStatusBadge = (status) => {
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const getStatusColor = (status) => {
     switch (status) {
-      case 'completed':
-        return <span className='bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full'>Completed</span>;
-      case 'processing':
-        return <span className='bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full'>Processing</span>;
-      case 'pending':
-        return <span className='bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full'>Pending</span>;
-      case 'cancelled':
-        return <span className='bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full'>Cancelled</span>;
+      case 'en_attente':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'en_cours':
+        return 'bg-blue-100 text-blue-800';
+      case 'livree':
+        return 'bg-green-100 text-green-800';
+      case 'annulee':
+        return 'bg-red-100 text-red-800';
       default:
-        return <span className='bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full'>{status}</span>;
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -381,61 +361,169 @@ export function OrderDetailsDialog({ isOpen, onClose, order, orderDetails, userN
       .join(' ');
   };
 
-  const footer = (
-    <button type='button' className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none' onClick={onClose}>
-      Close
-    </button>
-  );
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(price);
+  };
+
+  useEffect(() => {
+    if (order) {
+      setStatus(order.statut);
+    }
+  }, [order]);
+
+  const handleStatusChange = async (newStatus) => {
+    if (!order) return;
+
+    setIsUpdating(true);
+    try {
+      await router.put(`/admin/orders/${order.id}/status`, {
+        statut: newStatus
+      }, {
+        preserveScroll: true,
+        onSuccess: () => {
+          setStatus(newStatus);
+          order.statut = newStatus; // Update the local order status
+          setIsUpdating(false);
+        },
+        onError: () => {
+          setIsUpdating(false);
+        }
+      });
+    } catch (error) {
+      console.error('Error updating status:', error);
+      setIsUpdating(false);
+    }
+  };
+
+  if (!order) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title='Order Details' footer={footer}>
-      <div className='space-y-4'>
-        <div className='flex justify-between items-center'>
-          <h3 className='text-lg font-semibold text-gray-900'>Order #{order.id}</h3>
-          {getStatusBadge(order.statut)}
-        </div>
+    <Modal isOpen={isOpen} onClose={onClose} maxWidth="w-[90vw]">
+      <div className="flex flex-col h-[80vh]">
+        <div className="flex-1 overflow-y-auto pr-2">
+          {/* Order Header */}
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">
+                Commande #{order.id}
+              </h2>
+              <p className="text-sm text-gray-500">
+                {formatDate(order.created_at)}
+              </p>
+            </div>
+            <div className="flex items-center gap-4">
+              <select
+                value={status}
+                onChange={(e) => handleStatusChange(e.target.value)}
+                disabled={isUpdating}
+                className={`rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${getStatusColor(status)}`}
+              >
+                <option value="en_attente">En attente</option>
+                <option value="en_cours">En cours</option>
+                <option value="livree">Livrée</option>
+                <option value="annulee">Annulée</option>
+              </select>
+            </div>
+          </div>
 
-        <div className='grid grid-cols-2 gap-4'>
-          <div>
-            <p className='text-sm text-gray-500'>Customer</p>
-            <p className='font-medium text-gray-900'>{userName}</p>
-          </div>
-          <div>
-            <p className='text-sm text-gray-500'>Total Amount</p>
-            <p className='font-medium text-gray-900'>${order.montant_totale.toFixed(2)}</p>
-          </div>
-          <div>
-            <p className='text-sm text-gray-500'>Payment Method</p>
-            <p className='font-medium text-gray-900'>{formatPaymentMethod(order.method_paiment)}</p>
-          </div>
-        </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Customer Information */}
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Informations client</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm text-gray-500">Nom</p>
+                  <p className="text-sm font-medium text-gray-900">{order.client_name || `${order.user?.prenom} ${order.user?.nom}`}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Email</p>
+                  <p className="text-sm font-medium text-gray-900">{order.client_email || order.user?.email}</p>
+                </div>
+                {order.client_phone && (
+                  <div>
+                    <p className="text-sm text-gray-500">Téléphone</p>
+                    <p className="text-sm font-medium text-gray-900">{order.client_phone}</p>
+                  </div>
+                )}
+                {order.client_address && (
+                  <div>
+                    <p className="text-sm text-gray-500">Adresse</p>
+                    <p className="text-sm font-medium text-gray-900">{order.client_address}</p>
+                  </div>
+                )}
+              </div>
+            </div>
 
-        <div className='border-t pt-4'>
-          <p className='text-sm text-gray-500 mb-2'>Order Items</p>
-          {orderDetails.order_details && orderDetails.order_details.length > 0 ? (
-            <table className='w-full text-sm text-left text-gray-500'>
-              <thead>
-                <tr>
-                  <th>Book</th>
-                  <th>Quantity</th>
-                  <th>Price</th>
-                  <th>Subtotal</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orderDetails.order_details.map((item) => (
-                  <tr key={item.id}>
-                    <td>{item.livre?.libelle || 'Unknown'}</td>
-                    <td>{item.quantite}</td>
-                    <td>${item.prix.toFixed(2)}</td>
-                    <td>${(item.prix * item.quantite).toFixed(2)}</td>
+            {/* Order Summary */}
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Résumé de la commande</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm text-gray-500">Méthode de paiement</p>
+                  <p className="text-sm font-medium text-gray-900">{formatPaymentMethod(order.methode_paiement)}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Total</p>
+                  <p className="text-sm font-medium text-gray-900">{formatPrice(order.montant_totale)}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Order Items */}
+          <div className="bg-white rounded-lg shadow-sm p-6 mt-6">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Articles commandés</h3>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/2">
+                      Livre
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">
+                      Quantité
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">
+                      Prix unitaire
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">
+                      Sous-total
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <p className='text-center text-gray-500'>No items found for this order.</p>
-          )}
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {order.details_commandes?.map((item) => (
+                    <tr key={item.id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="ml-4">
+                            <div className="text-sm font-medium text-gray-900">
+                              {item.livre?.titre}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {item.livre?.auteur}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {item.quantite}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {formatPrice(item.prix_unitaire)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {formatPrice(item.sous_total)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </Modal>

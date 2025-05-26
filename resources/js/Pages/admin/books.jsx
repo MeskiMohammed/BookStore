@@ -3,7 +3,7 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { useState, useEffect } from 'react';
 import { router, Head, usePage } from '@inertiajs/react';
-import { DataTableToolbar, DeleteConfirmationDialog } from '@/components/ui-components';
+import { DataTableToolbar, DeleteConfirmationDialog, Pagination } from '@/components/ui-components';
 import { Modal } from '@/components/ui-components';
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 
@@ -126,15 +126,9 @@ export default function BooksPage({ initialBooks, categories }) {
   return (
     <AdminLayout>
       <Head title='Books Management' />
-      <div className='py-12'>
-        <div className='max-w-7xl mx-auto sm:px-6 lg:px-8'>
-          <div className='bg-white overflow-hidden shadow-sm sm:rounded-lg'>
-            <div className='p-6 text-gray-900'>
-              <h1 className='text-2xl font-semibold mb-6'>Books Management</h1>
-              <BookList books={books} categories={categories} onEdit={handleEdit} onDelete={handleDelete} onViewDetails={handleViewDetails} onAddNew={handleAddNew} />
-            </div>
-          </div>
-        </div>
+      <div className='bg-white p-4 rounded-lg shadow'>
+        <h2 className='text-2xl font-bold mb-4'>Books Management</h2>
+        <BookList books={books} categories={categories} onEdit={handleEdit} onDelete={handleDelete} onViewDetails={handleViewDetails} onAddNew={handleAddNew} />
       </div>
 
       <BookDialog isOpen={isAddDialogOpen} onClose={() => setIsAddDialogOpen(false)} onSave={handleSaveBook} title='Add New Book' categories={categories} />
@@ -468,35 +462,26 @@ export function BookList({ books, categories, onEdit, onDelete, onViewDetails, o
                   <td className='px-6 py-4'>
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${book.actif ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{book.actif ? 'Active' : 'Inactive'}</span>
                   </td>
-                  <td className='px-6 py-4 text-right space-x-2'>
-                    <button onClick={() => onViewDetails(book)} className='text-blue-600 hover:text-blue-800' title='View'>
-                      <FaEye />
-                    </button>
-                    <button onClick={() => onEdit(book)} className='text-green-600 hover:text-green-800' title='Edit'>
-                      <FaEdit />
-                    </button>
-                    <button onClick={() => onDelete(book)} className='text-red-600 hover:text-red-800' title='Delete'>
-                      <FaTrash />
-                    </button>
+                  <td className='px-6 py-4 text-right'>
+                    <div className='flex justify-end space-x-2'>
+                      <button onClick={() => onViewDetails(book)} className='text-blue-600 hover:text-blue-800' title='View'>
+                        <FaEye />
+                      </button>
+                      <button onClick={() => onEdit(book)} className='text-green-600 hover:text-green-800' title='Edit'>
+                        <FaEdit />
+                      </button>
+                      <button onClick={() => onDelete(book)} className='text-red-600 hover:text-red-800' title='Delete'>
+                        <FaTrash />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
             )}
           </tbody>
         </table>
-        {/* Pagination */}
         {totalPages > 1 && (
-          <div className='flex justify-center items-center mt-4 space-x-2'>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => goToPage(i + 1)}
-                className={`px-3 py-1 rounded ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={goToPage} />
         )}
       </div>
     </div>

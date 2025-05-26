@@ -4,7 +4,7 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import { useState, useEffect } from 'react';
 import { Modal } from '@/components/ui-components';
 import { router, usePage } from '@inertiajs/react';
-import { DataTableToolbar, DeleteConfirmationDialog } from '@/components/ui-components';
+import { DataTableToolbar, DeleteConfirmationDialog, Pagination } from '@/components/ui-components';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
 export default function ReviewsPage({ initialReviews, users, books }) {
@@ -179,8 +179,8 @@ export default function ReviewsPage({ initialReviews, users, books }) {
                     <td className='px-6 py-4'>{getBookTitle(review.livre_id)}</td>
                     <td className='px-6 py-4'>{renderStars(review.note)}</td>
                     <td className='px-6 py-4 max-w-xs truncate'>{review.commentaire}</td>
-                    <td className='px-6 py-4 text-right'>
-                      <button onClick={() => handleEdit(review)} className='text-green-600 hover:text-green-800 mr-2' title='Edit'>
+                    <td className='px-6 py-4 text-right space-x-2'>
+                      <button onClick={() => handleEdit(review)} className='text-green-600 hover:text-green-800' title='Edit'>
                         <FaEdit />
                       </button>
                       <button onClick={() => handleDelete(review)} className='text-red-600 hover:text-red-800' title='Delete'>
@@ -192,22 +192,10 @@ export default function ReviewsPage({ initialReviews, users, books }) {
               )}
             </tbody>
           </table>
+          {totalPages > 1 && (
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={goToPage} />
+          )}
         </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className='flex justify-center items-center mt-4 space-x-2'>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => goToPage(i + 1)}
-                className={`px-3 py-1 rounded ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
-        )}
 
         <ReviewDialog isOpen={isEditDialogOpen} onClose={() => setIsEditDialogOpen(false)} onSave={handleSaveReview} title='Edit Review' defaultValues={currentReview} users={users} books={books} />
 

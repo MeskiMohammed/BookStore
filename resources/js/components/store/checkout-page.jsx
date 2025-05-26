@@ -123,25 +123,60 @@ export default function CheckoutPage() {
       const submitData = {
         ...formData,
         cardNumber: formData.cardNumber.replace(/\s/g, ""),
+        cartItems: cartItems.map(item => ({
+          id: item.id,
+          quantity: item.quantity,
+          prix: item.prix
+        }))
       }
 
       console.log('Submitting data:', submitData)
 
-      router.post(route('checkout.store'), {
-        ...submitData,
-        cartItems: cartItems
-      }, {
-        onSuccess: () => {
+      // Add loading state
+      const submitButton = document.querySelector('button[type="submit"]')
+      if (submitButton) {
+        submitButton.disabled = true
+        submitButton.textContent = 'Traitement en cours...'
+      }
+
+      router.post(route('checkout.store'), submitData, {
+        onSuccess: (response) => {
+          console.log('Checkout successful:', response)
           clearCart()
           // The redirect will be handled by the backend
         },
         onError: (errors) => {
           console.error('Error response:', errors)
-          setErrors(errors)
-        }
+          if (errors.error) {
+            setErrors({ general: errors.error })
+          } else {
+            setErrors(errors)
+          }
+          // Reset button state
+          if (submitButton) {
+            submitButton.disabled = false
+            submitButton.textContent = 'Passer la commande'
+          }
+          // Scroll to the top to show errors
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        },
+        onFinish: () => {
+          // Reset button state
+          if (submitButton) {
+            submitButton.disabled = false
+            submitButton.textContent = 'Passer la commande'
+          }
+        },
+        preserveScroll: true,
+        preserveState: true
       })
     } else {
       console.log('Form validation failed:', errors)
+      // Scroll to the first error
+      const firstError = document.querySelector('.border-red-500')
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
     }
   }
 
@@ -169,278 +204,296 @@ export default function CheckoutPage() {
 
         <div className="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 xl:gap-x-16">
           <div className="lg:col-span-7">
-            <form onSubmit={handleSubmit}>
-              <div className="space-y-12">
-                <div>
-                  <h2 className="text-lg font-medium text-gray-900">Informations de contact</h2>
-                  {auth.user && (
-                    <p className="mt-1 text-sm text-gray-500">
-                      Vos informations ont été pré-remplies. Vous pouvez les modifier si nécessaire.
-                    </p>
-                  )}
-
-                  <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                    <div className="sm:col-span-3">
-                      <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-                        Prénom
-                      </label>
-                      <div className="mt-1">
-                        <input
-                          type="text"
-                          id="firstName"
-                          name="firstName"
-                          value={formData.firstName}
-                          onChange={handleChange}
-                          className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
-                            errors.firstName ? "border-red-500" : ""
-                          } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
-                          placeholder="Entrez votre prénom"
-                        />
-                        {errors.firstName && <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>}
-                      </div>
-                    </div>
-
-                    <div className="sm:col-span-3">
-                      <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-                        Nom
-                      </label>
-                      <div className="mt-1">
-                        <input
-                          type="text"
-                          id="lastName"
-                          name="lastName"
-                          value={formData.lastName}
-                          onChange={handleChange}
-                          className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
-                            errors.lastName ? "border-red-500" : ""
-                          } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
-                          placeholder="Entrez votre nom"
-                        />
-                        {errors.lastName && <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>}
-                      </div>
-                    </div>
-
-                    <div className="sm:col-span-6">
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                        Adresse email
-                      </label>
-                      <div className="mt-1">
-                        <input
-                          type="email"
-                          id="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
-                            errors.email ? "border-red-500" : ""
-                          } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
-                          placeholder="Entrez votre adresse email"
-                        />
-                        {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
-                      </div>
+            {errors.general && (
+              <div className="mb-6 rounded-md bg-red-50 p-4">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-red-800">
+                      Une erreur est survenue
+                    </h3>
+                    <div className="mt-2 text-sm text-red-700">
+                      <p>{errors.general}</p>
                     </div>
                   </div>
                 </div>
+              </div>
+            )}
 
-                <div>
-                  <h2 className="text-lg font-medium text-gray-900">Adresse de livraison</h2>
-                  {auth.user && (
-                    <p className="mt-1 text-sm text-gray-500">
-                      Vous pouvez modifier votre adresse de livraison pour cette commande.
-                    </p>
-                  )}
-
-                  <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                    <div className="sm:col-span-6">
-                      <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                        Adresse
-                      </label>
-                      <div className="mt-1">
-                        <input
-                          type="text"
-                          id="address"
-                          name="address"
-                          value={formData.address}
-                          onChange={handleChange}
-                          className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
-                            errors.address ? "border-red-500" : ""
-                          } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
-                          placeholder="Entrez votre adresse complète"
-                        />
-                        {errors.address && <p className="mt-1 text-sm text-red-600">{errors.address}</p>}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h2 className="text-lg font-medium text-gray-900">Méthode de paiement</h2>
+            <form id="checkout-form" onSubmit={handleSubmit} className="space-y-12">
+              <div>
+                <h2 className="text-lg font-medium text-gray-900">Informations de contact</h2>
+                {auth.user && (
                   <p className="mt-1 text-sm text-gray-500">
-                    Choisissez votre méthode de paiement préférée.
+                    Vos informations ont été pré-remplies. Vous pouvez les modifier si nécessaire.
                   </p>
+                )}
 
-                  <div className="mt-6 space-y-4">
-                    <label className="relative flex items-center p-4 border rounded-lg hover:border-blue-500 cursor-pointer transition-colors duration-200">
-                      <input
-                        id="credit_card"
-                        name="paymentMethod"
-                        type="radio"
-                        value="credit_card"
-                        checked={formData.paymentMethod === "credit_card"}
-                        onChange={handleChange}
-                        className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
-                      />
-                      <div className="ml-3 flex-1">
-                        <span className="block text-sm font-medium text-gray-700">
-                          Carte de crédit
-                        </span>
-                        <p className="text-sm text-gray-500">Visa, Mastercard, American Express</p>
-                      </div>
-                      <div className="flex space-x-3 text-2xl">
-                        <FontAwesomeIcon icon={faCcVisa} className="text-blue-600" />
-                        <FontAwesomeIcon icon={faCcMastercard} className="text-red-600" />
-                        <FontAwesomeIcon icon={faCcAmex} className="text-blue-800" />
-                      </div>
+                <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                  <div className="sm:col-span-3">
+                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                      Prénom
                     </label>
-
-                    {formData.paymentMethod === "credit_card" && (
-                      <div className="mt-6 space-y-4 pl-8">
-                        <div>
-                          <label htmlFor="cardNumber" className="block text-sm font-medium text-gray-700">
-                            Numéro de carte
-                          </label>
-                          <div className="mt-1">
-                            <input
-                              type="text"
-                              id="cardNumber"
-                              name="cardNumber"
-                              value={formData.cardNumber}
-                              onChange={handleChange}
-                              className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
-                                errors.cardNumber ? "border-red-500" : ""
-                              } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
-                              placeholder="1234 5678 9012 3456"
-                              maxLength="19"
-                            />
-                            {errors.cardNumber && <p className="mt-1 text-sm text-red-600">{errors.cardNumber}</p>}
-                          </div>
-                        </div>
-
-                        <div>
-                          <label htmlFor="cardName" className="block text-sm font-medium text-gray-700">
-                            Nom sur la carte
-                          </label>
-                          <div className="mt-1">
-                            <input
-                              type="text"
-                              id="cardName"
-                              name="cardName"
-                              value={formData.cardName}
-                              onChange={handleChange}
-                              className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
-                                errors.cardName ? "border-red-500" : ""
-                              } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
-                              placeholder="JEAN DUPONT"
-                            />
-                            {errors.cardName && <p className="mt-1 text-sm text-red-600">{errors.cardName}</p>}
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <label htmlFor="cardExpiry" className="block text-sm font-medium text-gray-700">
-                              Date d'expiration
-                            </label>
-                            <div className="mt-1">
-                              <input
-                                type="text"
-                                id="cardExpiry"
-                                name="cardExpiry"
-                                value={formData.cardExpiry}
-                                onChange={handleChange}
-                                className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
-                                  errors.cardExpiry ? "border-red-500" : ""
-                                } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
-                                placeholder="MM/AA"
-                                maxLength="5"
-                              />
-                              {errors.cardExpiry && <p className="mt-1 text-sm text-red-600">{errors.cardExpiry}</p>}
-                            </div>
-                          </div>
-
-                          <div>
-                            <label htmlFor="cardCvc" className="block text-sm font-medium text-gray-700">
-                              Code CVC
-                            </label>
-                            <div className="mt-1">
-                              <input
-                                type="text"
-                                id="cardCvc"
-                                name="cardCvc"
-                                value={formData.cardCvc}
-                                onChange={handleChange}
-                                className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
-                                  errors.cardCvc ? "border-red-500" : ""
-                                } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
-                                placeholder="123"
-                                maxLength="4"
-                              />
-                              {errors.cardCvc && <p className="mt-1 text-sm text-red-600">{errors.cardCvc}</p>}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    <label className="relative flex items-center p-4 border rounded-lg hover:border-blue-500 cursor-pointer transition-colors duration-200">
+                    <div className="mt-1">
                       <input
-                        id="paypal"
-                        name="paymentMethod"
-                        type="radio"
-                        value="paypal"
-                        checked={formData.paymentMethod === "paypal"}
+                        type="text"
+                        id="firstName"
+                        name="firstName"
+                        value={formData.firstName}
                         onChange={handleChange}
-                        className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
+                          errors.firstName ? "border-red-500" : ""
+                        } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
+                        placeholder="Entrez votre prénom"
                       />
-                      <div className="ml-3 flex-1">
-                        <span className="block text-sm font-medium text-gray-700">
-                          PayPal
-                        </span>
-                        <p className="text-sm text-gray-500">Paiement sécurisé via PayPal</p>
-                      </div>
-                      <FontAwesomeIcon icon={faPaypal} className="text-2xl text-blue-600" />
-                    </label>
-
-                    {formData.paymentMethod === "paypal" && (
-                      <div className="mt-6 space-y-4 pl-8">
-                        <div>
-                          <label htmlFor="paypalEmail" className="block text-sm font-medium text-gray-700">
-                            Email PayPal
-                          </label>
-                          <div className="mt-1">
-                            <input
-                              type="email"
-                              id="paypalEmail"
-                              name="paypalEmail"
-                              value={formData.paypalEmail}
-                              onChange={handleChange}
-                              className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
-                                errors.paypalEmail ? "border-red-500" : ""
-                              } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
-                              placeholder="votre@email.com"
-                            />
-                            {errors.paypalEmail && <p className="mt-1 text-sm text-red-600">{errors.paypalEmail}</p>}
-                          </div>
-                        </div>
-
-                        <div className="bg-blue-50 p-4 rounded-md">
-                          <p className="text-sm text-blue-700">
-                            Après avoir cliqué sur "Passer la commande", vous serez redirigé vers PayPal pour finaliser votre paiement.
-                          </p>
-                        </div>
-                      </div>
-                    )}
+                      {errors.firstName && <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>}
+                    </div>
                   </div>
+
+                  <div className="sm:col-span-3">
+                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                      Nom
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        type="text"
+                        id="lastName"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
+                          errors.lastName ? "border-red-500" : ""
+                        } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
+                        placeholder="Entrez votre nom"
+                      />
+                      {errors.lastName && <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>}
+                    </div>
+                  </div>
+
+                  <div className="sm:col-span-6">
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                      Adresse email
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
+                          errors.email ? "border-red-500" : ""
+                        } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
+                        placeholder="Entrez votre adresse email"
+                      />
+                      {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h2 className="text-lg font-medium text-gray-900">Adresse de livraison</h2>
+                {auth.user && (
+                  <p className="mt-1 text-sm text-gray-500">
+                    Vous pouvez modifier votre adresse de livraison pour cette commande.
+                  </p>
+                )}
+
+                <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                  <div className="sm:col-span-6">
+                    <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+                      Adresse
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        type="text"
+                        id="address"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleChange}
+                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
+                          errors.address ? "border-red-500" : ""
+                        } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
+                        placeholder="Entrez votre adresse complète"
+                      />
+                      {errors.address && <p className="mt-1 text-sm text-red-600">{errors.address}</p>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h2 className="text-lg font-medium text-gray-900">Méthode de paiement</h2>
+                <p className="mt-1 text-sm text-gray-500">
+                  Choisissez votre méthode de paiement préférée.
+                </p>
+
+                <div className="mt-6 space-y-4">
+                  <label className="relative flex items-center p-4 border rounded-lg hover:border-blue-500 cursor-pointer transition-colors duration-200">
+                    <input
+                      id="credit_card"
+                      name="paymentMethod"
+                      type="radio"
+                      value="credit_card"
+                      checked={formData.paymentMethod === "credit_card"}
+                      onChange={handleChange}
+                      className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                    <div className="ml-3 flex-1">
+                      <span className="block text-sm font-medium text-gray-700">
+                        Carte de crédit
+                      </span>
+                      <p className="text-sm text-gray-500">Visa, Mastercard, American Express</p>
+                    </div>
+                    <div className="flex space-x-3 text-2xl">
+                      <FontAwesomeIcon icon={faCcVisa} className="text-blue-600" />
+                      <FontAwesomeIcon icon={faCcMastercard} className="text-red-600" />
+                      <FontAwesomeIcon icon={faCcAmex} className="text-blue-800" />
+                    </div>
+                  </label>
+
+                  {formData.paymentMethod === "credit_card" && (
+                    <div className="mt-6 space-y-4 pl-8">
+                      <div>
+                        <label htmlFor="cardNumber" className="block text-sm font-medium text-gray-700">
+                          Numéro de carte
+                        </label>
+                        <div className="mt-1">
+                          <input
+                            type="text"
+                            id="cardNumber"
+                            name="cardNumber"
+                            value={formData.cardNumber}
+                            onChange={handleChange}
+                            className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
+                              errors.cardNumber ? "border-red-500" : ""
+                            } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
+                            placeholder="1234 5678 9012 3456"
+                            maxLength="19"
+                          />
+                          {errors.cardNumber && <p className="mt-1 text-sm text-red-600">{errors.cardNumber}</p>}
+                        </div>
+                      </div>
+
+                      <div>
+                        <label htmlFor="cardName" className="block text-sm font-medium text-gray-700">
+                          Nom sur la carte
+                        </label>
+                        <div className="mt-1">
+                          <input
+                            type="text"
+                            id="cardName"
+                            name="cardName"
+                            value={formData.cardName}
+                            onChange={handleChange}
+                            className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
+                              errors.cardName ? "border-red-500" : ""
+                            } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
+                            placeholder="JEAN DUPONT"
+                          />
+                          {errors.cardName && <p className="mt-1 text-sm text-red-600">{errors.cardName}</p>}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label htmlFor="cardExpiry" className="block text-sm font-medium text-gray-700">
+                            Date d'expiration
+                          </label>
+                          <div className="mt-1">
+                            <input
+                              type="text"
+                              id="cardExpiry"
+                              name="cardExpiry"
+                              value={formData.cardExpiry}
+                              onChange={handleChange}
+                              className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
+                                errors.cardExpiry ? "border-red-500" : ""
+                              } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
+                              placeholder="MM/AA"
+                              maxLength="5"
+                            />
+                            {errors.cardExpiry && <p className="mt-1 text-sm text-red-600">{errors.cardExpiry}</p>}
+                          </div>
+                        </div>
+
+                        <div>
+                          <label htmlFor="cardCvc" className="block text-sm font-medium text-gray-700">
+                            Code CVC
+                          </label>
+                          <div className="mt-1">
+                            <input
+                              type="text"
+                              id="cardCvc"
+                              name="cardCvc"
+                              value={formData.cardCvc}
+                              onChange={handleChange}
+                              className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
+                                errors.cardCvc ? "border-red-500" : ""
+                              } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
+                              placeholder="123"
+                              maxLength="4"
+                            />
+                            {errors.cardCvc && <p className="mt-1 text-sm text-red-600">{errors.cardCvc}</p>}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <label className="relative flex items-center p-4 border rounded-lg hover:border-blue-500 cursor-pointer transition-colors duration-200">
+                    <input
+                      id="paypal"
+                      name="paymentMethod"
+                      type="radio"
+                      value="paypal"
+                      checked={formData.paymentMethod === "paypal"}
+                      onChange={handleChange}
+                      className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                    <div className="ml-3 flex-1">
+                      <span className="block text-sm font-medium text-gray-700">
+                        PayPal
+                      </span>
+                      <p className="text-sm text-gray-500">Paiement sécurisé via PayPal</p>
+                    </div>
+                    <FontAwesomeIcon icon={faPaypal} className="text-2xl text-blue-600" />
+                  </label>
+
+                  {formData.paymentMethod === "paypal" && (
+                    <div className="mt-6 space-y-4 pl-8">
+                      <div>
+                        <label htmlFor="paypalEmail" className="block text-sm font-medium text-gray-700">
+                          Email PayPal
+                        </label>
+                        <div className="mt-1">
+                          <input
+                            type="email"
+                            id="paypalEmail"
+                            name="paypalEmail"
+                            value={formData.paypalEmail}
+                            onChange={handleChange}
+                            className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
+                              errors.paypalEmail ? "border-red-500" : ""
+                            } px-4 py-2.5 bg-white border focus:outline-none transition-colors duration-200`}
+                            placeholder="votre@email.com"
+                          />
+                          {errors.paypalEmail && <p className="mt-1 text-sm text-red-600">{errors.paypalEmail}</p>}
+                        </div>
+                      </div>
+
+                      <div className="bg-blue-50 p-4 rounded-md">
+                        <p className="text-sm text-blue-700">
+                          Après avoir cliqué sur "Passer la commande", vous serez redirigé vers PayPal pour finaliser votre paiement.
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -456,47 +509,42 @@ export default function CheckoutPage() {
           </div>
 
           <div className="mt-10 lg:col-span-5 lg:mt-0">
-            <div className="rounded-lg border border-gray-200 bg-gray-50 p-6">
+            <div className="rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:p-8">
               <h2 className="text-lg font-medium text-gray-900">Récapitulatif de la commande</h2>
-
-              <div className="mt-6 flow-root">
-                <ul role="list" className="-my-4 divide-y divide-gray-200">
-                  {cartItems.map((item) => (
-                    <li key={item.id} className="flex items-center space-x-4 py-4">
-                      <div className="flex items-center gap-4">
-                        <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                          <img src={getBookImage(item.image)} alt={item.libelle} className="h-full w-full object-cover object-center" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium text-gray-900">{item.libelle}</p>
-                          <p className="text-sm text-gray-500">Quantité: {item.quantity}</p>
-                        </div>
+              <div className="mt-6 space-y-4">
+                {cartItems.map((item) => (
+                  <div key={item.id} className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                        <img src={getBookImage(item.image)} alt={item.libelle} className="h-full w-full object-cover object-center" />
                       </div>
-                      <div className="flex-shrink-0 text-sm font-medium text-gray-900">
-                        €{(item.prix * item.quantity).toFixed(2)}
+                      <div className="ml-4">
+                        <h3 className="text-sm font-medium text-gray-900">{item.libelle}</h3>
+                        <p className="mt-1 text-sm text-gray-500">Quantité: {item.quantity}</p>
                       </div>
-                    </li>
-                  ))}
-                </ul>
+                    </div>
+                    <p className="text-sm font-medium text-gray-900">€{(item.prix * item.quantity).toFixed(2)}</p>
+                  </div>
+                ))}
               </div>
 
-              <div className="mt-6 border-t border-gray-200 pt-6">
+              <div className="mt-6 space-y-4">
+                <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+                  <dt className="text-base font-medium text-gray-900">Sous-total</dt>
+                  <dd className="text-base font-medium text-gray-900">€{getCartTotal().toFixed(2)}</dd>
+                </div>
                 <div className="flex items-center justify-between">
-                  <dt className="text-sm text-gray-600">Sous-total</dt>
-                  <dd className="text-sm font-medium text-gray-900">€{getCartTotal().toFixed(2)}</dd>
+                  <dt className="text-sm text-gray-600">Frais de livraison</dt>
+                  <dd className="text-sm font-medium text-gray-900">€5.99</dd>
                 </div>
-                <div className="flex items-center justify-between mt-2">
-                  <dt className="text-sm text-gray-600">Livraison</dt>
-                  <dd className="text-sm font-medium text-gray-900">€5.00</dd>
+                <div className="flex items-center justify-between">
+                  <dt className="text-sm text-gray-600">TVA (20%)</dt>
+                  <dd className="text-sm font-medium text-gray-900">€{(getCartTotal() * 0.20).toFixed(2)}</dd>
                 </div>
-                <div className="flex items-center justify-between mt-2">
-                  <dt className="text-sm text-gray-600">TVA (10%)</dt>
-                  <dd className="text-sm font-medium text-gray-900">€{(getCartTotal() * 0.1).toFixed(2)}</dd>
-                </div>
-                <div className="flex items-center justify-between border-t border-gray-200 pt-4 mt-4">
+                <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                   <dt className="text-base font-medium text-gray-900">Total</dt>
                   <dd className="text-base font-medium text-gray-900">
-                    €{(getCartTotal() + 5 + getCartTotal() * 0.1).toFixed(2)}
+                    €{(getCartTotal() + 5.99 + (getCartTotal() * 0.20)).toFixed(2)}
                   </dd>
                 </div>
               </div>

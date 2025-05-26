@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { router, usePage } from '@inertiajs/react';
 import { DataTableToolbar, DeleteConfirmationDialog } from '@/components/ui-components';
 import { Modal } from "@/components/ui-components"
+import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 
 export default function UsersPage({ initialUsers }) {
   const [users, setUsers] = useState(initialUsers || []);
@@ -144,12 +145,14 @@ export default function UsersPage({ initialUsers }) {
                     <td className='px-6 py-4'>{user.email}</td>
                     <td className='px-6 py-4 max-w-xs truncate'>{user.adresse}</td>
                     <td className='px-6 py-4 text-right'>
-                      <button onClick={() => handleEdit(user)} className='font-medium text-blue-600 hover:underline mr-3'>
-                        Edit
-                      </button>
-                      <button onClick={() => handleDelete(user)} className='font-medium text-red-600 hover:underline'>
-                        Delete
-                      </button>
+                      <div className='flex justify-end space-x-2'>
+                        <button onClick={() => handleEdit(user)} className='text-green-600 hover:text-green-800' title='Edit'>
+                          <FaEdit />
+                        </button>
+                        <button onClick={() => handleDelete(user)} className='text-red-600 hover:text-red-800' title='Delete'>
+                          <FaTrash />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

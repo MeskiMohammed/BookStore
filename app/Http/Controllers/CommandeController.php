@@ -14,7 +14,7 @@ class CommandeController extends Controller
     public function index()
     {
         $commandes = Commande::with('user')->latest()->get();
-        
+
         return Inertia::render('admin/orders', [
             'commandes' => $commandes
         ]);
@@ -26,7 +26,7 @@ class CommandeController extends Controller
     public function show(Commande $order)
     {
         $order->load('user', 'detailsCommandes.livre');
-        
+
         return Inertia::render('admin/orders/show', [
             'commande' => $order
         ]);
@@ -44,7 +44,7 @@ class CommandeController extends Controller
         $commande->update([
             'statut' => $request->statut
         ]);
-        
+
         return redirect()->back()->with('success', 'Statut de la commande mis à jour avec succès.');
     }
 
@@ -64,7 +64,7 @@ class CommandeController extends Controller
             'adresse_livraison' => $request->adresse_livraison,
             'methode_paiement' => $request->methode_paiement
         ]);
-        
+
         return redirect()->back()->with('success', 'Commande mise à jour avec succès.');
     }
 
@@ -75,10 +75,10 @@ class CommandeController extends Controller
     {
         // Delete related order details first
         $order->detailsCommandes()->delete();
-        
+
         // Then delete the order
         $order->delete();
-        
+
         return redirect()->route('orders.index')->with('success', 'Commande supprimée avec succès.');
     }
 }

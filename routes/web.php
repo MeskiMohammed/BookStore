@@ -51,6 +51,8 @@ Route::middleware('auth')->prefix('admin')->group(function(){
     Route::resource('categories', CategorieController::class);
     Route::resource('books', LivreController::class);
     Route::resource('contacts', ContactController::class);
+    Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
+    Route::put('/contacts/{contact}/status', [ContactController::class, 'updateStatus'])->name('contacts.update-status');
 });
 
 // Cart routes

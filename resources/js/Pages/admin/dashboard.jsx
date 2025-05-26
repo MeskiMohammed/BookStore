@@ -147,12 +147,12 @@ export default function App(props) {
                         <div className='flex items-center space-x-4'>
                           <div className='flex-shrink-0'>
                             <div className='w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center'>
-                              <span className='text-blue-600 font-medium text-sm'>{order.user?.name ? order.user.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}</span>
+                              <span className='text-blue-600 font-medium text-sm'>{order.client_name ? order.client_name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}</span>
                             </div>
                           </div>
                           <div className='flex-1 min-w-0'>
                             <p className='text-sm font-medium text-gray-900 truncate'>Order #{order.id}</p>
-                            <p className='text-sm text-gray-500 truncate'>{order.user?.name || 'Unknown'}</p>
+                            <p className='text-sm text-gray-500 truncate'>{order.client_name || 'Unknown'}</p>
                           </div>
                           <div className='inline-flex items-center text-base font-semibold text-gray-900'>${order.montant_totale?.toFixed(2) ?? '0.00'}</div>
                         </div>

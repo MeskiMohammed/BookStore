@@ -15,12 +15,14 @@ class DetailsCommandeFactory extends Factory
     {
         $livre = Livre::inRandomOrder()->first();
         $quantite = $this->faker->numberBetween(1, 5);
+        $prix_unitaire = $livre->prix;
 
         return [
             'commande_id' => Commande::factory(),
             'livre_id' => $livre->id,
             'quantite' => $quantite,
-            'prix' => $livre->prix * $quantite,
+            'prix_unitaire' => $prix_unitaire,
+            'sous_total' => $prix_unitaire * $quantite,
         ];
     }
 }

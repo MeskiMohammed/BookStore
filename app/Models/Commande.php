@@ -45,9 +45,9 @@ class Commande extends Model
     /**
      * Get the order details for the order.
      */
-    public function detailsCommandes()
+    public function details_commandes()
     {
-        return $this->hasMany(DetailsCommande::class);
+        return $this->hasMany(DetailsCommande::class, 'commande_id');
     }
 
     /**
@@ -55,6 +55,6 @@ class Commande extends Model
      */
     public function getTotalItemsAttribute()
     {
-        return $this->detailsCommandes()->sum('quantite');
+        return $this->details_commandes()->sum('quantite');
     }
 }

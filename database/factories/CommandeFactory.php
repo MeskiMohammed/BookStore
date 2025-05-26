@@ -17,8 +17,8 @@ class CommandeFactory extends Factory
         return [
             'user_id' => $user->id,
             'montant_totale' => $this->faker->randomFloat(2, 10, 200),
-            'statut' => $this->faker->randomElement(['en attente', 'confirmée', 'expédiée', 'livrée', 'annulée']),
-            'methode_paiement' => $this->faker->randomElement(['carte', 'paypal', 'virement']),
+            'statut' => $this->faker->randomElement(['en_attente', 'en_cours', 'livree', 'annulee']),
+            'methode_paiement' => $this->faker->randomElement(['credit_card', 'paypal']),
             'client_name' => $user->name,
             'client_email' => $user->email,
             'client_phone' => $this->faker->phoneNumber(),

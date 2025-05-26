@@ -3,7 +3,7 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { useState, useEffect } from 'react';
 import { router, usePage } from '@inertiajs/react';
-import { DataTableToolbar, DeleteConfirmationDialog } from '@/components/ui-components';
+import { DataTableToolbar, DeleteConfirmationDialog, Pagination } from '@/components/ui-components';
 import { Modal } from '@/components/ui-components';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
@@ -111,7 +111,7 @@ export default function Categories({ initialCategories }) {
             <tbody>
               {filteredCategories.length === 0 ? (
                 <tr className='bg-white border-b'>
-                  <td colSpan={3} className='px-6 py-4 text-center text-gray-500'>
+                  <td colSpan={4} className='px-6 py-4 text-center text-gray-500'>
                     No categories found
                   </td>
                 </tr>
@@ -120,9 +120,9 @@ export default function Categories({ initialCategories }) {
                   <tr key={category.id} className='bg-white border-b hover:bg-gray-50'>
                     <td className='px-6 py-4 font-medium text-gray-900'>{category.nom}</td>
                     <td className='px-6 py-4'>{category.description}</td>
-                    <td className='px-6 py-4'>{category.livres_count ?? category.books_count ?? 0}</td>
-                    <td className='px-6 py-4 text-right'>
-                      <button onClick={() => handleEdit(category)} className='text-green-600 hover:text-green-800 mr-2' title='Edit'>
+                    <td className='px-6 py-4'>{category.livres_count}</td>
+                    <td className='px-6 py-4 text-right space-x-2'>
+                      <button onClick={() => handleEdit(category)} className='text-green-600 hover:text-green-800' title='Edit'>
                         <FaEdit />
                       </button>
                       <button onClick={() => handleDelete(category)} className='text-red-600 hover:text-red-800' title='Delete'>
@@ -134,22 +134,10 @@ export default function Categories({ initialCategories }) {
               )}
             </tbody>
           </table>
+          {totalPages > 1 && (
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={goToPage} />
+          )}
         </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className='flex justify-center items-center mt-4 space-x-2'>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => goToPage(i + 1)}
-                className={`px-3 py-1 rounded ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
-        )}
 
         <CategoryDialog isOpen={isAddDialogOpen} onClose={() => setIsAddDialogOpen(false)} onSave={handleSaveCategory} title='Add New Category' />
 

@@ -38,7 +38,8 @@ class CartController extends Controller
                 'prix' => $product['prix'],
                 'image' => $product['image'],
                 'auteur' => $product['auteur'],
-                'quantity' => $product['quantity'] ?? 1
+                'quantity' => $product['quantity'] ?? 1,
+                'titre' => $product['libelle']
             ];
             $message = "{$product['libelle']} ajouté au panier";
         }

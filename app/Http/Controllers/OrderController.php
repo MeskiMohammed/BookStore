@@ -14,18 +14,17 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Commande::with('user')->latest()->get();
+        $orders = Commande::with(['user', 'details_commandes.livre'])
+            ->latest()
+            ->get();
         $users = User::select('id', 'nom', 'prenom')->get();
 
         return Inertia::render('admin/orders', [
             'initialOrders' => $orders,
             'users' => $users,
             'flash' => [
-                'newOrder' => session('newOrder'),
-                'updatedOrder' => session('updatedOrder'),
-                'deletedOrderId' => session('deletedOrderId'),
-                'success' => session('success'),
-                'error' => session('error')
+                'message' => session('message'),
+                'type' => session('type')
             ],
         ]);
     }
@@ -38,8 +37,8 @@ class OrderController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'montant_totale' => 'required|numeric|min:0',
-            'statut' => 'required|string|in:pending,processing,completed,cancelled',
-            'method_paiment' => 'required|string|in:credit_card,paypal,bank_transfer,cash'
+            'statut' => 'required|string|in:en_attente,en_cours,livree,annulee',
+            'methode_paiement' => 'required|string|in:credit_card,paypal'
         ]);
 
         $order = Commande::create($request->all());
@@ -53,10 +52,19 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(Commande $order)
     {
-        $order = \App\Models\Commande::with(['user', 'orderDetails.livre'])->findOrFail($id);
-        return response()->json($order);
+        $order->load(['user', 'details_commandes.livre']);
+
+        return Inertia::render('admin/orders/show', [
+            'commande' => $order,
+            'availableStatuses' => [
+                'en_attente' => 'En attente',
+                'en_cours' => 'En cours',
+                'livree' => 'Livrée',
+                'annulee' => 'Annulée'
+            ]
+        ]);
     }
 
     /**
@@ -67,8 +75,8 @@ class OrderController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'montant_totale' => 'required|numeric|min:0',
-            'statut' => 'required|string|in:pending,processing,completed,cancelled',
-            'method_paiment' => 'required|string|in:credit_card,paypal,bank_transfer,cash'
+            'statut' => 'required|string|in:en_attente,en_cours,livree,annulee',
+            'methode_paiement' => 'required|string|in:credit_card,paypal'
         ]);
 
         $order->update($request->all());
@@ -87,11 +95,31 @@ class OrderController extends Controller
         $orderId = $order->id;
 
         // Delete related order details first
-        $order->detailsCommandes()->delete();
+        $order->details_commandes()->delete();
         $order->delete();
 
         session()->flash('deletedOrderId', $orderId);
         return redirect()->route('orders.index')
             ->with('success', 'Order deleted successfully.');
+    }
+
+    /**
+     * Update the order status.
+     */
+    public function updateStatus(Request $request, Commande $order)
+    {
+        $request->validate([
+            'statut' => 'required|string|in:en_attente,en_cours,livree,annulee'
+        ]);
+
+        $order->update([
+            'statut' => $request->statut
+        ]);
+
+        // Reload the order with its relationships
+        $order->load(['user', 'details_commandes.livre']);
+
+        session()->flash('updatedOrder', $order);
+        return redirect()->back()->with('success', 'Order status updated successfully.');
     }
 }

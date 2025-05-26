@@ -188,8 +188,11 @@ class LivreSeeder extends Seeder
 
         // Insert real books
         foreach ($realBooks as $book) {
+            // Find a category that matches the book's category or get a random one
+            $categorie = Categorie::where('nom', $book['categorie'])->first() ?? $categories->random();
+
             Livre::create(array_merge($book, [
-                'categorie_id' => $categories->random()->id,
+                'categorie_id' => $categorie->id,
                 'actif' => 1,
             ]));
         }

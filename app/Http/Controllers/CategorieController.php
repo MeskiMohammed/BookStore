@@ -13,8 +13,7 @@ class CategorieController extends Controller
      */
     public function index()
     {
-        $categories = Categorie::all();
-
+        $categories = Categorie::withCount('livres')->get();
         return Inertia::render('admin/categories', [
             'initialCategories' => $categories,
             'flash' => [

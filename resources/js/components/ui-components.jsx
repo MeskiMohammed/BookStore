@@ -1,6 +1,6 @@
 "use client"
 
-export function DataTableToolbar({ searchPlaceholder, onSearch, onAddNew }) {
+export function DataTableToolbar({ searchPlaceholder, onSearch, onAddNew, showAddButton = true }) {
   return (
     <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4 bg-white rounded-lg shadow">
       <div className="w-full md:w-1/2">
@@ -36,28 +36,30 @@ export function DataTableToolbar({ searchPlaceholder, onSearch, onAddNew }) {
           </div>
         </form>
       </div>
-      <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-        <button
-          type="button"
-          className="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
-          onClick={onAddNew}
-        >
-          <svg
-            className="h-3.5 w-3.5 mr-2"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
+      {showAddButton && (
+        <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+          <button
+            type="button"
+            className="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
+            onClick={onAddNew}
           >
-            <path
-              clipRule="evenodd"
-              fillRule="evenodd"
-              d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-            />
-          </svg>
-          Add New
-        </button>
-      </div>
+            <svg
+              className="h-3.5 w-3.5 mr-2"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                clipRule="evenodd"
+                fillRule="evenodd"
+                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+              />
+            </svg>
+            Add New
+          </button>
+        </div>
+      )}
     </div>
   )
 }
@@ -130,7 +132,7 @@ export function DeleteConfirmationDialog({ isOpen, onClose, onConfirm, title, de
   )
 }
 
-export function Modal({ isOpen, onClose, title, children, size = "md", footer }) {
+export function Modal({ isOpen, onClose, title, children, size = "md", maxWidth, footer }) {
   if (!isOpen) return null
 
   const sizeClasses = {
@@ -142,7 +144,7 @@ export function Modal({ isOpen, onClose, title, children, size = "md", footer })
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto">
-      <div className={`relative p-4 w-full ${sizeClasses[size]} max-h-full`}>
+      <div className={`relative p-4 w-full ${maxWidth ? maxWidth : sizeClasses[size]} max-h-full`}>
         <div className="relative bg-white rounded-lg shadow">
           {/* Header */}
           <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
@@ -182,5 +184,25 @@ export function Modal({ isOpen, onClose, title, children, size = "md", footer })
       </div>
     </div>
   )
+}
+
+export function Pagination({ currentPage, totalPages, onPageChange }) {
+  return (
+    <div className='flex justify-center items-center mt-4 mb-4 space-x-2'>
+      {Array.from({ length: totalPages }, (_, i) => (
+        <button
+          key={i + 1}
+          onClick={() => onPageChange(i + 1)}
+          className={`px-3 py-1 rounded ${
+            currentPage === i + 1
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+        >
+          {i + 1}
+        </button>
+      ))}
+    </div>
+  );
 }
 
